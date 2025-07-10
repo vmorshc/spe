@@ -3,35 +3,25 @@
 import { motion } from 'framer-motion';
 import { CheckCircle, Play } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { incrementLandingVisits } from '@/lib/actions/counters';
 import Button from '../ui/Button';
 import Section from '../ui/Section';
 
 interface HeroClientProps {
   initialVisitCount: number;
-  pushCurrentVisit: boolean;
 }
 
-export default function HeroClient({ initialVisitCount, pushCurrentVisit }: HeroClientProps) {
+export default function HeroClient({ initialVisitCount }: HeroClientProps) {
   const [visitCount, setVisitCount] = useState<number>(initialVisitCount);
   const [isIncrementing, setIsIncrementing] = useState<boolean>(false);
 
   // Increment counter after component mounts
   useEffect(() => {
     const incrementVisit = async () => {
-      if (!pushCurrentVisit) {
-        return;
-      }
       try {
         setIsIncrementing(true);
-
-        const response = await fetch('/api/counters/landing-visits', {
-          method: 'POST',
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setVisitCount(data.count);
-        }
+        const newCount = await incrementLandingVisits();
+        setVisitCount(newCount);
       } catch (error) {
         console.error('Failed to increment visit count:', error);
       } finally {
@@ -43,7 +33,7 @@ export default function HeroClient({ initialVisitCount, pushCurrentVisit }: Hero
     const timeoutId = setTimeout(incrementVisit, 500);
 
     return () => clearTimeout(timeoutId);
-  }, [pushCurrentVisit]);
+  }, []);
 
   return (
     <Section className="pt-8 lg:pt-16" background="white">

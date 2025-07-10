@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 # Перевіряємо TypeScript типи
 echo "🔍 Checking TypeScript..."
 pnpm type-check
