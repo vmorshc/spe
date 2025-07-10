@@ -1,0 +1,5 @@
+
+> spe@0.1.0 lint /Users/viktormorshc/Projects/spe/spe
+> biome lint . 2\@
+
+ ELIFECYCLE  Command failed with exit code 1.

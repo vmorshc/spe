@@ -1,15 +1,16 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import Button from '../ui/Button'
-import { Instagram, Menu, X } from 'lucide-react'
+import { motion } from 'framer-motion';
+import { Instagram, Menu, X } from 'lucide-react';
+import { useState } from 'react';
+import { sharedConfig } from '@/config';
+import Button from '../ui/Button';
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <motion.header 
+    <motion.header
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -19,34 +20,47 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <motion.div 
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center space-x-2"
-            >
+            <motion.div whileHover={{ scale: 1.05 }} className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">SP</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">Sure Pick Engine</span>
+              <span className="text-xl font-bold text-gray-900">{sharedConfig.SITE_NAME}</span>
             </motion.div>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <button
+              type="button"
+              onClick={() =>
+                document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })
+              }
+              className="text-gray-700 hover:text-blue-600 transition-colors"
+            >
               Як це працює
-            </a>
-            <a href="#benefits" className="text-gray-700 hover:text-blue-600 transition-colors">
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                document.getElementById('benefits')?.scrollIntoView({ behavior: 'smooth' })
+              }
+              className="text-gray-700 hover:text-blue-600 transition-colors"
+            >
               Переваги
-            </a>
-            <a href="#faq" className="text-gray-700 hover:text-blue-600 transition-colors">
+            </button>
+            <button
+              type="button"
+              onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })}
+              className="text-gray-700 hover:text-blue-600 transition-colors"
+            >
               FAQ
-            </a>
+            </button>
           </nav>
 
           {/* CTA Button */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               className="flex items-center space-x-2"
               onClick={() => console.log('Instagram login')}
             >
@@ -57,6 +71,7 @@ export default function Header() {
 
           {/* Mobile menu button */}
           <button
+            type="button"
             className="md:hidden p-2 rounded-md text-gray-700 hover:text-blue-600 transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
@@ -66,36 +81,45 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden py-4 border-t border-gray-200"
           >
             <nav className="flex flex-col space-y-4">
-              <a 
-                href="#how-it-works" 
-                className="text-gray-700 hover:text-blue-600 transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
+              <button
+                type="button"
+                className="text-gray-700 hover:text-blue-600 transition-colors py-2 text-left"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 Як це працює
-              </a>
-              <a 
-                href="#benefits" 
-                className="text-gray-700 hover:text-blue-600 transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
+              </button>
+              <button
+                type="button"
+                className="text-gray-700 hover:text-blue-600 transition-colors py-2 text-left"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  document.getElementById('benefits')?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 Переваги
-              </a>
-              <a 
-                href="#faq" 
-                className="text-gray-700 hover:text-blue-600 transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
+              </button>
+              <button
+                type="button"
+                className="text-gray-700 hover:text-blue-600 transition-colors py-2 text-left"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 FAQ
-              </a>
-              <Button 
-                variant="primary" 
+              </button>
+              <Button
+                variant="primary"
                 className="flex items-center justify-center space-x-2 w-full"
                 onClick={() => console.log('Instagram login')}
               >
@@ -107,5 +131,5 @@ export default function Header() {
         )}
       </div>
     </motion.header>
-  )
-} 
+  );
+}

@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Перевіряємо TypeScript типи
+echo "🔍 Checking TypeScript..."
+pnpm type-check
+
+# Запускаємо lint-staged для форматування та лінтингу
+echo "🔧 Running Biome linting and formatting..."
+npx lint-staged
+
+echo "✅ Pre-commit checks passed!"

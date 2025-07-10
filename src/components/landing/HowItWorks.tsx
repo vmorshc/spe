@@ -1,35 +1,35 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import Section from '../ui/Section'
-import { Instagram, Link, Trophy } from 'lucide-react'
+import { motion } from 'framer-motion';
+import { Instagram, Link, Trophy } from 'lucide-react';
+import Section from '../ui/Section';
 
 const steps = [
   {
     icon: Instagram,
     title: 'Увійдіть через Instagram',
     description: 'Авторизуйтесь бізнес-або creator-акаунтом у два кліки.',
-    color: 'from-pink-500 to-purple-600'
+    color: 'from-pink-500 to-purple-600',
   },
   {
     icon: Link,
     title: 'Обирайте пост',
     description: 'Вкажіть посилання — ми імпортуємо до 5 000 коментарів.',
-    color: 'from-blue-500 to-indigo-600'
+    color: 'from-blue-500 to-indigo-600',
   },
   {
     icon: Trophy,
     title: 'Отримайте переможця',
     description: 'Натисніть «Обрати» й одразу побачите чесний результат.',
-    color: 'from-green-500 to-emerald-600'
-  }
-]
+    color: 'from-green-500 to-emerald-600',
+  },
+];
 
 export default function HowItWorks() {
   return (
     <Section id="how-it-works" background="gray">
       <div className="text-center mb-16">
-        <motion.h2 
+        <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -38,7 +38,7 @@ export default function HowItWorks() {
         >
           Як це працює
         </motion.h2>
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -51,8 +51,8 @@ export default function HowItWorks() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {steps.map((step, index) => (
-          <motion.div 
-            key={index}
+          <motion.div
+            key={step.title}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -68,17 +68,15 @@ export default function HowItWorks() {
               </div>
 
               {/* Icon */}
-              <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${step.color} flex items-center justify-center mb-4 mt-2`}>
+              <div
+                className={`w-12 h-12 rounded-lg bg-gradient-to-br ${step.color} flex items-center justify-center mb-4 mt-2`}
+              >
                 <step.icon className="w-6 h-6 text-white" />
               </div>
 
               {/* Content */}
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                {step.title}
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                {step.description}
-              </p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">{step.title}</h3>
+              <p className="text-gray-600 leading-relaxed">{step.description}</p>
             </div>
 
             {/* Connector line (except for last item) */}
@@ -93,7 +91,7 @@ export default function HowItWorks() {
       </div>
 
       {/* Additional Info */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -125,5 +123,5 @@ export default function HowItWorks() {
         </div>
       </motion.div>
     </Section>
-  )
-} 
+  );
+}

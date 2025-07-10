@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import { Instagram, Linkedin, Mail, MessageCircle } from 'lucide-react'
+import { motion } from 'framer-motion';
+import { Instagram, Linkedin, Mail, MessageCircle } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}
           <div className="md:col-span-2">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -22,35 +22,35 @@ export default function Footer() {
               </div>
               <span className="text-xl font-bold">Sure Pick Engine</span>
             </motion.div>
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-gray-300 mb-6 max-w-md"
             >
-              Чесні розіграші в Instagram без зайвого клопоту. 
-              Обирайте переможця за хвилину з повною прозорістю.
+              Чесні розіграші в Instagram без зайвого клопоту. Обирайте переможця за хвилину з
+              повною прозорістю.
             </motion.p>
-            
+
             {/* Social Links */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.4 }}
               className="flex space-x-4"
             >
-              <a 
-                href="https://instagram.com" 
+              <a
+                href="https://instagram.com"
                 className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Instagram className="w-5 h-5" />
               </a>
-              <a 
-                href="https://linkedin.com" 
+              <a
+                href="https://linkedin.com"
                 className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -62,7 +62,7 @@ export default function Footer() {
 
           {/* Contact Information */}
           <div>
-            <motion.h3 
+            <motion.h3
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -71,15 +71,15 @@ export default function Footer() {
             >
               Контакти
             </motion.h3>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="space-y-3"
             >
-              <a 
-                href="https://t.me/surepick_support" 
+              <a
+                href="https://t.me/surepick_support"
                 className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -87,8 +87,8 @@ export default function Footer() {
                 <MessageCircle className="w-5 h-5" />
                 <span>@surepick_support</span>
               </a>
-              <a 
-                href="mailto:hello@surepick.com" 
+              <a
+                href="mailto:hello@surepick.com"
                 className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors"
               >
                 <Mail className="w-5 h-5" />
@@ -99,7 +99,7 @@ export default function Footer() {
 
           {/* Legal Links */}
           <div>
-            <motion.h3 
+            <motion.h3
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -108,23 +108,17 @@ export default function Footer() {
             >
               Правова інформація
             </motion.h3>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="space-y-3"
             >
-              <a 
-                href="/privacy" 
-                className="block text-gray-300 hover:text-white transition-colors"
-              >
+              <a href="/privacy" className="block text-gray-300 hover:text-white transition-colors">
                 Політика конфіденційності
               </a>
-              <a 
-                href="/terms" 
-                className="block text-gray-300 hover:text-white transition-colors"
-              >
+              <a href="/terms" className="block text-gray-300 hover:text-white transition-colors">
                 Публічна оферта
               </a>
             </motion.div>
@@ -132,7 +126,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Section */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -140,9 +134,7 @@ export default function Footer() {
           className="border-t border-gray-800 pt-8 mt-12"
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-gray-400 text-sm">
-              © 2024 Sure Pick Engine. Всі права захищені.
-            </p>
+            <p className="text-gray-400 text-sm">© 2024 Sure Pick Engine. Всі права захищені.</p>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
               <span>Зроблено з ❤️ в Україні</span>
               <span>•</span>
@@ -152,5 +144,5 @@ export default function Footer() {
         </motion.div>
       </div>
     </footer>
-  )
-} 
+  );
+}
