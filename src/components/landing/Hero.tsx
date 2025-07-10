@@ -1,3 +1,4 @@
+import { clientConfig } from '@/config/client';
 import { CountersRepository } from '@/lib/redis/repositories/counters';
 import HeroClient from './HeroClient';
 
@@ -15,5 +16,10 @@ async function getInitialVisitCount(): Promise<number> {
 export default async function Hero() {
   const initialVisitCount = await getInitialVisitCount();
 
-  return <HeroClient initialVisitCount={initialVisitCount} />;
+  return (
+    <HeroClient
+      initialVisitCount={initialVisitCount}
+      pushCurrentVisit={clientConfig.NEXT_PUBLIC_NODE_ENV === 'production'}
+    />
+  );
 }

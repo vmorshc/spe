@@ -6,7 +6,7 @@ import { z } from 'zod';
  */
 const serverEnvSchema = z.object({
   //   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  NEXT_PUBLIC_NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   REDIS_URL: z.string().optional(),
 });
 
@@ -17,7 +17,7 @@ const serverEnvSchema = z.object({
 const clientEnvSchema = z.object({
   // Add client-safe environment variables here as needed
   // Example: NEXT_PUBLIC_API_URL: z.string().url().optional(),
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  NEXT_PUBLIC_NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 });
 
 /**

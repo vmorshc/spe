@@ -3,22 +3,22 @@
 import { motion } from 'framer-motion';
 import { CheckCircle, Play } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { clientConfig } from '@/config/client';
 import Button from '../ui/Button';
 import Section from '../ui/Section';
 
 interface HeroClientProps {
   initialVisitCount: number;
+  pushCurrentVisit: boolean;
 }
 
-export default function HeroClient({ initialVisitCount }: HeroClientProps) {
+export default function HeroClient({ initialVisitCount, pushCurrentVisit }: HeroClientProps) {
   const [visitCount, setVisitCount] = useState<number>(initialVisitCount);
   const [isIncrementing, setIsIncrementing] = useState<boolean>(false);
 
   // Increment counter after component mounts
   useEffect(() => {
     const incrementVisit = async () => {
-      if (clientConfig.NODE_ENV === 'development') {
+      if (!pushCurrentVisit) {
         return;
       }
       try {
@@ -43,7 +43,7 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
     const timeoutId = setTimeout(incrementVisit, 500);
 
     return () => clearTimeout(timeoutId);
-  }, []);
+  }, [pushCurrentVisit]);
 
   return (
     <Section className="pt-8 lg:pt-16" background="white">

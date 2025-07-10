@@ -11,7 +11,7 @@ function createServerConfig() {
 
   return {
     // DATABASE_URL: env.DATABASE_URL,
-    NODE_ENV: env.NODE_ENV,
+    NEXT_PUBLIC_NODE_ENV: env.NEXT_PUBLIC_NODE_ENV,
     REDIS_URL: env.REDIS_URL,
     // Add other server-only configuration here
     // Example: JWT_SECRET: env.JWT_SECRET,
