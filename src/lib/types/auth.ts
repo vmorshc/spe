@@ -29,6 +29,7 @@ export interface TempProfileData {
     pageAccessToken: string;
   }>;
   longLivedToken: string;
+  redirectUrl?: string;
   createdAt: string;
   expiresAt: string;
 }

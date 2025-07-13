@@ -10,12 +10,14 @@ interface LoginButtonProps {
   className?: string;
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
+  redirectUrl?: string;
 }
 
 export default function LoginButton({
   className = '',
   variant = 'primary',
   size = 'md',
+  redirectUrl,
 }: LoginButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   useAuth();
@@ -23,7 +25,7 @@ export default function LoginButton({
   const handleLogin = async () => {
     try {
       setIsLoading(true);
-      await initiateOAuthLogin();
+      await initiateOAuthLogin({ redirectUrl });
       // Auth state will be refreshed when user returns from OAuth
     } catch (error) {
       console.error('Login failed:', error);

@@ -1,18 +1,37 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { clearSessionId, getSessionId, setOAuthState, setSessionId } from '@/lib/auth/session';
-import { buildOAuthURL, generateState } from '@/lib/auth/utils';
+import {
+  clearRedirectUrl,
+  clearSessionId,
+  getSessionId,
+  setOAuthState,
+  setRedirectUrl,
+  setSessionId,
+} from '@/lib/auth/session';
+import { buildOAuthURL, generateState, validateRedirectUrl } from '@/lib/auth/utils';
 import { userRepository } from '@/lib/redis/repositories/users';
 import type { TempProfileData, UserSession } from '@/lib/types/auth';
+
+export interface OAuthLoginOptions {
+  redirectUrl?: string;
+}
 
 /**
  * Initiate OAuth login flow
  * Generates state, stores it in session, and redirects to Facebook OAuth
  */
-export async function initiateOAuthLogin(): Promise<never> {
+export async function initiateOAuthLogin(options?: OAuthLoginOptions): Promise<never> {
   let oauthURL: string;
   try {
+    // Validate and store redirect URL if provided
+    if (options?.redirectUrl) {
+      if (!validateRedirectUrl(options.redirectUrl)) {
+        throw new Error('Invalid redirect URL. Must be a relative path starting with /');
+      }
+      await setRedirectUrl(options.redirectUrl);
+    }
+
     // Generate cryptographically secure state parameter
     const state = generateState();
 
@@ -25,6 +44,7 @@ export async function initiateOAuthLogin(): Promise<never> {
     console.log('OAuth login initiated:', {
       state,
       redirectUri: oauthURL,
+      redirectUrl: options?.redirectUrl,
     });
   } catch (error) {
     console.error('Failed to initiate OAuth login:', error);
@@ -78,7 +98,10 @@ export async function getTempProfileData(tempId: string): Promise<TempProfileDat
 /**
  * Complete profile selection and create user session
  */
-export async function selectInstagramProfile(tempId: string, pageId: string): Promise<void> {
+export async function selectInstagramProfile(
+  tempId: string,
+  pageId: string
+): Promise<{ redirectUrl?: string }> {
   try {
     // Get temporary profile data
     const tempData = await userRepository.getTempProfileData(tempId);
@@ -114,7 +137,10 @@ export async function selectInstagramProfile(tempId: string, pageId: string): Pr
       sessionId,
       username: selectedProfile.username,
       pageId: selectedProfile.pageId,
+      redirectUrl: tempData.redirectUrl,
     });
+
+    return { redirectUrl: tempData.redirectUrl };
   } catch (error) {
     console.error('Failed to select Instagram profile:', error);
     throw new Error('Profile selection failed');

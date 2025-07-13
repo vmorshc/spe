@@ -60,10 +60,13 @@ function SelectProfileContent() {
       if (!tempId) {
         throw new Error('Відсутній ідентифікатор сесії');
       }
-      await selectInstagramProfile(tempId, pageId);
+      const result = await selectInstagramProfile(tempId, pageId);
       // Refresh auth state so Header shows correct state
       await refreshAuth();
-      router.push('/');
+
+      // Redirect to the specified URL or default to home
+      const redirectUrl = result.redirectUrl || '/';
+      router.push(redirectUrl);
     } catch (err) {
       console.error('Profile selection failed:', err);
       setError('Не вдалося вибрати профіль');

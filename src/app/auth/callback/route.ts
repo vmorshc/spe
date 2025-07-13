@@ -1,5 +1,10 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { clearOAuthState, getOAuthState } from '@/lib/auth/session';
+import {
+  clearOAuthState,
+  clearRedirectUrl,
+  getOAuthState,
+  getRedirectUrl,
+} from '@/lib/auth/session';
 import { validateState } from '@/lib/auth/utils';
 import { facebookClient } from '@/lib/facebook/client';
 import { userRepository } from '@/lib/redis/repositories/users';
@@ -91,7 +96,10 @@ export async function GET(request: NextRequest) {
       const tempId = await userRepository.storeTempProfileData({
         profiles: instagramAccounts,
         longLivedToken: longLivedTokenResponse.access_token,
+        redirectUrl: await getRedirectUrl(),
       });
+
+      await clearRedirectUrl();
 
       // Redirect to profile selection page
       return NextResponse.redirect(new URL(`/auth/select-profile?tempId=${tempId}`, request.url));

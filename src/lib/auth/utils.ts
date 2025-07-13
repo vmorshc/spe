@@ -53,3 +53,66 @@ export function validateState(receivedState: string, storedState: string): boole
 
   return result === 0;
 }
+
+/**
+ * Validate redirect URL for security
+ * Only allows relative URLs to prevent open redirect attacks
+ */
+export function validateRedirectUrl(url: string): boolean {
+  if (!url || typeof url !== 'string') {
+    return false;
+  }
+
+  // Trim whitespace
+  const trimmedUrl = url.trim();
+
+  // Must start with forward slash (relative URL)
+  if (!trimmedUrl.startsWith('/')) {
+    return false;
+  }
+
+  // Cannot contain protocol schemes
+  if (trimmedUrl.includes('://')) {
+    return false;
+  }
+
+  // Cannot start with double slashes (protocol-relative URLs)
+  if (trimmedUrl.startsWith('//')) {
+    return false;
+  }
+
+  // Cannot contain dangerous patterns
+  const dangerousPatterns = [
+    'javascript:',
+    'data:',
+    'vbscript:',
+    'file:',
+    'ftp:',
+    'mailto:',
+    'tel:',
+  ];
+
+  const lowerUrl = trimmedUrl.toLowerCase();
+  for (const pattern of dangerousPatterns) {
+    if (lowerUrl.includes(pattern)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Sanitize redirect URL
+ * Returns a safe relative URL or default fallback
+ */
+export function sanitizeRedirectUrl(
+  url: string | null | undefined,
+  fallback: string = '/'
+): string {
+  if (!url || !validateRedirectUrl(url)) {
+    return fallback;
+  }
+
+  return url.trim();
+}

@@ -8,6 +8,7 @@ import { serverConfig } from '@/config/server';
 export interface SessionData {
   sessionId?: string; // Only store the Redis session ID
   oauthState?: string; // Temporary, only during OAuth flow
+  redirectUrl?: string; // Redirect URL after successful authentication
 }
 
 /**
@@ -83,5 +84,31 @@ export async function clearSessionId(): Promise<void> {
   const session = await getSession();
   session.sessionId = undefined;
   session.oauthState = undefined;
+  await session.save();
+}
+
+/**
+ * Set redirect URL in session
+ */
+export async function setRedirectUrl(redirectUrl: string): Promise<void> {
+  const session = await getSession();
+  session.redirectUrl = redirectUrl;
+  await session.save();
+}
+
+/**
+ * Get redirect URL from session
+ */
+export async function getRedirectUrl(): Promise<string | undefined> {
+  const session = await getSession();
+  return session.redirectUrl;
+}
+
+/**
+ * Clear redirect URL from session
+ */
+export async function clearRedirectUrl(): Promise<void> {
+  const session = await getSession();
+  session.redirectUrl = undefined;
   await session.save();
 }
