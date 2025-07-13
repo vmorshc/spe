@@ -2,7 +2,7 @@
 
 import { Image, Instagram, Users } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Button from '@/components/ui/Button';
 import Section from '@/components/ui/Section';
 import { getTempProfileData, selectInstagramProfile } from '@/lib/actions/auth';
@@ -19,7 +19,7 @@ interface ProfileData {
   pageAccessToken: string;
 }
 
-export default function SelectProfilePage() {
+function SelectProfileContent() {
   const [profiles, setProfiles] = useState<ProfileData[]>([]);
   const [loading, setLoading] = useState(true);
   const [selecting, setSelecting] = useState<string | null>(null);
@@ -193,5 +193,24 @@ export default function SelectProfilePage() {
         </div>
       </div>
     </Section>
+  );
+}
+
+function SelectProfileLoading() {
+  return (
+    <Section className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+        <p className="text-gray-600">Завантаження профілів...</p>
+      </div>
+    </Section>
+  );
+}
+
+export default function SelectProfilePage() {
+  return (
+    <Suspense fallback={<SelectProfileLoading />}>
+      <SelectProfileContent />
+    </Suspense>
   );
 }
