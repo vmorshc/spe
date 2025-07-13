@@ -6,6 +6,7 @@ import type {
   FacebookPagesResponse,
   FacebookTokenResponse,
   InstagramAccountWithPageInfo,
+  InstagramMediaResponse,
 } from './types';
 
 /**
@@ -120,7 +121,10 @@ export class FacebookClient {
         if (!instagramId) {
           continue;
         }
-        const instagramDetails = await this.getInstagramAccountDetails(instagramId, accessToken);
+        const instagramDetails = await this.getInstagramAccountDetails(
+          instagramId,
+          page.access_token
+        );
 
         instagramAccounts.push({
           instagramId,
@@ -145,14 +149,17 @@ export class FacebookClient {
   /**
    * Get detailed Instagram account information
    */
-  private async getInstagramAccountDetails(
+  async getInstagramAccountDetails(
     instagramId: string,
-    pageAccessToken: string
+    accessToken: string
   ): Promise<FacebookInstagramAccountDetails> {
     const url = `${this.baseURL}/${instagramId}`;
+
+    const fields = 'id,username,name,followers_count,media_count,biography,profile_picture_url';
+
     const params = new URLSearchParams({
-      fields: 'id,username,profile_picture_url,followers_count,media_count',
-      access_token: pageAccessToken,
+      fields,
+      access_token: accessToken,
     });
 
     const response = await fetch(`${url}?${params}`);
@@ -162,8 +169,39 @@ export class FacebookClient {
       throw new Error(`Instagram account fetch failed: ${errorData.error.message}`);
     }
 
-    const accountData = (await response.json()) as FacebookInstagramAccountDetails;
-    return accountData;
+    return (await response.json()) as FacebookInstagramAccountDetails;
+  }
+
+  /**
+   * Get Instagram posts with pagination support
+   */
+  async getInstagramPosts(
+    instagramId: string,
+    accessToken: string,
+    after?: string
+  ): Promise<InstagramMediaResponse> {
+    const url = `${this.baseURL}/${instagramId}/media`;
+    const params = new URLSearchParams({
+      fields:
+        'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,comments_count,like_count',
+      access_token: accessToken,
+      limit: '12', // Fetch 12 posts at a time for 3-column grid
+    });
+
+    // Add cursor for pagination
+    if (after) {
+      params.set('after', after);
+    }
+
+    const response = await fetch(`${url}?${params}`);
+
+    if (!response.ok) {
+      const errorData = (await response.json()) as FacebookErrorResponse;
+      throw new Error(`Instagram posts fetch failed: ${errorData.error.message}`);
+    }
+
+    const postsData = (await response.json()) as InstagramMediaResponse;
+    return postsData;
   }
 }
 

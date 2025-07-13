@@ -46,9 +46,11 @@ export interface FacebookErrorResponse {
 export interface FacebookInstagramAccountDetails {
   id: string;
   username: string;
+  name?: string;
   profile_picture_url: string;
   followers_count: number;
   media_count: number;
+  biography?: string;
 }
 
 export interface InstagramAccountWithPageInfo {
@@ -60,4 +62,39 @@ export interface InstagramAccountWithPageInfo {
   pageId: string;
   pageName: string;
   pageAccessToken: string;
+}
+
+// Instagram-specific types for posts functionality
+export interface InstagramProfile {
+  id: string;
+  username: string;
+  name?: string;
+  followers_count: number;
+  media_count: number;
+  biography?: string;
+  profile_picture_url: string;
+}
+
+export interface InstagramMedia {
+  id: string;
+  media_type: 'IMAGE' | 'VIDEO' | 'CAROUSEL_ALBUM' | 'REEL';
+  media_url: string;
+  thumbnail_url?: string;
+  caption?: string;
+  timestamp: string;
+  comments_count: number;
+  like_count: number;
+  permalink: string;
+}
+
+export interface InstagramMediaResponse {
+  data: InstagramMedia[];
+  paging?: {
+    cursors: {
+      before: string;
+      after: string;
+    };
+    next?: string;
+    previous?: string;
+  };
 }

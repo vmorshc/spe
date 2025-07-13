@@ -2,8 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { CheckCircle, Play } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { incrementLandingVisits } from '@/lib/actions/counters';
+import { useAuth } from '@/lib/contexts/AuthContext';
 import Button from '../ui/Button';
 import Section from '../ui/Section';
 
@@ -14,6 +16,8 @@ interface HeroClientProps {
 export default function HeroClient({ initialVisitCount }: HeroClientProps) {
   const [visitCount, setVisitCount] = useState<number>(initialVisitCount);
   const [isIncrementing, setIsIncrementing] = useState<boolean>(false);
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
 
   // Increment counter after component mounts
   useEffect(() => {
@@ -34,6 +38,10 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
 
     return () => clearTimeout(timeoutId);
   }, []);
+
+  const handleStartGiveaway = () => {
+    router.push('/instagram/posts');
+  };
 
   return (
     <Section className="pt-8 lg:pt-16" background="white">
@@ -97,7 +105,7 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
               size="lg"
               variant="primary"
               className="text-lg px-8 py-4"
-              onClick={() => console.log('Start giveaway')}
+              onClick={handleStartGiveaway}
             >
               Почати розіграш
             </Button>
