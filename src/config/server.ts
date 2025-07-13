@@ -1,4 +1,5 @@
 import { validateServerEnv } from '@/lib/env';
+import { sharedConfig } from './shared';
 
 /**
  * Server-side configuration
@@ -11,8 +12,14 @@ function createServerConfig() {
 
   return {
     // DATABASE_URL: env.DATABASE_URL,
-    NEXT_PUBLIC_NODE_ENV: env.NEXT_PUBLIC_NODE_ENV,
+    NODE_ENV: env.NEXT_PUBLIC_NODE_ENV,
+    DOMAIN: env.NEXT_PUBLIC_DOMAIN,
     REDIS_URL: env.REDIS_URL,
+    // Facebook OAuth configuration
+    FACEBOOK_APP_ID: env.FACEBOOK_APP_ID,
+    FACEBOOK_APP_SECRET: env.FACEBOOK_APP_SECRET,
+    FACEBOOK_REDIRECT_URI: `${env.NEXT_PUBLIC_DOMAIN}${sharedConfig.FACEBOOK_REDIRECT_PATH}`,
+    SESSION_SECRET: env.SESSION_SECRET,
     // Add other server-only configuration here
     // Example: JWT_SECRET: env.JWT_SECRET,
     // Example: SMTP_HOST: env.SMTP_HOST,

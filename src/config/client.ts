@@ -14,8 +14,9 @@ function createClientConfig() {
     // Example: API_URL: env.NEXT_PUBLIC_API_URL,
     // Example: APP_VERSION: env.NEXT_PUBLIC_APP_VERSION,
 
-    // For now, return an empty object since no client variables are defined
-    ...env,
+    // Domain configuration
+    DOMAIN: env.NEXT_PUBLIC_DOMAIN,
+    NODE_ENV: env.NEXT_PUBLIC_NODE_ENV,
   } as const;
 }
 

@@ -4,6 +4,8 @@
  */
 export const sharedConfig = {
   SITE_NAME: 'Sure Pick Engine',
+  // OAuth configuration
+  FACEBOOK_REDIRECT_PATH: '/auth/callback',
   // Add other hardcoded constants here as needed
   // Example: API_VERSION: "v1",
   // Example: MAX_UPLOAD_SIZE: 10 * 1024 * 1024, // 10MB

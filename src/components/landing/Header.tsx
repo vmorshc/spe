@@ -1,13 +1,16 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Instagram, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { sharedConfig } from '@/config';
-import Button from '../ui/Button';
+import { useAuth } from '@/lib/contexts/AuthContext';
+import LoginButton from '../auth/LoginButton';
+import UserProfile from '../auth/UserProfile';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
 
   return (
     <motion.header
@@ -59,14 +62,13 @@ export default function Header() {
 
           {/* CTA Button */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button
-              variant="primary"
-              className="flex items-center space-x-2"
-              onClick={() => console.log('Instagram login')}
-            >
-              <Instagram className="w-4 h-4" />
-              <span>Увійти через Instagram</span>
-            </Button>
+            {authLoading ? (
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            ) : isAuthenticated ? (
+              <UserProfile />
+            ) : (
+              <LoginButton />
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -118,14 +120,15 @@ export default function Header() {
               >
                 FAQ
               </button>
-              <Button
-                variant="primary"
-                className="flex items-center justify-center space-x-2 w-full"
-                onClick={() => console.log('Instagram login')}
-              >
-                <Instagram className="w-4 h-4" />
-                <span>Увійти через Instagram</span>
-              </Button>
+              {authLoading ? (
+                <div className="flex justify-center py-2">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                </div>
+              ) : isAuthenticated ? (
+                <UserProfile className="w-full" />
+              ) : (
+                <LoginButton className="w-full justify-center" />
+              )}
             </nav>
           </motion.div>
         )}

@@ -7,7 +7,12 @@ import { z } from 'zod';
 const serverEnvSchema = z.object({
   //   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
   NEXT_PUBLIC_NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  NEXT_PUBLIC_DOMAIN: z.string().url().default('http://localhost:3001'),
   REDIS_URL: z.string().optional(),
+  // Facebook OAuth configuration
+  FACEBOOK_APP_ID: z.string().min(1, 'FACEBOOK_APP_ID is required'),
+  FACEBOOK_APP_SECRET: z.string().min(1, 'FACEBOOK_APP_SECRET is required'),
+  SESSION_SECRET: z.string().min(32, 'SESSION_SECRET must be at least 32 characters'),
 });
 
 /**
@@ -18,6 +23,7 @@ const clientEnvSchema = z.object({
   // Add client-safe environment variables here as needed
   // Example: NEXT_PUBLIC_API_URL: z.string().url().optional(),
   NEXT_PUBLIC_NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  NEXT_PUBLIC_DOMAIN: z.string().url().default('http://localhost:3001'),
 });
 
 /**

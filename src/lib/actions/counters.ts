@@ -1,6 +1,6 @@
 'use server';
 
-import { serverConfig } from '@/config';
+import { serverConfig } from '@/config/server';
 import { CountersRepository } from '@/lib/redis/repositories/counters';
 
 const countersRepo = new CountersRepository();
@@ -22,7 +22,7 @@ export async function getLandingVisits(): Promise<number> {
  * Increment landing visits counter
  */
 export async function incrementLandingVisits(): Promise<number> {
-  if (serverConfig.NEXT_PUBLIC_NODE_ENV !== 'production') {
+  if (serverConfig.NODE_ENV !== 'production') {
     return await getLandingVisits();
   }
 
