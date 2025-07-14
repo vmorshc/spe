@@ -40,7 +40,7 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
   }, []);
 
   const handleStartGiveaway = () => {
-    router.push('/instagram/posts');
+    router.push('/app/instagram/posts');
   };
 
   return (

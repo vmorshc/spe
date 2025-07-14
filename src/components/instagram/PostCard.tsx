@@ -16,7 +16,7 @@ export default function PostCard({ post }: PostCardProps) {
 
   return (
     <Link
-      href={`/instagram/posts/${post.id}`}
+      href={`/app/instagram/posts/${post.id}`}
       className="group relative aspect-square block overflow-hidden bg-gray-100"
     >
       <div className="relative w-full h-full">

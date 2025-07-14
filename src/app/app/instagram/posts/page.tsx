@@ -1,51 +1,11 @@
 import { Suspense } from 'react';
-import LoginButton from '@/components/auth/LoginButton';
 import InstagramHeader from '@/components/instagram/InstagramHeader';
 import PostsGrid from '@/components/instagram/PostsGrid';
 import ProfileHeader from '@/components/instagram/ProfileHeader';
-import {
-  checkInstagramAccess,
-  getInstagramPosts,
-  getInstagramProfile,
-} from '@/lib/actions/instagram';
+import { getInstagramPosts, getInstagramProfile } from '@/lib/actions/instagram';
 
 export default async function InstagramPostsPage() {
-  // Check authentication first
-  const accessInfo = await checkInstagramAccess();
-
-  if (!accessInfo.isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="max-w-md w-full mx-auto text-center">
-          <div className="bg-white rounded-lg shadow-sm p-8">
-            <div className="flex justify-center mb-6">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-xl">SP</span>
-              </div>
-            </div>
-
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Вхід до Instagram</h1>
-
-            <p className="text-gray-600 mb-6">
-              Щоб розпочати розіграш, увійдіть через ваш Instagram бізнес-акаунт
-            </p>
-
-            <LoginButton
-              size="lg"
-              className="w-full justify-center"
-              redirectUrl="/instagram/posts"
-            />
-
-            <p className="text-xs text-gray-400 mt-4">
-              Підтримуються тільки бізнес та creator акаунти
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // User is authenticated, fetch Instagram data
+  // User is authenticated (handled by layout), fetch Instagram data
   try {
     // Fetch initial data in parallel
     const [profile, postsData] = await Promise.all([getInstagramProfile(), getInstagramPosts()]);

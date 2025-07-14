@@ -17,7 +17,6 @@ export async function getInstagramProfile(): Promise<InstagramProfile | null> {
     // Check authentication
     const user = await getCurrentUser();
     if (!user) {
-      await initiateOAuthLogin({ redirectUrl: '/instagram/posts' });
       return null;
     }
 
@@ -64,10 +63,8 @@ export async function getInstagramPosts(after?: string): Promise<{
   hasMore: boolean;
 }> {
   try {
-    // Check authentication
     const user = await getCurrentUser();
     if (!user) {
-      await initiateOAuthLogin({ redirectUrl: '/instagram/posts' });
       return { posts: [], hasMore: false };
     }
 
@@ -112,7 +109,7 @@ export async function refreshInstagramData(): Promise<void> {
     // Check authentication
     const user = await getCurrentUser();
     if (!user) {
-      await initiateOAuthLogin({ redirectUrl: '/instagram/posts' });
+      await initiateOAuthLogin({ redirectUrl: '/app/instagram/posts' });
       return;
     }
 

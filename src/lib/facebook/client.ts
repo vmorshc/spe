@@ -121,10 +121,7 @@ export class FacebookClient {
         if (!instagramId) {
           continue;
         }
-        const instagramDetails = await this.getInstagramAccountDetails(
-          instagramId,
-          page.access_token
-        );
+        const instagramDetails = await this.getInstagramAccountDetails(instagramId, accessToken);
 
         instagramAccounts.push({
           instagramId,
