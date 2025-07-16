@@ -4,6 +4,9 @@ import ProfileHeader from '@/components/instagram/ProfileHeader';
 import AppHeader from '@/components/ui/AppHeader';
 import { getInstagramPosts, getInstagramProfile } from '@/lib/actions/instagram';
 
+// Force dynamic rendering since this page uses cookies for authentication
+export const dynamic = 'force-dynamic';
+
 export default async function InstagramPostsPage() {
   // User is authenticated (handled by layout), fetch Instagram data
   try {

@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@types/react-window':
+        specifier: ^1.8.8
+        version: 1.8.8
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       framer-motion:
         specifier: ^12.23.3
         version: 12.23.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -23,6 +29,9 @@ importers:
       next:
         specifier: 15.3.5
         version: 15.3.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      papaparse:
+        specifier: ^5.5.3
+        version: 5.5.3
       react:
         specifier: ^19.0.0
         version: 19.1.0
@@ -32,6 +41,12 @@ importers:
       react-icons:
         specifier: ^5.5.0
         version: 5.5.0(react@19.1.0)
+      react-intersection-observer:
+        specifier: ^9.16.0
+        version: 9.16.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react-window:
+        specifier: ^1.8.11
+        version: 1.8.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       zod:
         specifier: ^4.0.2
         version: 4.0.2
@@ -76,6 +91,10 @@ packages:
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
+
+  '@babel/runtime@7.27.6':
+    resolution: {integrity: sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q==}
+    engines: {node: '>=6.9.0'}
 
   '@biomejs/biome@2.1.1':
     resolution: {integrity: sha512-HFGYkxG714KzG+8tvtXCJ1t1qXQMzgWzfvQaUjxN6UeKv+KvMEuliInnbZLJm6DXFXwqVi6446EGI0sGBLIYng==}
@@ -432,6 +451,9 @@ packages:
     peerDependencies:
       '@types/react': ^19.0.0
 
+  '@types/react-window@1.8.8':
+    resolution: {integrity: sha512-8Ls660bHR1AUA2kuRvVG9D/4XpRC6wjAaPT9dil7Ckc76eP9TKWZwwmgfq8Q1LANX3QNDnoU4Zp48A3w+zK69Q==}
+
   '@types/react@19.1.8':
     resolution: {integrity: sha512-AwAfQ2Wa5bCx9WP8nZL2uMZWod7J7/JSplxbTmBQ5ms6QpqNYm672H0Vu9ZVKVngQ+ii4R/byguVEUZQyeg44g==}
 
@@ -508,6 +530,9 @@ packages:
 
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
+
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
   debug@4.4.1:
     resolution: {integrity: sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==}
@@ -694,6 +719,9 @@ packages:
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
 
+  memoize-one@5.2.1:
+    resolution: {integrity: sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==}
+
   micromatch@4.0.8:
     resolution: {integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==}
     engines: {node: '>=8.6'}
@@ -758,6 +786,9 @@ packages:
     resolution: {integrity: sha512-VXJjc87FScF88uafS3JllDgvAm+c/Slfz06lorj2uAY34rlUu0Nt+v8wreiImcrgAjjIHp1rXpTDlLOGw29WwQ==}
     engines: {node: '>=18'}
 
+  papaparse@5.5.3:
+    resolution: {integrity: sha512-5QvjGxYVjxO59MGU2lHVYpRWBBtKHnlIAcSe1uNFCkkptUh63NFRj0FJQm7nR67puEruUci/ZkjmEFrjCAyP4A==}
+
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
@@ -787,6 +818,22 @@ packages:
     resolution: {integrity: sha512-MEFcXdkP3dLo8uumGI5xN3lDFNsRtrjbOEKDLD7yv76v4wpnEq2Lt2qeHaQOr34I/wPN3s3+N08WkQ+CW37Xiw==}
     peerDependencies:
       react: '*'
+
+  react-intersection-observer@9.16.0:
+    resolution: {integrity: sha512-w9nJSEp+DrW9KmQmeWHQyfaP6b03v+TdXynaoA964Wxt7mdR3An11z4NNCQgL4gKSK7y1ver2Fq+JKH6CWEzUA==}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+
+  react-window@1.8.11:
+    resolution: {integrity: sha512-+SRbUVT2scadgFSWx+R1P754xHPEqvcfSfVX10QYg6POOz+WNgkN48pS+BtZNIMGiL1HYrSEiCkwsMS15QogEQ==}
+    engines: {node: '>8.0.0'}
+    peerDependencies:
+      react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   react@19.1.0:
     resolution: {integrity: sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==}
@@ -923,6 +970,8 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.12
       '@jridgewell/trace-mapping': 0.3.29
+
+  '@babel/runtime@7.27.6': {}
 
   '@biomejs/biome@2.1.1':
     optionalDependencies:
@@ -1188,6 +1237,10 @@ snapshots:
     dependencies:
       '@types/react': 19.1.8
 
+  '@types/react-window@1.8.8':
+    dependencies:
+      '@types/react': 19.1.8
+
   '@types/react@19.1.8':
     dependencies:
       csstype: 3.1.3
@@ -1254,6 +1307,8 @@ snapshots:
   cookie@0.7.2: {}
 
   csstype@3.1.3: {}
+
+  date-fns@4.1.0: {}
 
   debug@4.4.1:
     dependencies:
@@ -1419,6 +1474,8 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.4
 
+  memoize-one@5.2.1: {}
+
   micromatch@4.0.8:
     dependencies:
       braces: 3.0.3
@@ -1475,6 +1532,8 @@ snapshots:
     dependencies:
       mimic-function: 5.0.1
 
+  papaparse@5.5.3: {}
+
   picocolors@1.1.1: {}
 
   picomatch@2.3.1: {}
@@ -1501,6 +1560,19 @@ snapshots:
   react-icons@5.5.0(react@19.1.0):
     dependencies:
       react: 19.1.0
+
+  react-intersection-observer@9.16.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+    optionalDependencies:
+      react-dom: 19.1.0(react@19.1.0)
+
+  react-window@1.8.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
+      '@babel/runtime': 7.27.6
+      memoize-one: 5.2.1
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
 
   react@19.1.0: {}
 

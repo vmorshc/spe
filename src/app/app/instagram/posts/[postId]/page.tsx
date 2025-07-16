@@ -8,6 +8,9 @@ import ActionDrawer from './components/ActionDrawer';
 import CommentsList from './components/CommentsList';
 import PostDetailsComponent from './components/PostDetails';
 
+// Force dynamic rendering since this page uses cookies for authentication
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
   params: Promise<{
     postId: string;

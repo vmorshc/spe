@@ -2,6 +2,9 @@ import { Suspense } from 'react';
 import RedirectBackLoginButton from '@/components/auth/RedirectBackLoginButton';
 import { checkInstagramAccess } from '@/lib/actions/instagram';
 
+// Force dynamic rendering since this layout uses cookies for authentication
+export const dynamic = 'force-dynamic';
+
 interface AppLayoutProps {
   children: React.ReactNode;
 }
