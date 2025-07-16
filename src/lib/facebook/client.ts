@@ -6,6 +6,8 @@ import type {
   FacebookPagesResponse,
   FacebookTokenResponse,
   InstagramAccountWithPageInfo,
+  InstagramCommentsResponse,
+  InstagramMedia,
   InstagramMediaResponse,
 } from './types';
 
@@ -199,6 +201,60 @@ export class FacebookClient {
 
     const postsData = (await response.json()) as InstagramMediaResponse;
     return postsData;
+  }
+
+  /**
+   * Get detailed information about a specific Instagram post
+   */
+  async getPostDetails(postId: string, accessToken: string): Promise<InstagramMedia> {
+    const url = `${this.baseURL}/${postId}`;
+    const params = new URLSearchParams({
+      fields:
+        'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,comments_count,like_count',
+      access_token: accessToken,
+    });
+
+    const response = await fetch(`${url}?${params}`);
+
+    if (!response.ok) {
+      const errorData = (await response.json()) as FacebookErrorResponse;
+      throw new Error(`Instagram post fetch failed: ${errorData.error.message}`);
+    }
+
+    const postData = (await response.json()) as InstagramMedia;
+
+    return postData;
+  }
+
+  /**
+   * Get comments for a specific Instagram post with pagination
+   */
+  async getPostComments(
+    postId: string,
+    accessToken: string,
+    after?: string
+  ): Promise<InstagramCommentsResponse> {
+    const url = `${this.baseURL}/${postId}/comments`;
+    const params = new URLSearchParams({
+      fields: 'id,text,timestamp,like_count,username,user{id,username,profile_picture_url}',
+      access_token: accessToken,
+      limit: '50', // Fetch 50 comments at a time
+    });
+
+    // Add cursor for pagination
+    if (after) {
+      params.set('after', after);
+    }
+
+    const response = await fetch(`${url}?${params}`);
+
+    if (!response.ok) {
+      const errorData = (await response.json()) as FacebookErrorResponse;
+      throw new Error(`Instagram comments fetch failed: ${errorData.error.message}`);
+    }
+
+    const commentsData = (await response.json()) as InstagramCommentsResponse;
+    return commentsData;
   }
 }
 

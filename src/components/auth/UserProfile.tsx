@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronDown, LogOut } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
 import { useAuth } from '@/lib/contexts/AuthContext';
@@ -47,13 +48,13 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         disabled={isLoggingOut}
       >
-        <img
+        <Image
           src={user.profilePicture}
           alt={user.username}
+          width={32}
+          height={32}
           className="w-8 h-8 rounded-full"
-          onError={(e) => {
-            e.currentTarget.src = '/api/placeholder/32/32';
-          }}
+          unoptimized
         />
         <div className="hidden sm:block text-left">
           <div className="text-sm font-medium text-gray-900">@{user.username}</div>
@@ -76,13 +77,13 @@ export default function UserProfile({ className = '' }: UserProfileProps) {
           <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border z-20">
             <div className="p-4 border-b">
               <div className="flex items-center space-x-3">
-                <img
+                <Image
                   src={user.profilePicture}
                   alt={user.username}
+                  width={40}
+                  height={40}
                   className="w-10 h-10 rounded-full"
-                  onError={(e) => {
-                    e.currentTarget.src = '/api/placeholder/40/40';
-                  }}
+                  unoptimized
                 />
                 <div>
                   <div className="font-medium text-gray-900">@{user.username}</div>

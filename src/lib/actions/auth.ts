@@ -2,7 +2,6 @@
 
 import { redirect } from 'next/navigation';
 import {
-  clearRedirectUrl,
   clearSessionId,
   getSessionId,
   setOAuthState,

@@ -5,7 +5,6 @@ import { CheckCircle, Play } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { incrementLandingVisits } from '@/lib/actions/counters';
-import { useAuth } from '@/lib/contexts/AuthContext';
 import Button from '../ui/Button';
 import Section from '../ui/Section';
 
@@ -16,7 +15,6 @@ interface HeroClientProps {
 export default function HeroClient({ initialVisitCount }: HeroClientProps) {
   const [visitCount, setVisitCount] = useState<number>(initialVisitCount);
   const [isIncrementing, setIsIncrementing] = useState<boolean>(false);
-  const { isAuthenticated } = useAuth();
   const router = useRouter();
 
   // Increment counter after component mounts

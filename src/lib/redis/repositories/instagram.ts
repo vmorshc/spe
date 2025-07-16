@@ -1,11 +1,12 @@
-import type { InstagramMedia, InstagramProfile } from '@/lib/facebook/types';
+import type { InstagramComment, InstagramMedia, InstagramProfile } from '@/lib/facebook/types';
 import { BaseRedisRepository } from './base';
 
 /**
- * Instagram repository for managing Instagram profile and posts cache
+ * Instagram repository for managing Instagram profile, posts, and comments cache
  */
 export class InstagramRepository extends BaseRedisRepository {
   private readonly CACHE_TTL = 300; // 5 minutes in seconds
+  private readonly COMMENTS_CACHE_TTL = 900; // 15 minutes for comments
 
   constructor() {
     super('instagram');
@@ -196,6 +197,225 @@ export class InstagramRepository extends BaseRedisRepository {
    */
   async hasPosts(userId: string, cursor?: string): Promise<boolean> {
     const key = this.getKey(`instagram:posts:${userId}:${cursor || 'initial'}`);
+    return await this.exists(key);
+  }
+
+  /**
+   * Get cached post details
+   */
+  async getPostDetails(postId: string): Promise<InstagramMedia | null> {
+    if (!this.client) {
+      return null;
+    }
+
+    try {
+      const key = this.getKey(`instagram:post:${postId}`);
+      const postData = await this.client.get(key);
+
+      if (!postData) {
+        return null;
+      }
+
+      return JSON.parse(postData) as InstagramMedia;
+    } catch (error) {
+      console.error('Failed to get post details from cache:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Set post details cache
+   */
+  async setPostDetails(postId: string, post: InstagramMedia): Promise<boolean> {
+    if (!this.client) {
+      return false;
+    }
+
+    try {
+      const key = this.getKey(`instagram:post:${postId}`);
+      await this.client.setex(key, this.CACHE_TTL, JSON.stringify(post));
+      return true;
+    } catch (error) {
+      console.error('Failed to set post details cache:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Get cached comments for a post
+   */
+  async getComments(
+    postId: string,
+    cursor?: string
+  ): Promise<{
+    comments: InstagramComment[];
+    nextCursor: string | null;
+  } | null> {
+    if (!this.client) {
+      return null;
+    }
+
+    try {
+      const key = this.getKey(`instagram:comments:${postId}:${cursor || 'initial'}`);
+      const commentsData = await this.client.get(key);
+
+      if (!commentsData) {
+        return null;
+      }
+
+      return JSON.parse(commentsData) as {
+        comments: InstagramComment[];
+        nextCursor: string | null;
+      };
+    } catch (error) {
+      console.error('Failed to get comments from cache:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Set comments cache
+   */
+  async setComments(
+    postId: string,
+    cursor: string | null,
+    data: {
+      comments: InstagramComment[];
+      nextCursor: string | null;
+    }
+  ): Promise<boolean> {
+    if (!this.client) {
+      return false;
+    }
+
+    try {
+      const key = this.getKey(`instagram:comments:${postId}:${cursor || 'initial'}`);
+      await this.client.setex(key, this.COMMENTS_CACHE_TTL, JSON.stringify(data));
+      return true;
+    } catch (error) {
+      console.error('Failed to set comments cache:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Get cached comments metadata (total count, etc.)
+   */
+  async getCommentsMetadata(postId: string): Promise<{ totalCount: number } | null> {
+    if (!this.client) {
+      return null;
+    }
+
+    try {
+      const key = this.getKey(`instagram:comments:meta:${postId}`);
+      const metaData = await this.client.get(key);
+
+      if (!metaData) {
+        return null;
+      }
+
+      return JSON.parse(metaData) as { totalCount: number };
+    } catch (error) {
+      console.error('Failed to get comments metadata from cache:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Set comments metadata cache
+   */
+  async setCommentsMetadata(postId: string, metadata: { totalCount: number }): Promise<boolean> {
+    if (!this.client) {
+      return false;
+    }
+
+    try {
+      const key = this.getKey(`instagram:comments:meta:${postId}`);
+      await this.client.setex(key, this.COMMENTS_CACHE_TTL, JSON.stringify(metadata));
+      return true;
+    } catch (error) {
+      console.error('Failed to set comments metadata cache:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Invalidate all cache for a specific post
+   */
+  async invalidatePostCache(postId: string): Promise<boolean> {
+    if (!this.client) {
+      return false;
+    }
+
+    try {
+      // Get all cache keys for this post
+      const postKey = this.getKey(`instagram:post:${postId}`);
+      const commentsPattern = this.getKey(`instagram:comments:${postId}:*`);
+      const metaKey = this.getKey(`instagram:comments:meta:${postId}`);
+
+      // Delete post details key
+      await this.client.del(postKey);
+
+      // Delete metadata key
+      await this.client.del(metaKey);
+
+      // Find and delete all comments keys for this post
+      const commentsKeys = await this.client.keys(commentsPattern);
+      if (commentsKeys.length > 0) {
+        await this.client.del(...commentsKeys);
+      }
+
+      console.log(`Invalidated cache for post ${postId}`);
+      return true;
+    } catch (error) {
+      console.error('Failed to invalidate post cache:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Invalidate comments cache for a specific post
+   */
+  async invalidateCommentsCache(postId: string): Promise<boolean> {
+    if (!this.client) {
+      return false;
+    }
+
+    try {
+      // Get all comments cache keys for this post
+      const commentsPattern = this.getKey(`instagram:comments:${postId}:*`);
+      const metaKey = this.getKey(`instagram:comments:meta:${postId}`);
+
+      // Delete metadata key
+      await this.client.del(metaKey);
+
+      // Find and delete all comments keys for this post
+      const commentsKeys = await this.client.keys(commentsPattern);
+      if (commentsKeys.length > 0) {
+        await this.client.del(...commentsKeys);
+      }
+
+      console.log(`Invalidated comments cache for post ${postId}`);
+      return true;
+    } catch (error) {
+      console.error('Failed to invalidate comments cache:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Check if post details exist in cache
+   */
+  async hasPostDetails(postId: string): Promise<boolean> {
+    const key = this.getKey(`instagram:post:${postId}`);
+    return await this.exists(key);
+  }
+
+  /**
+   * Check if comments exist in cache
+   */
+  async hasComments(postId: string, cursor?: string): Promise<boolean> {
+    const key = this.getKey(`instagram:comments:${postId}:${cursor || 'initial'}`);
     return await this.exists(key);
   }
 }

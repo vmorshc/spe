@@ -84,6 +84,7 @@ export interface InstagramMedia {
   timestamp: string;
   comments_count: number;
   like_count: number;
+  total_comments: number;
   permalink: string;
 }
 
@@ -96,5 +97,39 @@ export interface InstagramMediaResponse {
     };
     next?: string;
     previous?: string;
+  };
+}
+
+// Instagram comment types
+export interface InstagramComment {
+  id: string;
+  text: string;
+  timestamp: string;
+  like_count: number;
+  username: string;
+  user: {
+    id: string;
+    username: string;
+    profile_picture_url?: string;
+  };
+  replies?: {
+    data: InstagramComment[];
+    paging?: {
+      cursors: {
+        before: string;
+        after: string;
+      };
+      next?: string;
+    };
+  };
+}
+
+export interface InstagramCommentsResponse {
+  data: InstagramComment[];
+  paging?: {
+    cursors: {
+      before: string;
+      after: string;
+    };
   };
 }

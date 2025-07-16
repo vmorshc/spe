@@ -1,6 +1,7 @@
 'use client';
 
-import { Image, Instagram, Users } from 'lucide-react';
+import { Image as ImageIcon, Instagram, Users } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import Button from '@/components/ui/Button';
@@ -37,14 +38,14 @@ function SelectProfileContent() {
     }
 
     getTempProfileData(tempId)
-      .then((data: any) => {
+      .then((data) => {
         if (!data) {
           setError('Дані сесії не знайдено або застарілі');
           return;
         }
         setProfiles(data.profiles);
       })
-      .catch((err: any) => {
+      .catch((err) => {
         console.error('Failed to load profiles:', err);
         setError('Не вдалося завантажити профілі');
       })
@@ -145,13 +146,13 @@ function SelectProfileContent() {
             >
               <div className="p-6">
                 <div className="flex items-center mb-4">
-                  <img
+                  <Image
                     src={profile.profilePicture}
                     alt={profile.username}
+                    width={48}
+                    height={48}
                     className="w-12 h-12 rounded-full mr-4"
-                    onError={(e) => {
-                      e.currentTarget.src = '/api/placeholder/48/48';
-                    }}
+                    unoptimized
                   />
                   <div>
                     <h3 className="font-semibold text-gray-900">@{profile.username}</h3>
@@ -165,7 +166,7 @@ function SelectProfileContent() {
                     <span>{profile.followersCount.toLocaleString()} підписників</span>
                   </div>
                   <div className="flex items-center">
-                    <Image className="w-4 h-4 mr-1" />
+                    <ImageIcon className="w-4 h-4 mr-1" />
                     <span>{profile.mediaCount.toLocaleString()} постів</span>
                   </div>
                 </div>

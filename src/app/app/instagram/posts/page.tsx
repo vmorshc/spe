@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
-import InstagramHeader from '@/components/instagram/InstagramHeader';
 import PostsGrid from '@/components/instagram/PostsGrid';
 import ProfileHeader from '@/components/instagram/ProfileHeader';
+import AppHeader from '@/components/ui/AppHeader';
 import { getInstagramPosts, getInstagramProfile } from '@/lib/actions/instagram';
 
 export default async function InstagramPostsPage() {
@@ -25,7 +25,7 @@ export default async function InstagramPostsPage() {
 
     return (
       <div className="min-h-screen bg-white">
-        <InstagramHeader />
+        <AppHeader title="Instagram публікації" />
 
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="flex justify-center mb-8">
