@@ -127,7 +127,7 @@ export default function FAQ() {
           <p className="text-gray-600 mb-6">Наша команда підтримки готова допомогти вам 24/7</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="https://t.me/surepick_support"
+              href="https://t.me/pickly_support"
               className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
               target="_blank"
               rel="noopener noreferrer"
@@ -135,7 +135,7 @@ export default function FAQ() {
               💬 Telegram підтримка
             </a>
             <a
-              href="mailto:hello@surepick.com"
+              href="mailto:hello@pickly.com"
               className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
             >
               ✉️ Email підтримка

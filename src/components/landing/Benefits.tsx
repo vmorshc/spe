@@ -126,7 +126,7 @@ export default function Benefits() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-lg text-gray-600 max-w-2xl mx-auto"
           >
-            Чому вибирають Sure Pick Engine
+            Чому вибирають Pickly
           </motion.p>
         </div>
 

@@ -16,7 +16,7 @@ export interface SessionData {
  */
 const sessionOptions = {
   password: serverConfig.SESSION_SECRET,
-  cookieName: 'spe-session',
+  cookieName: 'pickly-session',
   cookieOptions: {
     secure: serverConfig.NODE_ENV === 'production',
     httpOnly: true,

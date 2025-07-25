@@ -18,9 +18,9 @@ export default function Footer() {
               className="flex items-center space-x-2 mb-4"
             >
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">SP</span>
+                <span className="text-white font-bold text-sm">P</span>
               </div>
-              <span className="text-xl font-bold">Sure Pick Engine</span>
+              <span className="text-xl font-bold">Pickly</span>
             </motion.div>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -79,20 +79,20 @@ export default function Footer() {
               className="space-y-3"
             >
               <a
-                href="https://t.me/surepick_support"
+                href="https://t.me/pickly_support"
                 className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <MessageCircle className="w-5 h-5" />
-                <span>@surepick_support</span>
+                <span>@pickly_support</span>
               </a>
               <a
-                href="mailto:hello@surepick.com"
+                href="mailto:hello@pickly.com"
                 className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors"
               >
                 <Mail className="w-5 h-5" />
-                <span>hello@surepick.com</span>
+                <span>hello@pickly.com</span>
               </a>
             </motion.div>
           </div>
@@ -134,7 +134,7 @@ export default function Footer() {
           className="border-t border-gray-800 pt-8 mt-12"
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-gray-400 text-sm">© 2024 Sure Pick Engine. Всі права захищені.</p>
+            <p className="text-gray-400 text-sm">© 2024 Pickly. Всі права захищені.</p>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
               <span>Зроблено з ❤️ в Україні</span>
               <span>•</span>

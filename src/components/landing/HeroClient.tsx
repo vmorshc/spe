@@ -130,10 +130,10 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
             <div className="bg-white rounded-lg p-6 shadow-sm">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold">SP</span>
+                  <span className="text-white font-bold">P</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Sure Pick Engine</h3>
+                  <h3 className="font-semibold text-gray-900">Pickly</h3>
                   <p className="text-sm text-gray-500">Чесний розіграш</p>
                 </div>
               </div>

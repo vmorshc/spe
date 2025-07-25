@@ -3,7 +3,7 @@
  * These values are hardcoded and safe to use anywhere (client or server)
  */
 export const sharedConfig = {
-  SITE_NAME: 'Sure Pick Engine',
+  SITE_NAME: 'Pickly',
   // OAuth configuration
   FACEBOOK_REDIRECT_PATH: '/auth/callback',
   // Add other hardcoded constants here as needed
