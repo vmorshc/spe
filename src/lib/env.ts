@@ -13,6 +13,11 @@ const serverEnvSchema = z.object({
   FACEBOOK_APP_ID: z.string().min(1, 'FACEBOOK_APP_ID is required'),
   FACEBOOK_APP_SECRET: z.string().min(1, 'FACEBOOK_APP_SECRET is required'),
   SESSION_SECRET: z.string().min(32, 'SESSION_SECRET must be at least 32 characters'),
+  // MailerLite configuration
+  MAILERLITE_API_KEY: z
+    .string()
+    .min(32, 'MAILERLITE_API_KEY is required and must be at least 32 characters'),
+  MAILERLITE_GROUP_ID: z.string().regex(/^\d+$/, 'MAILERLITE_GROUP_ID must be a numeric string'),
 });
 
 /**

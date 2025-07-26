@@ -20,6 +20,9 @@ function createServerConfig() {
     FACEBOOK_APP_SECRET: env.FACEBOOK_APP_SECRET,
     FACEBOOK_REDIRECT_URI: `${env.NEXT_PUBLIC_DOMAIN}${sharedConfig.FACEBOOK_REDIRECT_PATH}`,
     SESSION_SECRET: env.SESSION_SECRET,
+    // MailerLite configuration
+    MAILERLITE_API_KEY: env.MAILERLITE_API_KEY,
+    MAILERLITE_GROUP_ID: env.MAILERLITE_GROUP_ID,
     // Add other server-only configuration here
     // Example: JWT_SECRET: env.JWT_SECRET,
     // Example: SMTP_HOST: env.SMTP_HOST,
