@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { sharedConfig } from '@/config';
 import { useAuth } from '@/lib/contexts/AuthContext';
@@ -11,6 +13,18 @@ import UserProfile from '../auth/UserProfile';
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleNavigation = (sectionId: string) => {
+    if (pathname === '/') {
+      // On home page, scroll to section
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // On other pages, navigate to home with hash
+      router.push(`/#${sectionId}`);
+    }
+  };
 
   return (
     <motion.header
@@ -23,37 +37,38 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <motion.div whileHover={{ scale: 1.05 }} className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">SP</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900">{sharedConfig.SITE_NAME}</span>
-            </motion.div>
+            <Link href="/">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center space-x-2 cursor-pointer"
+              >
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">SP</span>
+                </div>
+                <span className="text-xl font-bold text-gray-900">{sharedConfig.SITE_NAME}</span>
+              </motion.div>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <button
               type="button"
-              onClick={() =>
-                document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })
-              }
+              onClick={() => handleNavigation('how-it-works')}
               className="text-gray-700 hover:text-blue-600 transition-colors"
             >
               Як це працює
             </button>
             <button
               type="button"
-              onClick={() =>
-                document.getElementById('benefits')?.scrollIntoView({ behavior: 'smooth' })
-              }
+              onClick={() => handleNavigation('benefits')}
               className="text-gray-700 hover:text-blue-600 transition-colors"
             >
               Переваги
             </button>
             <button
               type="button"
-              onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => handleNavigation('faq')}
               className="text-gray-700 hover:text-blue-600 transition-colors"
             >
               FAQ
@@ -95,7 +110,7 @@ export default function Header() {
                 className="text-gray-700 hover:text-blue-600 transition-colors py-2 text-left"
                 onClick={() => {
                   setIsMenuOpen(false);
-                  document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+                  handleNavigation('how-it-works');
                 }}
               >
                 Як це працює
@@ -105,7 +120,7 @@ export default function Header() {
                 className="text-gray-700 hover:text-blue-600 transition-colors py-2 text-left"
                 onClick={() => {
                   setIsMenuOpen(false);
-                  document.getElementById('benefits')?.scrollIntoView({ behavior: 'smooth' });
+                  handleNavigation('benefits');
                 }}
               >
                 Переваги
@@ -115,7 +130,7 @@ export default function Header() {
                 className="text-gray-700 hover:text-blue-600 transition-colors py-2 text-left"
                 onClick={() => {
                   setIsMenuOpen(false);
-                  document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
+                  handleNavigation('faq');
                 }}
               >
                 FAQ

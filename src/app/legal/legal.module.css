@@ -1,0 +1,136 @@
+.legalContent {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #374151;
+}
+
+.legalContent h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.legalContent h2 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: #111827;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  padding-left: 0;
+}
+
+.legalContent h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #374151;
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  padding-left: 1rem;
+}
+
+.legalContent h4 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #374151;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.legalContent p {
+  color: #374151;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  padding-left: 2rem;
+  text-align: justify;
+  text-indent: 2rem;
+  font-size: 1rem;
+}
+
+.legalContent ul,
+.legalContent ol {
+  margin-bottom: 1.5rem;
+  padding-left: 4rem;
+  margin-left: 1rem;
+}
+
+.legalContent ul {
+  list-style-type: disc;
+}
+
+.legalContent ol {
+  list-style-type: decimal;
+}
+
+.legalContent li {
+  margin-bottom: 0.75rem;
+  color: #374151;
+  line-height: 1.7;
+  padding-left: 0.5rem;
+  font-size: 1rem;
+}
+
+.legalContent ul ul,
+.legalContent ol ol,
+.legalContent ul ol,
+.legalContent ol ul {
+  margin-top: 0.75rem;
+  padding-left: 2rem;
+}
+
+.legalContent strong {
+  font-weight: 600;
+  color: #111827;
+}
+
+.legalContent em {
+  font-style: italic;
+  color: #4b5563;
+}
+
+.legalContent a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.legalContent a:hover {
+  color: #1d4ed8;
+}
+
+.legalContent blockquote {
+  border-left: 4px solid #3b82f6;
+  padding-left: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background-color: #f9fafb;
+  margin-bottom: 1.5rem;
+  margin-left: 1.5rem;
+}
+
+.legalContent hr {
+  border-color: #e5e7eb;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.legalContent table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  margin-left: 1.5rem;
+}
+
+.legalContent table th,
+.legalContent table td {
+  border: 1px solid #d1d5db;
+  padding: 0.75rem 1.5rem;
+}
+
+.legalContent table th {
+  background-color: #f3f4f6;
+  font-weight: 600;
+}

@@ -1,7 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Instagram, Linkedin, Mail, MessageCircle } from 'lucide-react';
+import { Facebook, Instagram, Mail, MessageCircle } from 'lucide-react';
+import { sharedConfig } from '@/config';
 
 export default function Footer() {
   return (
@@ -42,7 +43,7 @@ export default function Footer() {
               className="flex space-x-4"
             >
               <a
-                href="https://instagram.com"
+                href={sharedConfig.INSTAGRAM_URL}
                 className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -50,12 +51,12 @@ export default function Footer() {
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href="https://linkedin.com"
+                href={sharedConfig.FACEBOOK_PAGE_URL}
                 className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Linkedin className="w-5 h-5" />
+                <Facebook className="w-5 h-5" />
               </a>
             </motion.div>
           </div>
@@ -88,11 +89,11 @@ export default function Footer() {
                 <span>@pickly_support</span>
               </a>
               <a
-                href="mailto:hello@pickly.com"
+                href={`mailto:${sharedConfig.SUPPORT_EMAIL}`}
                 className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors"
               >
                 <Mail className="w-5 h-5" />
-                <span>hello@pickly.com</span>
+                <span>{sharedConfig.SUPPORT_EMAIL}</span>
               </a>
             </motion.div>
           </div>
@@ -118,8 +119,11 @@ export default function Footer() {
               <a href="/privacy" className="block text-gray-300 hover:text-white transition-colors">
                 Політика конфіденційності
               </a>
-              <a href="/terms" className="block text-gray-300 hover:text-white transition-colors">
-                Публічна оферта
+              <a
+                href="/legal/terms"
+                className="block text-gray-300 hover:text-white transition-colors"
+              >
+                Угода користувача
               </a>
             </motion.div>
           </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { CheckCircle, Play } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { incrementLandingVisits } from '@/lib/actions/counters';
@@ -107,7 +107,7 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
             >
               Почати розіграш
             </Button>
-            <Button
+            {/* <Button
               size="lg"
               variant="outline"
               className="text-lg px-8 py-4 flex items-center justify-center space-x-2"
@@ -115,7 +115,7 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
             >
               <Play className="w-5 h-5" />
               <span>Дивитись демо</span>
-            </Button>
+            </Button> */}
           </motion.div>
         </motion.div>
 

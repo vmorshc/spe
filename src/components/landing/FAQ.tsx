@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
+import { sharedConfig } from '@/config';
 import Section from '../ui/Section';
 
 const faqData = [
@@ -135,7 +136,7 @@ export default function FAQ() {
               💬 Telegram підтримка
             </a>
             <a
-              href="mailto:hello@pickly.com"
+              href={`mailto:${sharedConfig.SUPPORT_EMAIL}`}
               className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
             >
               ✉️ Email підтримка

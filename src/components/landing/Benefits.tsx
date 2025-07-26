@@ -42,7 +42,7 @@ const benefits = [
   {
     icon: Globe,
     title: 'Українська локалізація',
-    description: 'Усе інтерфейсом і підтримкою рідною мовою.',
+    description: 'Інтерфейс та підтримка рідною мовою.',
     color: 'bg-yellow-100 text-yellow-600',
   },
   {
