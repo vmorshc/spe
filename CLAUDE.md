@@ -17,7 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Sure Pick Engine (SPE) is a Ukrainian-language web application for conducting transparent and fair Instagram giveaways. The application enables business account owners to automatically select random winners from Instagram post comments using a cryptographically secure process.
+Pickly (SPE) is a Ukrainian-language web application for conducting transparent and fair Instagram giveaways. The application enables business account owners to automatically select random winners from Instagram post comments using a cryptographically secure process.
 
 ### Core Business Logic
 1. **Instagram Authentication** - Secure OAuth flow for Instagram Business accounts

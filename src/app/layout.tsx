@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'uk_UA',
-    url: 'https://surepick.com',
+    url: 'https://pickly.com.ua',
     siteName: 'Pickly',
     title: 'Pickly - Чесні розіграші в Instagram',
     description:

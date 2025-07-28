@@ -1,7 +1,7 @@
 # Facebook/Instagram OAuth Implementation - Project Context
 
 ## Overview
-This document describes the complete implementation of Facebook/Instagram OAuth authentication for the Sure Pick Engine (SPE) project - a Ukrainian-language web application for conducting transparent Instagram giveaways. The implementation allows users to authenticate with their Instagram Business accounts through Facebook OAuth.
+This document describes the complete implementation of Facebook/Instagram OAuth authentication for the Pickly (SPE) project - a Ukrainian-language web application for conducting transparent Instagram giveaways. The implementation allows users to authenticate with their Instagram Business accounts through Facebook OAuth.
 
 The OAuth system was implemented in stages:
 1. Basic OAuth flow with state validation

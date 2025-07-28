@@ -111,8 +111,8 @@ function SelectProfileContent() {
             <h2 className="text-xl font-semibold">Немає бізнес-акаунтів Instagram</h2>
           </div>
           <p className="text-gray-600 mb-6">
-            Щоб використовувати Sure Pick Engine, вам потрібен бізнес-акаунт Instagram, підключений
-            до сторінки Facebook.
+            Щоб використовувати Pickly, вам потрібен бізнес-акаунт Instagram, підключений до
+            сторінки Facebook.
           </p>
           <div className="text-sm text-gray-500 mb-6">
             <p className="mb-2">Для налаштування:</p>
@@ -134,7 +134,7 @@ function SelectProfileContent() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Оберіть Instagram профіль</h1>
           <p className="text-gray-600">
-            Виберіть акаунт Instagram, який хочете використовувати з Sure Pick Engine
+            Виберіть акаунт Instagram, який хочете використовувати з Pickly
           </p>
         </div>
 

@@ -116,7 +116,10 @@ export default function Footer() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="space-y-3"
             >
-              <a href="/privacy" className="block text-gray-300 hover:text-white transition-colors">
+              <a
+                href="/legal/privacy-policy"
+                className="block text-gray-300 hover:text-white transition-colors"
+              >
                 Політика конфіденційності
               </a>
               <a
