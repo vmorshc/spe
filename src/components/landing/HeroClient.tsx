@@ -10,9 +10,13 @@ import Section from '../ui/Section';
 
 interface HeroClientProps {
   initialVisitCount: number;
+  instagramMvpEnabled?: boolean;
 }
 
-export default function HeroClient({ initialVisitCount }: HeroClientProps) {
+export default function HeroClient({
+  initialVisitCount,
+  instagramMvpEnabled = false,
+}: HeroClientProps) {
   const [visitCount, setVisitCount] = useState<number>(initialVisitCount);
   const [isIncrementing, setIsIncrementing] = useState<boolean>(false);
   const router = useRouter();
@@ -93,30 +97,32 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
           </motion.div>
 
           {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-          >
-            <Button
-              size="lg"
-              variant="primary"
-              className="text-lg px-8 py-4"
-              onClick={handleStartGiveaway}
+          {instagramMvpEnabled && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
             >
-              Почати розіграш
-            </Button>
-            {/* <Button
-              size="lg"
-              variant="outline"
-              className="text-lg px-8 py-4 flex items-center justify-center space-x-2"
-              onClick={() => console.log('Watch demo')}
-            >
-              <Play className="w-5 h-5" />
-              <span>Дивитись демо</span>
-            </Button> */}
-          </motion.div>
+              <Button
+                size="lg"
+                variant="primary"
+                className="text-lg px-8 py-4"
+                onClick={handleStartGiveaway}
+              >
+                Почати розіграш
+              </Button>
+              {/* <Button
+                size="lg"
+                variant="outline"
+                className="text-lg px-8 py-4 flex items-center justify-center space-x-2"
+                onClick={() => console.log('Watch demo')}
+              >
+                <Play className="w-5 h-5" />
+                <span>Дивитись демо</span>
+              </Button> */}
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Visual */}

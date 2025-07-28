@@ -10,7 +10,11 @@ import { useAuth } from '@/lib/contexts/AuthContext';
 import LoginButton from '../auth/LoginButton';
 import UserProfile from '../auth/UserProfile';
 
-export default function Header() {
+interface HeaderProps {
+  instagramMvpEnabled?: boolean;
+}
+
+export default function Header({ instagramMvpEnabled = false }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
@@ -82,7 +86,7 @@ export default function Header() {
             ) : isAuthenticated ? (
               <UserProfile />
             ) : (
-              <LoginButton />
+              <LoginButton disabled={!instagramMvpEnabled} />
             )}
           </div>
 
@@ -142,7 +146,7 @@ export default function Header() {
               ) : isAuthenticated ? (
                 <UserProfile className="w-full" />
               ) : (
-                <LoginButton className="w-full justify-center" />
+                <LoginButton className="w-full justify-center" disabled={!instagramMvpEnabled} />
               )}
             </nav>
           </motion.div>

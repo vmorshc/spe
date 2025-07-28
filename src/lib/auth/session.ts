@@ -9,6 +9,7 @@ export interface SessionData {
   sessionId?: string; // Only store the Redis session ID
   oauthState?: string; // Temporary, only during OAuth flow
   redirectUrl?: string; // Redirect URL after successful authentication
+  featureFlags?: Record<string, boolean>; // Feature flags for this session
 }
 
 /**

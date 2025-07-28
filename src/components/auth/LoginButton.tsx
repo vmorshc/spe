@@ -11,6 +11,7 @@ interface LoginButtonProps {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   redirectUrl?: string;
+  disabled?: boolean;
 }
 
 export default function LoginButton({
@@ -18,6 +19,7 @@ export default function LoginButton({
   variant = 'primary',
   size = 'md',
   redirectUrl,
+  disabled = false,
 }: LoginButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   useAuth();
@@ -32,6 +34,20 @@ export default function LoginButton({
       setIsLoading(false);
     }
   };
+
+  if (disabled) {
+    return (
+      <button
+        type="button"
+        className={`flex items-center space-x-2 text-gray-400 cursor-not-allowed px-4 py-2 rounded-lg ${className}`}
+        disabled
+      >
+        <Instagram className="w-4 h-4" />
+        <span>Увійти через Instagram</span>
+        <span className="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Незабаром</span>
+      </button>
+    );
+  }
 
   return (
     <Button
