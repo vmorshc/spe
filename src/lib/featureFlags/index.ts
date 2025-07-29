@@ -1,17 +1,22 @@
-import { getSession } from '@/lib/auth/session';
+import {
+  getFeatureFlagsFromSession,
+  resetFeatureFlagsInSession,
+  setFeatureFlagInSession,
+  setFeatureFlagsInSession,
+} from '@/lib/auth/session';
 import { type FeatureFlagName, getDefaultFeatureFlags } from './constants';
 
 /**
  * Get all feature flags from session, with defaults for missing flags
  */
 export async function getFeatureFlags(): Promise<Record<string, boolean>> {
-  const session = await getSession();
+  const sessionFlags = await getFeatureFlagsFromSession();
   const defaultFlags = getDefaultFeatureFlags();
 
   // Merge session flags with defaults, prioritizing session values
   return {
     ...defaultFlags,
-    ...(session.featureFlags || {}),
+    ...(sessionFlags || {}),
   };
 }
 
@@ -27,15 +32,7 @@ export async function getFeatureFlag(flagName: FeatureFlagName): Promise<boolean
  * Set a specific feature flag value
  */
 export async function setFeatureFlag(flagName: FeatureFlagName, value: boolean): Promise<void> {
-  const session = await getSession();
-
-  // Initialize featureFlags object if it doesn't exist
-  if (!session.featureFlags) {
-    session.featureFlags = {};
-  }
-
-  session.featureFlags[flagName] = value;
-  await session.save();
+  await setFeatureFlagInSession(flagName, value);
 }
 
 /**
@@ -52,9 +49,8 @@ export async function toggleFeatureFlag(flagName: FeatureFlagName): Promise<bool
  * Reset all feature flags to their default values
  */
 export async function resetFeatureFlags(): Promise<void> {
-  const session = await getSession();
-  session.featureFlags = getDefaultFeatureFlags();
-  await session.save();
+  const defaultFlags = getDefaultFeatureFlags();
+  await resetFeatureFlagsInSession(defaultFlags);
 }
 
 /**
@@ -63,19 +59,5 @@ export async function resetFeatureFlags(): Promise<void> {
 export async function setFeatureFlags(
   flags: Partial<Record<FeatureFlagName, boolean>>
 ): Promise<void> {
-  const session = await getSession();
-
-  // Initialize featureFlags object if it doesn't exist
-  if (!session.featureFlags) {
-    session.featureFlags = {};
-  }
-
-  // Update each flag
-  Object.entries(flags).forEach(([flagName, value]) => {
-    if (value !== undefined) {
-      session.featureFlags![flagName] = value;
-    }
-  });
-
-  await session.save();
+  await setFeatureFlagsInSession(flags);
 }

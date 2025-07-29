@@ -113,3 +113,60 @@ export async function clearRedirectUrl(): Promise<void> {
   session.redirectUrl = undefined;
   await session.save();
 }
+
+/**
+ * Get feature flags from session
+ */
+export async function getFeatureFlagsFromSession(): Promise<Record<string, boolean> | undefined> {
+  const session = await getSession();
+  return session.featureFlags;
+}
+
+/**
+ * Set a specific feature flag in session
+ */
+export async function setFeatureFlagInSession(flagName: string, value: boolean): Promise<void> {
+  const session = await getSession();
+
+  // Initialize featureFlags object if it doesn't exist
+  if (!session.featureFlags) {
+    session.featureFlags = {};
+  }
+
+  session.featureFlags[flagName] = value;
+  await session.save();
+}
+
+/**
+ * Set multiple feature flags in session
+ */
+export async function setFeatureFlagsInSession(
+  flags: Partial<Record<string, boolean>>
+): Promise<void> {
+  const session = await getSession();
+
+  // Initialize featureFlags object if it doesn't exist
+  if (!session.featureFlags) {
+    session.featureFlags = {};
+  }
+
+  // Update each flag
+  Object.entries(flags).forEach(([flagName, value]) => {
+    if (value !== undefined) {
+      session.featureFlags![flagName] = value;
+    }
+  });
+
+  await session.save();
+}
+
+/**
+ * Reset feature flags to given defaults in session
+ */
+export async function resetFeatureFlagsInSession(
+  defaultFlags: Record<string, boolean>
+): Promise<void> {
+  const session = await getSession();
+  session.featureFlags = defaultFlags;
+  await session.save();
+}
