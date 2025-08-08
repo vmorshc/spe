@@ -128,6 +128,12 @@ export default function Footer() {
               >
                 Угода користувача
               </a>
+              <a
+                href="/legal/contact"
+                className="block text-gray-300 hover:text-white transition-colors"
+              >
+                Контакти
+              </a>
             </motion.div>
           </div>
         </div>
@@ -141,7 +147,9 @@ export default function Footer() {
           className="border-t border-gray-800 pt-8 mt-12"
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-gray-400 text-sm">© 2025 Pickly. Всі права захищені.</p>
+            <p className="text-gray-400 text-sm">
+              © {new Date().getFullYear()} Морщ Віктор Олександрович
+            </p>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
               <span>Зроблено з ❤️ в Україні</span>
               <span>•</span>
