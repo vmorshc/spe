@@ -43,7 +43,7 @@ export default function ContactPage() {
         питання щодо оплати, співпраця.
       </p>
       <address>
-        <p>Офіційна назва: ФОП Морщ Віктор Олександрович</p>
+        <p>Офіційна назва: ФІЗИЧНА ОСОБА - ПІДПРИЄМЕЦЬ Морщ Віктор Олександрович</p>
         <p>
           Електронна пошта: <a href="mailto:support@pickly.com.ua">support@pickly.com.ua</a>
         </p>

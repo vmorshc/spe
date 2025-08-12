@@ -148,7 +148,7 @@ export default function Footer() {
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-400 text-sm">
-              © {new Date().getFullYear()} Морщ Віктор Олександрович
+              © {new Date().getFullYear()} ФІЗИЧНА ОСОБА - ПІДПРИЄМЕЦЬ Морщ Віктор Олександрович
             </p>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
               <span>Зроблено з ❤️ в Україні</span>
