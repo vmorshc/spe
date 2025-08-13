@@ -16,6 +16,7 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
+		"@next/third-parties": "^15.4.6",
 		"@types/react-window": "^1.8.8",
 		"date-fns": "^4.1.0",
 		"framer-motion": "^12.23.3",

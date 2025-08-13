@@ -17,6 +17,7 @@ function createClientConfig() {
     // Domain configuration
     DOMAIN: env.NEXT_PUBLIC_DOMAIN,
     NODE_ENV: env.NEXT_PUBLIC_NODE_ENV,
+    GA_MEASUREMENT_ID: env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
   } as const;
 }
 

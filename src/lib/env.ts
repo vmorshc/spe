@@ -29,6 +29,10 @@ const clientEnvSchema = z.object({
   // Example: NEXT_PUBLIC_API_URL: z.string().url().optional(),
   NEXT_PUBLIC_NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   NEXT_PUBLIC_DOMAIN: z.string().url().default('http://localhost:3001'),
+  NEXT_PUBLIC_GA_MEASUREMENT_ID: z
+    .string()
+    .regex(/^G-[A-Z0-9]+$/, 'Invalid GA4 Measurement ID')
+    .optional(),
 });
 
 /**

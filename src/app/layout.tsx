@@ -1,6 +1,8 @@
+import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import { clientConfig } from '@/config';
 import { AuthProvider } from '@/lib/contexts/AuthContext';
 
 const geistSans = Geist({
@@ -54,6 +56,9 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>{children}</AuthProvider>
       </body>
+      {clientConfig.GA_MEASUREMENT_ID ? (
+        <GoogleAnalytics gaId={clientConfig.GA_MEASUREMENT_ID} />
+      ) : null}
     </html>
   );
 }
