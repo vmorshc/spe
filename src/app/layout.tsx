@@ -20,6 +20,10 @@ export const metadata: Metadata = {
   keywords: 'розіграш, Instagram, переможець, чесний, прозорий, API, crypto-safe',
   authors: [{ name: 'Pickly' }],
   creator: 'Pickly',
+  icons: {
+    icon: '/icon.png',
+    apple: '/apple-icon.png',
+  },
   openGraph: {
     type: 'website',
     locale: 'uk_UA',
