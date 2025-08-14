@@ -115,7 +115,7 @@ export default function FuturePlans() {
   );
 
   return (
-    <Section id="future-plans" background="blue">
+    <Section id="waitlist" background="blue">
       <div className="text-center mb-16">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -162,19 +162,19 @@ export default function FuturePlans() {
 
       {/* Call to Action */}
       <motion.div
+        id="waitlist-form"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8, delay: 0.6 }}
-        className="mt-16 text-center"
+        className="mt-16 text-center scroll-mt-24"
       >
         <div className="bg-white rounded-xl p-8 shadow-sm">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">
-            Хочете першими дізнатися про нові функції?
+          <h3 tabIndex={-1} className="text-2xl font-bold text-gray-900 mb-4">
+            Приєднайтесь до вейтліста Pickly
           </h3>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Підписуйтесь на наші оновлення, щоб отримувати повідомлення про нові можливості та
-            покращення сервісу.
+            Залиште email — повідомимо про запуск і великі оновлення. Жодного спаму.
           </p>
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -201,11 +201,11 @@ export default function FuturePlans() {
                   required: 'Будь ласка, введіть email адресу',
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: 'Будь ласка, введіть дійсну email адресу',
+                    message: 'Вкажіть коректний email',
                   },
                 })}
                 type="email"
-                placeholder="Введіть вашу email адресу"
+                placeholder="Ваша робоча email-адреса"
                 className={`px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent flex-1 ${
                   errors.email ? 'border-red-300' : 'border-gray-300'
                 }`}
@@ -216,7 +216,7 @@ export default function FuturePlans() {
                 disabled={isPending || isSubmitting}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors font-medium"
               >
-                {isPending || isSubmitting ? 'Підписка...' : 'Підписатися'}
+                {isPending || isSubmitting ? 'Підписка...' : 'Додати до вейтліста'}
               </button>
             </div>
 
@@ -224,6 +224,11 @@ export default function FuturePlans() {
             {errors.email && (
               <div className="mt-2 text-sm text-red-600">{errors.email.message}</div>
             )}
+
+            {/* Footnote */}
+            <div className="mt-2 text-xs text-gray-500">
+              Надсилаємо лише важливе. В кожному листі є «Відписатися».
+            </div>
 
             {/* Status message */}
             {message && (

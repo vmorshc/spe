@@ -45,6 +45,32 @@ export default function HeroClient({
     router.push('/app/instagram/posts');
   };
 
+  const handleWaitlistScroll = () => {
+    try {
+      const form = document.getElementById('waitlist-form');
+      if (form && 'scrollIntoView' in form) {
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // Focus management after scroll
+      window.setTimeout(() => {
+        const emailInput = document.querySelector(
+          '#waitlist-form input[name="email"]'
+        ) as HTMLInputElement | null;
+        if (emailInput) {
+          emailInput.focus();
+          return;
+        }
+        const heading = document.querySelector('#waitlist h3') as HTMLElement | null;
+        if (heading) {
+          heading.focus?.();
+        }
+      }, 400);
+    } catch {
+      // no-op
+    }
+  };
+
   return (
     <Section className="pt-8 lg:pt-16" background="white">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -97,13 +123,13 @@ export default function HeroClient({
           </motion.div>
 
           {/* CTA Buttons */}
-          {instagramMvpEnabled && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-            >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+          >
+            {instagramMvpEnabled ? (
               <Button
                 size="lg"
                 variant="primary"
@@ -112,17 +138,17 @@ export default function HeroClient({
               >
                 Почати розіграш
               </Button>
-              {/* <Button
+            ) : (
+              <Button
                 size="lg"
-                variant="outline"
-                className="text-lg px-8 py-4 flex items-center justify-center space-x-2"
-                onClick={() => console.log('Watch demo')}
+                variant="primary"
+                className="text-lg px-8 py-4"
+                onClick={handleWaitlistScroll}
               >
-                <Play className="w-5 h-5" />
-                <span>Дивитись демо</span>
-              </Button> */}
-            </motion.div>
-          )}
+                Долучитись до waitlist
+              </Button>
+            )}
+          </motion.div>
         </motion.div>
 
         {/* Visual */}
