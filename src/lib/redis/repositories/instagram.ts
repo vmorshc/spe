@@ -6,7 +6,6 @@ import { BaseRedisRepository } from './base';
  */
 export class InstagramRepository extends BaseRedisRepository {
   private readonly CACHE_TTL = 300; // 5 minutes in seconds
-  private readonly COMMENTS_CACHE_TTL = 900; // 15 minutes for comments
 
   constructor() {
     super('instagram');
@@ -21,7 +20,7 @@ export class InstagramRepository extends BaseRedisRepository {
     }
 
     try {
-      const key = this.getKey(`instagram:profile:${userId}`);
+      const key = this.getKey(`profile:${userId}`);
       const profileData = await this.client.get(key);
 
       if (!profileData) {
@@ -44,7 +43,7 @@ export class InstagramRepository extends BaseRedisRepository {
     }
 
     try {
-      const key = this.getKey(`instagram:profile:${userId}`);
+      const key = this.getKey(`profile:${userId}`);
       await this.client.setex(key, this.CACHE_TTL, JSON.stringify(profile));
       return true;
     } catch (error) {
@@ -62,7 +61,7 @@ export class InstagramRepository extends BaseRedisRepository {
     }
 
     try {
-      const key = this.getKey(`instagram:posts:${userId}:${cursor || 'initial'}`);
+      const key = this.getKey(`posts:${userId}:${cursor || 'initial'}`);
       const postsData = await this.client.get(key);
 
       if (!postsData) {
@@ -85,7 +84,7 @@ export class InstagramRepository extends BaseRedisRepository {
     }
 
     try {
-      const key = this.getKey(`instagram:posts:${userId}:${cursor || 'initial'}`);
+      const key = this.getKey(`posts:${userId}:${cursor || 'initial'}`);
       await this.client.setex(key, this.CACHE_TTL, JSON.stringify(posts));
       return true;
     } catch (error) {
@@ -110,7 +109,7 @@ export class InstagramRepository extends BaseRedisRepository {
     }
 
     try {
-      const key = this.getKey(`instagram:posts:${userId}:${cacheKey}`);
+      const key = this.getKey(`posts:${userId}:${cacheKey}`);
       const postsData = await this.client.get(key);
 
       if (!postsData) {
@@ -145,7 +144,7 @@ export class InstagramRepository extends BaseRedisRepository {
     }
 
     try {
-      const key = this.getKey(`instagram:posts:${userId}:${cacheKey}`);
+      const key = this.getKey(`posts:${userId}:${cacheKey}`);
       await this.client.setex(key, this.CACHE_TTL, JSON.stringify(data));
       return true;
     } catch (error) {
@@ -164,8 +163,8 @@ export class InstagramRepository extends BaseRedisRepository {
 
     try {
       // Get all Instagram keys for this user
-      const profileKey = this.getKey(`instagram:profile:${userId}`);
-      const postsPattern = this.getKey(`instagram:posts:${userId}:*`);
+      const profileKey = this.getKey(`profile:${userId}`);
+      const postsPattern = this.getKey(`posts:${userId}:*`);
 
       // Delete profile key
       await this.client.del(profileKey);
@@ -188,7 +187,7 @@ export class InstagramRepository extends BaseRedisRepository {
    * Check if profile exists in cache
    */
   async hasProfile(userId: string): Promise<boolean> {
-    const key = this.getKey(`instagram:profile:${userId}`);
+    const key = this.getKey(`profile:${userId}`);
     return await this.exists(key);
   }
 
@@ -196,7 +195,7 @@ export class InstagramRepository extends BaseRedisRepository {
    * Check if posts exist in cache
    */
   async hasPosts(userId: string, cursor?: string): Promise<boolean> {
-    const key = this.getKey(`instagram:posts:${userId}:${cursor || 'initial'}`);
+    const key = this.getKey(`posts:${userId}:${cursor || 'initial'}`);
     return await this.exists(key);
   }
 
@@ -209,7 +208,7 @@ export class InstagramRepository extends BaseRedisRepository {
     }
 
     try {
-      const key = this.getKey(`instagram:post:${postId}`);
+      const key = this.getKey(`post:${postId}`);
       const postData = await this.client.get(key);
 
       if (!postData) {
@@ -232,7 +231,7 @@ export class InstagramRepository extends BaseRedisRepository {
     }
 
     try {
-      const key = this.getKey(`instagram:post:${postId}`);
+      const key = this.getKey(`post:${postId}`);
       await this.client.setex(key, this.CACHE_TTL, JSON.stringify(post));
       return true;
     } catch (error) {
@@ -242,21 +241,17 @@ export class InstagramRepository extends BaseRedisRepository {
   }
 
   /**
-   * Get cached comments for a post
+   * Get cached last comments for a post
    */
-  async getComments(
-    postId: string,
-    cursor?: string
-  ): Promise<{
+  async getLastPostCommentsCache(postId: string): Promise<{
     comments: InstagramComment[];
-    nextCursor: string | null;
   } | null> {
     if (!this.client) {
       return null;
     }
 
     try {
-      const key = this.getKey(`instagram:comments:${postId}:${cursor || 'initial'}`);
+      const key = this.getKey(`last_comments:${postId}`);
       const commentsData = await this.client.get(key);
 
       if (!commentsData) {
@@ -265,7 +260,6 @@ export class InstagramRepository extends BaseRedisRepository {
 
       return JSON.parse(commentsData) as {
         comments: InstagramComment[];
-        nextCursor: string | null;
       };
     } catch (error) {
       console.error('Failed to get comments from cache:', error);
@@ -274,67 +268,22 @@ export class InstagramRepository extends BaseRedisRepository {
   }
 
   /**
-   * Set comments cache
+   * Set last comments cache
    */
-  async setComments(
+  async setLastPostCommentsCache(
     postId: string,
-    cursor: string | null,
-    data: {
-      comments: InstagramComment[];
-      nextCursor: string | null;
-    }
+    data: { comments: InstagramComment[] }
   ): Promise<boolean> {
     if (!this.client) {
       return false;
     }
 
     try {
-      const key = this.getKey(`instagram:comments:${postId}:${cursor || 'initial'}`);
-      await this.client.setex(key, this.COMMENTS_CACHE_TTL, JSON.stringify(data));
+      const key = this.getKey(`last_comments:${postId}`);
+      await this.client.setex(key, this.CACHE_TTL, JSON.stringify(data));
       return true;
     } catch (error) {
       console.error('Failed to set comments cache:', error);
-      return false;
-    }
-  }
-
-  /**
-   * Get cached comments metadata (total count, etc.)
-   */
-  async getCommentsMetadata(postId: string): Promise<{ totalCount: number } | null> {
-    if (!this.client) {
-      return null;
-    }
-
-    try {
-      const key = this.getKey(`instagram:comments:meta:${postId}`);
-      const metaData = await this.client.get(key);
-
-      if (!metaData) {
-        return null;
-      }
-
-      return JSON.parse(metaData) as { totalCount: number };
-    } catch (error) {
-      console.error('Failed to get comments metadata from cache:', error);
-      return null;
-    }
-  }
-
-  /**
-   * Set comments metadata cache
-   */
-  async setCommentsMetadata(postId: string, metadata: { totalCount: number }): Promise<boolean> {
-    if (!this.client) {
-      return false;
-    }
-
-    try {
-      const key = this.getKey(`instagram:comments:meta:${postId}`);
-      await this.client.setex(key, this.COMMENTS_CACHE_TTL, JSON.stringify(metadata));
-      return true;
-    } catch (error) {
-      console.error('Failed to set comments metadata cache:', error);
       return false;
     }
   }
@@ -349,21 +298,10 @@ export class InstagramRepository extends BaseRedisRepository {
 
     try {
       // Get all cache keys for this post
-      const postKey = this.getKey(`instagram:post:${postId}`);
-      const commentsPattern = this.getKey(`instagram:comments:${postId}:*`);
-      const metaKey = this.getKey(`instagram:comments:meta:${postId}`);
+      const postKey = this.getKey(`post:${postId}`);
 
       // Delete post details key
       await this.client.del(postKey);
-
-      // Delete metadata key
-      await this.client.del(metaKey);
-
-      // Find and delete all comments keys for this post
-      const commentsKeys = await this.client.keys(commentsPattern);
-      if (commentsKeys.length > 0) {
-        await this.client.del(...commentsKeys);
-      }
 
       console.log(`Invalidated cache for post ${postId}`);
       return true;
@@ -371,52 +309,6 @@ export class InstagramRepository extends BaseRedisRepository {
       console.error('Failed to invalidate post cache:', error);
       return false;
     }
-  }
-
-  /**
-   * Invalidate comments cache for a specific post
-   */
-  async invalidateCommentsCache(postId: string): Promise<boolean> {
-    if (!this.client) {
-      return false;
-    }
-
-    try {
-      // Get all comments cache keys for this post
-      const commentsPattern = this.getKey(`instagram:comments:${postId}:*`);
-      const metaKey = this.getKey(`instagram:comments:meta:${postId}`);
-
-      // Delete metadata key
-      await this.client.del(metaKey);
-
-      // Find and delete all comments keys for this post
-      const commentsKeys = await this.client.keys(commentsPattern);
-      if (commentsKeys.length > 0) {
-        await this.client.del(...commentsKeys);
-      }
-
-      console.log(`Invalidated comments cache for post ${postId}`);
-      return true;
-    } catch (error) {
-      console.error('Failed to invalidate comments cache:', error);
-      return false;
-    }
-  }
-
-  /**
-   * Check if post details exist in cache
-   */
-  async hasPostDetails(postId: string): Promise<boolean> {
-    const key = this.getKey(`instagram:post:${postId}`);
-    return await this.exists(key);
-  }
-
-  /**
-   * Check if comments exist in cache
-   */
-  async hasComments(postId: string, cursor?: string): Promise<boolean> {
-    const key = this.getKey(`instagram:comments:${postId}:${cursor || 'initial'}`);
-    return await this.exists(key);
   }
 }
 

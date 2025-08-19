@@ -10,9 +10,8 @@ import type {
 import { instagramRepository } from '@/lib/redis/repositories/instagram';
 import { getCurrentUser, initiateOAuthLogin } from './auth';
 
-export interface InstagramCommentsResult {
+export interface InstagramPostLastComments {
   comments: InstagramComment[];
-  nextCursor: string | null;
 }
 
 /**
@@ -193,10 +192,10 @@ export async function getPostDetailsAction(postId: string): Promise<InstagramMed
 /**
  * Get paginated comments with cursor support
  */
-export async function getCommentsAction(
+export async function getLastCommentsAction(
   postId: string,
-  cursor?: string
-): Promise<InstagramCommentsResult> {
+  cache: boolean = true
+): Promise<InstagramPostLastComments> {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -204,111 +203,29 @@ export async function getCommentsAction(
     }
 
     // Check cache first
-    const cachedComments = await instagramRepository.getComments(postId, cursor);
-    if (cachedComments) {
-      console.log('Comments cache hit');
-      return cachedComments;
+    if (cache) {
+      const cachedComments = await instagramRepository.getLastPostCommentsCache(postId);
+      if (cachedComments) {
+        console.log('Comments cache hit');
+        return cachedComments;
+      }
     }
 
     // Fetch from API
-    const commentsData = await facebookClient.getPostComments(postId, user.accessToken, cursor);
-
-    const nextCursor = commentsData.paging?.cursors?.after || null;
+    const commentsData = await facebookClient.getPostComments(postId, user.accessToken);
 
     const result = {
       comments: commentsData.data,
-      nextCursor: nextCursor,
     };
 
     // Cache the result
-    await instagramRepository.setComments(postId, cursor || null, result);
+    await instagramRepository.setLastPostCommentsCache(postId, result);
     console.log(`Comments fetched and cached: ${result.comments.length} comments`);
 
     return result;
   } catch (error) {
     console.error('Failed to get comments:', error);
     throw new Error('Failed to fetch comments');
-  }
-}
-
-/**
- * Refresh comments (clear cache)
- */
-export async function refreshCommentsAction(postId: string): Promise<InstagramCommentsResult> {
-  try {
-    const user = await getCurrentUser();
-    if (!user) {
-      throw new Error('User not authenticated');
-    }
-
-    // Invalidate comments cache
-    await instagramRepository.invalidateCommentsCache(postId);
-
-    // Fetch fresh data
-    return await getCommentsAction(postId);
-  } catch (error) {
-    console.error('Failed to refresh comments:', error);
-    throw new Error('Failed to refresh comments');
-  }
-}
-
-/**
- * Export comments to CSV
- */
-export async function exportCsvAction(postId: string): Promise<Response> {
-  try {
-    const user = await getCurrentUser();
-    if (!user) {
-      throw new Error('User not authenticated');
-    }
-
-    const allComments: InstagramComment[] = [];
-    let cursor: string | null = null;
-    let pageCount = 0;
-    const maxPages = 100; // Limit to prevent infinite loops
-
-    // Fetch all comments
-    while (pageCount < maxPages) {
-      const commentsData = await getCommentsAction(postId, cursor || undefined);
-      const comments = commentsData.comments;
-      if (comments.length !== 0) {
-        allComments.push(...comments);
-      } else {
-        break;
-      }
-      if (commentsData.nextCursor) {
-        cursor = commentsData.nextCursor;
-      } else {
-        break;
-      }
-      pageCount++;
-    }
-
-    if (allComments.length === 0) {
-      throw new Error('No comments found to export');
-    }
-
-    // Create CSV content
-    const csvHeader = 'id,username,text,created_time,like_count\n';
-    const csvRows = allComments
-      .map((comment) => {
-        const escapedText = comment.text.replace(/"/g, '""');
-        return `"${comment.id}","${comment.username}","${escapedText}","${comment.timestamp}","${comment.like_count}"`;
-      })
-      .join('\n');
-
-    const csvContent = csvHeader + csvRows;
-
-    // Create response with CSV data
-    return new Response(csvContent, {
-      headers: {
-        'Content-Type': 'text/csv',
-        'Content-Disposition': `attachment; filename="instagram_comments_${postId}.csv"`,
-      },
-    });
-  } catch (error) {
-    console.error('Failed to export CSV:', error);
-    throw new Error('Failed to export comments to CSV');
   }
 }
 

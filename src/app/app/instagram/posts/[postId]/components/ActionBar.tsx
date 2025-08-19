@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Dice4, Download, RefreshCw, Settings } from 'lucide-react';
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
-import { exportCsvAction, pickWinnerAction, refreshCommentsAction } from '@/lib/actions/instagram';
+import { pickWinnerAction } from '@/lib/actions/instagram';
 
 interface ActionBarProps {
   postId: string;
@@ -12,43 +12,17 @@ interface ActionBarProps {
 
 export default function ActionBar({ postId }: ActionBarProps) {
   const [isExporting, setIsExporting] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [isPickingWinner, setIsPickingWinner] = useState(false);
 
   const handleExportCsv = async () => {
     try {
       setIsExporting(true);
-      const response = await exportCsvAction(postId);
-
-      // Create blob and download
-      const blob = new Blob([await response.text()], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `instagram_comments_${postId}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      // TODO: Implement CSV export
     } catch (error) {
       console.error('Error exporting CSV:', error);
       alert('Помилка експорту CSV. Спробуйте ще раз.');
     } finally {
       setIsExporting(false);
-    }
-  };
-
-  const handleRefreshComments = async () => {
-    try {
-      setIsRefreshing(true);
-      await refreshCommentsAction(postId);
-      // Refresh the page to show updated comments
-      window.location.reload();
-    } catch (error) {
-      console.error('Error refreshing comments:', error);
-      alert('Помилка оновлення коментарів. Спробуйте ще раз.');
-    } finally {
-      setIsRefreshing(false);
     }
   };
 
@@ -97,18 +71,6 @@ export default function ActionBar({ postId }: ActionBarProps) {
           >
             <Download className={`w-5 h-5 ${isExporting ? 'animate-bounce' : ''}`} />
             <span>Експорт CSV</span>
-          </Button>
-
-          {/* Refresh Comments Button */}
-          <Button
-            onClick={handleRefreshComments}
-            disabled={isRefreshing}
-            variant="outline"
-            size="lg"
-            className="flex items-center space-x-2"
-          >
-            <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
-            <span>Оновити коментарі</span>
           </Button>
 
           {/* Filters Button (Placeholder) */}

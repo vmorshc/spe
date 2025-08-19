@@ -4,13 +4,12 @@ import { formatDistanceToNow } from 'date-fns';
 import { uk } from 'date-fns/locale';
 import { Heart, MessageCircle, RefreshCw } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useInView } from 'react-intersection-observer';
 import { VariableSizeList as List } from 'react-window';
 import Button from '@/components/ui/Button';
 import {
-  getCommentsAction,
+  getLastCommentsAction,
   getPostDetailsAction,
-  type InstagramCommentsResult,
+  type InstagramPostLastComments,
 } from '@/lib/actions/instagram';
 import type { InstagramComment, InstagramMedia } from '@/lib/facebook/types';
 
@@ -23,8 +22,6 @@ interface CommentItemProps {
   style: React.CSSProperties;
   data: {
     comments: InstagramComment[];
-    hasMore: boolean;
-    loadMore: () => void;
   };
 }
 
@@ -52,19 +49,8 @@ const getCommentHeight = (comment: InstagramComment, index: number): number => {
 };
 
 function CommentItem({ index, style, data }: CommentItemProps) {
-  const { comments, hasMore, loadMore } = data;
+  const { comments } = data;
   const comment = comments[index];
-
-  const { ref, inView } = useInView({
-    threshold: 0.1,
-    triggerOnce: true,
-  });
-
-  useEffect(() => {
-    if (inView && hasMore && index === comments.length - 2) {
-      loadMore();
-    }
-  }, [inView, hasMore, index, comments.length, loadMore]);
 
   if (!comment) {
     return (
@@ -80,7 +66,7 @@ function CommentItem({ index, style, data }: CommentItemProps) {
   });
 
   return (
-    <div ref={ref} style={style} className="px-4 py-3 border-b border-gray-100">
+    <div style={style} className="px-4 py-3 border-b border-gray-100">
       <div className="flex space-x-3">
         <div className="flex-shrink-0">
           <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
@@ -123,8 +109,7 @@ export default function CommentsList({ post }: CommentsListProps) {
   const [postId] = useState<string>(post.id);
   const [comments, setComments] = useState<InstagramComment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [hasMore, setHasMore] = useState(true);
-  const [nextCursor, setNextCursor] = useState<string | null | undefined>();
+
   const [totalCount, setTotalCount] = useState<number>(post.comments_count || 0);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -132,19 +117,11 @@ export default function CommentsList({ post }: CommentsListProps) {
   const listRef = useRef<List>(null);
 
   const loadComments = useCallback(
-    async (cursor?: string, append: boolean = true) => {
+    async (cache: boolean = true) => {
       try {
         setError(null);
-        const result: InstagramCommentsResult = await getCommentsAction(postId, cursor);
-
-        if (append) {
-          setComments((prev) => [...prev, ...result.comments]);
-        } else {
-          setComments(result.comments);
-        }
-
-        setNextCursor(result.nextCursor);
-        setHasMore(result.comments?.length > 0 && result.nextCursor !== null);
+        const result: InstagramPostLastComments = await getLastCommentsAction(postId, cache);
+        setComments(result.comments);
       } catch (err) {
         setError('Помилка завантаження коментарів');
         console.error('Error loading comments:', err);
@@ -156,23 +133,17 @@ export default function CommentsList({ post }: CommentsListProps) {
     [postId]
   );
 
-  const loadMore = useCallback(() => {
-    if (hasMore && !loading && nextCursor) {
-      loadComments(nextCursor, true);
-    }
-  }, [hasMore, loading, nextCursor, loadComments]);
-
   const refresh = useCallback(async () => {
     setRefreshing(true);
     const post = await getPostDetailsAction(postId);
     setTotalCount(post.comments_count || 0);
     itemSizeCache.clear();
-    await loadComments(undefined, false);
+    await loadComments(false);
     listRef.current?.resetAfterIndex(0);
   }, [loadComments, postId]);
 
   useEffect(() => {
-    loadComments(undefined, false);
+    loadComments();
   }, [loadComments]);
 
   if (loading && comments.length === 0) {
@@ -235,8 +206,6 @@ export default function CommentsList({ post }: CommentsListProps) {
           itemSize={(index) => getCommentHeight(comments[index], index)}
           itemData={{
             comments,
-            hasMore,
-            loadMore,
           }}
           overscanCount={3}
         >
@@ -244,17 +213,12 @@ export default function CommentsList({ post }: CommentsListProps) {
         </List>
       </div>
 
-      {/* Loading More Indicator */}
-      {hasMore && (
+      {/* Notice about importing to see all comments */}
+      {totalCount > comments.length && (
         <div className="px-4 py-3 text-center border-t border-gray-200 flex-shrink-0">
-          <button
-            type="button"
-            onClick={loadMore}
-            disabled={loading}
-            className="text-sm text-blue-600 hover:text-blue-800 disabled:text-gray-400"
-          >
-            {loading ? 'Завантаження...' : 'Завантажити ще'}
-          </button>
+          <p className="text-sm text-gray-600">
+            Використайте експорт для того, щоб побачити всі коментарі
+          </p>
         </div>
       )}
     </div>

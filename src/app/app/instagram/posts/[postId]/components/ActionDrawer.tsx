@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useDragControls } from 'framer-motion';
 import { Dice4, Download, RefreshCw, Settings, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import Button from '@/components/ui/Button';
-import { exportCsvAction, pickWinnerAction, refreshCommentsAction } from '@/lib/actions/instagram';
+import { pickWinnerAction } from '@/lib/actions/instagram';
 
 interface ActionDrawerProps {
   postId: string;
@@ -13,7 +13,6 @@ interface ActionDrawerProps {
 export default function ActionDrawer({ postId }: ActionDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [isPickingWinner, setIsPickingWinner] = useState(false);
 
   const dragControls = useDragControls();
@@ -22,19 +21,7 @@ export default function ActionDrawer({ postId }: ActionDrawerProps) {
   const handleExportCsv = async () => {
     try {
       setIsExporting(true);
-      const response = await exportCsvAction(postId);
-
-      // Create blob and download
-      const blob = new Blob([await response.text()], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `instagram_comments_${postId}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
+      // TODO: Implement CSV export
       // Close drawer after successful export
       setIsOpen(false);
     } catch (error) {
@@ -42,20 +29,6 @@ export default function ActionDrawer({ postId }: ActionDrawerProps) {
       alert('Помилка експорту CSV. Спробуйте ще раз.');
     } finally {
       setIsExporting(false);
-    }
-  };
-
-  const handleRefreshComments = async () => {
-    try {
-      setIsRefreshing(true);
-      await refreshCommentsAction(postId);
-      // Refresh the page to show updated comments
-      window.location.reload();
-    } catch (error) {
-      console.error('Error refreshing comments:', error);
-      alert('Помилка оновлення коментарів. Спробуйте ще раз.');
-    } finally {
-      setIsRefreshing(false);
     }
   };
 
@@ -190,18 +163,6 @@ export default function ActionDrawer({ postId }: ActionDrawerProps) {
                 >
                   <Download className={`w-5 h-5 ${isExporting ? 'animate-bounce' : ''}`} />
                   <span>Експорт CSV</span>
-                </Button>
-
-                {/* Refresh Comments Button */}
-                <Button
-                  onClick={handleRefreshComments}
-                  disabled={isRefreshing}
-                  variant="outline"
-                  size="lg"
-                  className="w-full flex items-center justify-center space-x-3"
-                >
-                  <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
-                  <span>Оновити коментарі</span>
                 </Button>
 
                 {/* Filters Button (Placeholder) */}
