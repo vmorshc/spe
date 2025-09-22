@@ -2,7 +2,7 @@
 
 import { formatDistanceToNow } from 'date-fns';
 import { uk } from 'date-fns/locale';
-import { Heart, MessageCircle, RefreshCw } from 'lucide-react';
+import { Heart, MessageCircle } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { VariableSizeList as List } from 'react-window';
 import Button from '@/components/ui/Button';
@@ -112,7 +112,6 @@ export default function CommentsList({ post }: CommentsListProps) {
 
   const [totalCount, setTotalCount] = useState<number>(post.comments_count || 0);
   const [error, setError] = useState<string | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
 
   const listRef = useRef<List>(null);
 
@@ -127,14 +126,12 @@ export default function CommentsList({ post }: CommentsListProps) {
         console.error('Error loading comments:', err);
       } finally {
         setLoading(false);
-        setRefreshing(false);
       }
     },
     [postId]
   );
 
   const refresh = useCallback(async () => {
-    setRefreshing(true);
     const post = await getPostDetailsAction(postId);
     setTotalCount(post.comments_count || 0);
     itemSizeCache.clear();
@@ -178,21 +175,11 @@ export default function CommentsList({ post }: CommentsListProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <MessageCircle className="w-5 h-5 text-gray-600" />
-            <h3 className="text-lg font-medium text-gray-900">Коментарі</h3>
+            <h3 className="text-lg font-medium text-gray-900">Останні Коментарі</h3>
             {totalCount && (
               <span className="text-sm text-gray-500">({totalCount.toLocaleString()})</span>
             )}
           </div>
-          <Button
-            onClick={refresh}
-            variant="ghost"
-            size="sm"
-            disabled={refreshing}
-            className="flex items-center space-x-2"
-          >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-            <span>Оновити</span>
-          </Button>
         </div>
       </div>
 

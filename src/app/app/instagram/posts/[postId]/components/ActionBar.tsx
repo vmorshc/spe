@@ -1,23 +1,35 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Dice4, Download, RefreshCw, Settings } from 'lucide-react';
+import { Dice4, Download, Settings } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
+import FullScreenLoader from '@/components/ui/FullScreenLoader';
 import { pickWinnerAction } from '@/lib/actions/instagram';
+import { startExportAction } from '@/lib/actions/instagramExport';
 
 interface ActionBarProps {
   postId: string;
+  mode?: 'live' | 'export';
+  exportId?: string;
 }
 
-export default function ActionBar({ postId }: ActionBarProps) {
+export default function ActionBar({ postId, mode = 'live', exportId }: ActionBarProps) {
   const [isExporting, setIsExporting] = useState(false);
   const [isPickingWinner, setIsPickingWinner] = useState(false);
+  const router = useRouter();
 
   const handleExportCsv = async () => {
     try {
       setIsExporting(true);
-      // TODO: Implement CSV export
+      if (mode === 'export') {
+        if (!exportId) return;
+        router.push(`/api/exports/${exportId}/csv`);
+      } else {
+        const { exportId } = await startExportAction(postId);
+        router.push(`/app/instagram/posts/${postId}/exports/${exportId}`);
+      }
     } catch (error) {
       console.error('Error exporting CSV:', error);
       alert('Помилка експорту CSV. Спробуйте ще раз.');
@@ -47,6 +59,11 @@ export default function ActionBar({ postId }: ActionBarProps) {
       transition={{ delay: 0.2 }}
       className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50"
     >
+      <FullScreenLoader
+        show={isExporting}
+        title="Готуємо експорт"
+        subtitle="Будь ласка, зачекайте..."
+      />
       <div className="max-w-4xl mx-auto px-4 py-4">
         <div className="flex items-center justify-center space-x-4">
           {/* Pick Winner Button */}
@@ -61,7 +78,7 @@ export default function ActionBar({ postId }: ActionBarProps) {
             <span>Обрати переможця</span>
           </Button>
 
-          {/* Export CSV Button */}
+          {/* Export/Download CSV Button */}
           <Button
             onClick={handleExportCsv}
             disabled={isExporting}
@@ -70,7 +87,7 @@ export default function ActionBar({ postId }: ActionBarProps) {
             className="flex items-center space-x-2"
           >
             <Download className={`w-5 h-5 ${isExporting ? 'animate-bounce' : ''}`} />
-            <span>Експорт CSV</span>
+            <span>{mode === 'export' ? 'Завантажити CSV' : 'Експорт'}</span>
           </Button>
 
           {/* Filters Button (Placeholder) */}

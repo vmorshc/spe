@@ -2,11 +2,12 @@
 
 import { motion } from 'framer-motion';
 import { XCircle } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
 function AuthErrorContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const error = searchParams.get('error');
   const description = searchParams.get('description');
 
@@ -59,18 +60,14 @@ function AuthErrorContent() {
       <div className="space-y-3">
         <button
           type="button"
-          onClick={() => {
-            window.location.href = '/';
-          }}
+          onClick={() => router.push('/')}
           className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
         >
           Спробувати знову
         </button>
         <button
           type="button"
-          onClick={() => {
-            window.location.href = '/';
-          }}
+          onClick={() => router.push('/')}
           className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors"
         >
           Повернутися на головну

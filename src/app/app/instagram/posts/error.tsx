@@ -1,6 +1,7 @@
 'use client';
 
 import { AlertCircle, RefreshCw } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Button from '@/components/ui/Button';
 
@@ -10,6 +11,7 @@ interface ErrorPageProps {
 }
 
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
+  const router = useRouter();
   useEffect(() => {
     // Log error details for debugging
     console.error('Instagram posts error:', error);
@@ -45,7 +47,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
             <Button
               variant="outline"
               onClick={() => {
-                window.location.href = '/';
+                router.push('/');
               }}
               className="flex items-center justify-center"
             >

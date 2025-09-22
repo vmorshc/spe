@@ -1,19 +1,24 @@
 'use client';
 
 import { AnimatePresence, motion, useDragControls } from 'framer-motion';
-import { Dice4, Download, RefreshCw, Settings, X } from 'lucide-react';
+import { Dice4, Download, Settings, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import Button from '@/components/ui/Button';
 import { pickWinnerAction } from '@/lib/actions/instagram';
+import { startExportAction } from '@/lib/actions/instagramExport';
 
 interface ActionDrawerProps {
   postId: string;
+  mode?: 'live' | 'export';
+  exportId?: string;
 }
 
-export default function ActionDrawer({ postId }: ActionDrawerProps) {
+export default function ActionDrawer({ postId, mode = 'live', exportId }: ActionDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [isPickingWinner, setIsPickingWinner] = useState(false);
+  const router = useRouter();
 
   const dragControls = useDragControls();
   const constraintsRef = useRef(null);
@@ -21,9 +26,15 @@ export default function ActionDrawer({ postId }: ActionDrawerProps) {
   const handleExportCsv = async () => {
     try {
       setIsExporting(true);
-      // TODO: Implement CSV export
-      // Close drawer after successful export
-      setIsOpen(false);
+      if (mode === 'export') {
+        if (!exportId) return;
+        setIsOpen(false);
+        router.push(`/api/exports/${exportId}/csv`);
+      } else {
+        const { exportId } = await startExportAction(postId);
+        setIsOpen(false);
+        router.push(`/app/instagram/posts/${postId}/exports/${exportId}`);
+      }
     } catch (error) {
       console.error('Error exporting CSV:', error);
       alert('Помилка експорту CSV. Спробуйте ще раз.');
@@ -153,7 +164,7 @@ export default function ActionDrawer({ postId }: ActionDrawerProps) {
                   <span>Обрати переможця</span>
                 </Button>
 
-                {/* Export CSV Button */}
+                {/* Export/Download CSV Button */}
                 <Button
                   onClick={handleExportCsv}
                   disabled={isExporting}
@@ -162,7 +173,7 @@ export default function ActionDrawer({ postId }: ActionDrawerProps) {
                   className="w-full flex items-center justify-center space-x-3"
                 >
                   <Download className={`w-5 h-5 ${isExporting ? 'animate-bounce' : ''}`} />
-                  <span>Експорт CSV</span>
+                  <span>{mode === 'export' ? 'Завантажити CSV' : 'Експорт'}</span>
                 </Button>
 
                 {/* Filters Button (Placeholder) */}

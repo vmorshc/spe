@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { FeatureFlagName } from './constants';
 
 /**
@@ -8,7 +8,7 @@ import type { FeatureFlagName } from './constants';
  * Note: This requires the feature flag to be passed from server components
  * since we cannot access iron-session directly on the client
  */
-export function useFeatureFlag(flagName: FeatureFlagName, initialValue: boolean = false) {
+export function useFeatureFlag(_flagName: FeatureFlagName, initialValue: boolean = false) {
   const [isEnabled, setIsEnabled] = useState(initialValue);
 
   // This hook is primarily for receiving updates from server components

@@ -19,7 +19,7 @@ export default function FeatureFlagsClient({
 
   const handleToggle = async (flagName: string) => {
     startTransition(async () => {
-      const result = await toggleFeatureFlagAction(flagName as any);
+      const result = await toggleFeatureFlagAction(flagName as FeatureFlagDefinition['name']);
 
       if (result.success) {
         // Update local state
