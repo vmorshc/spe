@@ -4,7 +4,7 @@ import { Image as ImageIcon, Instagram, Users } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import Section from '@/components/ui/Section';
 import { getTempProfileData, selectInstagramProfile } from '@/lib/actions/auth';
 import { useAuth } from '@/lib/contexts/AuthContext';

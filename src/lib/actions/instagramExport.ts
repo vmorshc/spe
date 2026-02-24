@@ -20,10 +20,7 @@ function normalizeComments(batch: InstagramComment[]): NormalizedComment[] {
   }));
 }
 
-export async function startExportAction(
-  mediaId: string,
-  options?: { firstPerAuthor?: boolean }
-): Promise<{ exportId: string }> {
+export async function startExportAction(mediaId: string): Promise<{ exportId: string }> {
   const user = await getCurrentUser();
   if (!user) {
     throw new Error('Unauthorized');
@@ -40,8 +37,7 @@ export async function startExportAction(
     owner: { instagramId: user.instagramId, username: user.username },
     post: { mediaId },
     igPaging: { afterCursor: null },
-    counters: { appended: 0, failed: 0, skipped: { duplicates: 0, byAuthor: 0 } },
-    dedupe: { byCommentId: true, firstPerAuthor: options?.firstPerAuthor === true },
+    counters: { appended: 0, failed: 0, skipped: { duplicates: 0 } },
     list: { key: instagramExportRepository.buildListKey(exportId), length: 0 },
     file: null,
     error: null,
@@ -125,13 +121,10 @@ export async function resumeExportAction(exportId: string, budgetMs = 1500): Pro
 
         const remaining = HARD_CAP - record.counters.appended;
         const slice = normalized.slice(0, Math.max(0, remaining));
-        const res = await instagramExportRepository.appendComments(exportId, slice, {
-          firstPerAuthor: record.dedupe.firstPerAuthor,
-        });
+        const res = await instagramExportRepository.appendComments(exportId, slice);
 
         record.counters.appended += res.appended;
         record.counters.skipped.duplicates += res.skippedDuplicates;
-        record.counters.skipped.byAuthor += res.skippedByAuthor;
         const newLen = await instagramExportRepository.getCommentsCount(exportId);
         record.list.length = newLen;
 

@@ -3,7 +3,7 @@
 import { ArrowLeft, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import { sharedConfig } from '@/config';
 import { useAuth } from '@/lib/contexts/AuthContext';
 

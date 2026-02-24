@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 
 interface ErrorProps {
   error: Error & { digest?: string };
@@ -43,7 +43,7 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
           </p>
 
           <div className="space-y-3">
-            <Button onClick={reset} variant="primary" className="w-full">
+            <Button onClick={reset} variant="default" className="w-full">
               Спробувати ще раз
             </Button>
 

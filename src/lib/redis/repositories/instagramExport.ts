@@ -26,10 +26,6 @@ export class InstagramExportRepository extends BaseRedisRepository {
     return this.getKey(`${exportId}:dedupe:comments`);
   }
 
-  private dedupeAuthorsKey(exportId: string): string {
-    return this.getKey(`${exportId}:dedupe:authors`);
-  }
-
   private postIndexKey(mediaId: string): string {
     return this.getKey(`index:media:${mediaId}`);
   }
@@ -64,17 +60,14 @@ export class InstagramExportRepository extends BaseRedisRepository {
 
   async appendComments(
     exportId: string,
-    comments: NormalizedComment[],
-    options: { firstPerAuthor: boolean }
-  ): Promise<{ appended: number; skippedDuplicates: number; skippedByAuthor: number }> {
-    if (!this.client) return { appended: 0, skippedDuplicates: 0, skippedByAuthor: 0 };
+    comments: NormalizedComment[]
+  ): Promise<{ appended: number; skippedDuplicates: number }> {
+    if (!this.client) return { appended: 0, skippedDuplicates: 0 };
     const listKey = this.listKey(exportId);
     const dedupeComments = this.dedupeCommentsKey(exportId);
-    const dedupeAuthors = this.dedupeAuthorsKey(exportId);
 
     let appended = 0;
     let skippedDuplicates = 0;
-    let skippedByAuthor = 0;
 
     for (const c of comments) {
       const wasAddedComment = await this.client.sadd(dedupeComments, c.commentId);
@@ -83,23 +76,14 @@ export class InstagramExportRepository extends BaseRedisRepository {
         continue;
       }
 
-      if (options.firstPerAuthor) {
-        const wasAddedAuthor = await this.client.sadd(dedupeAuthors, c.userId);
-        if (wasAddedAuthor === 0) {
-          skippedByAuthor += 1;
-          continue;
-        }
-      }
-
       await this.client.rpush(listKey, JSON.stringify(c));
       appended += 1;
     }
 
     await this.client.expire(listKey, this.LIST_TTL_SECONDS);
     await this.client.expire(dedupeComments, this.LIST_TTL_SECONDS);
-    await this.client.expire(dedupeAuthors, this.LIST_TTL_SECONDS);
 
-    return { appended, skippedDuplicates, skippedByAuthor };
+    return { appended, skippedDuplicates };
   }
 
   async getCommentsSlice(

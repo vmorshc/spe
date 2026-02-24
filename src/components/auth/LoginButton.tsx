@@ -2,22 +2,22 @@
 
 import { Instagram } from 'lucide-react';
 import { useState } from 'react';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import { initiateOAuthLogin } from '@/lib/actions/auth';
 import { useAuth } from '@/lib/contexts/AuthContext';
 
 interface LoginButtonProps {
   className?: string;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: 'default' | 'secondary' | 'outline' | 'ghost';
+  size?: 'sm' | 'default' | 'lg';
   redirectUrl?: string;
   disabled?: boolean;
 }
 
 export default function LoginButton({
   className = '',
-  variant = 'primary',
-  size = 'md',
+  variant = 'default',
+  size = 'default',
   redirectUrl,
   disabled = false,
 }: LoginButtonProps) {

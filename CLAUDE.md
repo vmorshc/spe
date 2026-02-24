@@ -1,301 +1,142 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working with code in this repository.
 
-## Development Commands
+## Quick Reference
 
-- `pnpm dev` - Start development server with Turbopack (preferred)
-- `pnpm build` - Build production version
-- `pnpm start` - Start production server
-- `pnpm lint` - Run Biome linter for code quality checks
-- `pnpm lint:fix` - Auto-fix linting issues
-- `pnpm format` - Check code formatting with Biome
-- `pnpm format:fix` - Auto-fix formatting issues
-- `pnpm check` - Run all Biome checks (lint + format)
-- `pnpm check:fix` - Auto-fix all Biome issues
-- `pnpm type-check` - Run TypeScript type checking
+**Development Commands**
+- `pnpm dev` - Start dev server with Turbopack
+- `pnpm build` - Build for production
+- `pnpm check:fix` - Fix all linting + formatting issues
+- `pnpm type-check` - Run TypeScript checks
+
+**Key Documentation**
+- `docs/base.md` - Project overview, tech stack, user flows
+- `docs/architecture.md` - System architecture, patterns, data flows
+- `docs/config.md` - Environment variables and configuration
+- `docs/data-models.md` - Redis schemas, data models, lifecycles
+- `docs/api.md` - Server Actions and route handlers reference
+- `docs/ui.md` - Component architecture and design patterns
+
+**Domain-Specific Docs**
+- `docs/facebook.md` - Facebook Graph API integration
+- `docs/redis/redis.md` - Redis client and repositories
+- `docs/feature-flags.md` - Feature flags system
+- `docs/instagram-export.md` - Comment export flow
+- `docs/actions/` - Individual server action documentation
+- `docs/pages/` - Page-specific implementation details
 
 ## Project Overview
 
-Pickly (SPE) is a Ukrainian-language web application for conducting transparent and fair Instagram giveaways. The application enables business account owners to automatically select random winners from Instagram post comments using a cryptographically secure process.
+Pickly (SPE) is a Ukrainian-language web app for transparent Instagram giveaways. Users authenticate with Instagram Business accounts, select posts, export comments, and pick winners using cryptographically secure randomization.
 
-### Core Business Logic
-1. **Instagram Authentication** - Secure OAuth flow for Instagram Business accounts
-2. **Post Selection** - Browse and select Instagram posts for giveaways
-3. **Comment Import** - Fetch up to 5,000 comments from selected posts
-4. **Random Winner Selection** - Cryptographically secure random selection
-5. **Transparent Results** - Display selection process and auditable results
+**Core Flow**: OAuth → Select Profile → Browse Posts → View Comments → Export/Pick Winner
 
-## Tech Stack & Configuration
+**Tech Stack**: Next.js 15, React 19, TypeScript, Tailwind v4, Redis, Iron Session, Facebook Graph API
 
-### Core Framework
-- **Next.js 15** with App Router architecture
-- **TypeScript** with strict mode and bundler module resolution
-- **React 19** with modern hooks and patterns
-- **Turbopack** for fast development builds (via `--turbopack` flag)
+## Working with This Codebase
 
-### Code Quality & Formatting
-- **Biome** replaces ESLint/Prettier with unified linting and formatting
-- **Husky** with lint-staged for pre-commit hooks
-- **TypeScript** strict mode with `noEmit` type checking
-- 100-character line width, single quotes, trailing commas ES5 style
-- Automatic import organization and complexity checks
+### Code Style & Quality
+- **Biome** for linting + formatting (replaces ESLint/Prettier)
+- **TypeScript** strict mode, 100-char line width, single quotes, trailing commas ES5
+- Pre-commit hooks run type-check, lint, and format
+- Import organization is automatic
 
-### Authentication & Session Management
-- **Iron Session** for secure cookie-based sessions (AES-256-GCM encryption)
-- **Facebook Graph API** OAuth integration for Instagram Business accounts
-- **Redis** for session storage and caching (with ioredis client)
-- **Zod** for runtime type validation and environment variable validation
+### Adding Features
+1. Check `docs/base.md` for user flows and existing features
+2. Review `docs/architecture.md` for patterns (Repository, Server Actions)
+3. Check `docs/actions/` for related server actions
+4. Add server action in `src/lib/actions/` (see `docs/api.md`)
+5. Create UI components in `src/components/` (see `docs/ui.md`)
+6. Use `AppHeader` for authenticated pages, `Section` for landing sections
+7. Test Redis graceful degradation
 
-### Data Layer
-- **Redis** singleton client with connection resilience and graceful degradation
-- **Repository pattern** for data access abstraction
-- **Caching strategy**: 5min for API data, 24hr for sessions, persistent counters
+### Working with Instagram Data
+- All Instagram API calls go through `src/lib/facebook/client.ts` (see `docs/facebook.md`)
+- Server actions in `src/lib/actions/instagram.ts` handle caching (see `docs/actions/instagram.md`)
+- Cache TTL: 5 minutes for profiles/posts
+- Export flow is async with progress tracking (see `docs/instagram-export.md`)
 
-### Styling & UI
-- **Tailwind CSS v4** with new `@theme inline` syntax and PostCSS configuration
-- **Framer Motion** for animations and interactions
-- **Lucide React** + **React Icons** for iconography
-- **Geist Sans/Mono** fonts from Google Fonts with CSS variables
+### Working with Sessions
+- Iron Session stores only session ID in cookie (AES-256-GCM)
+- Full session data lives in Redis with 24h TTL
+- Use `getCurrentUser()` from `src/lib/actions/auth.ts` (see `docs/actions/auth.md`)
+- Feature flags stored in session cookie (see `docs/feature-flags.md`)
 
-## Architecture
+### UI Development
+- Use shadcn/ui components from `src/components/ui/` (lowercase paths)
+- Tailwind v4 with CSS variables in `src/app/globals.css`
+- Framer Motion for animations (keep subtle and fast)
+- Virtualize long lists with `react-window`
+- See `docs/ui.md` for component patterns and examples
 
-### Project Structure
-```
-src/
-├── app/
-│   ├── api/counters/landing-visits/   # Analytics API
-│   ├── auth/
-│   │   ├── callback/route.ts          # OAuth callback handler
-│   │   ├── error/page.tsx             # OAuth error page
-│   │   └── select-profile/page.tsx    # Instagram account selection
-│   ├── instagram/posts/               # Instagram posts browsing
-│   ├── layout.tsx                     # Root layout with metadata
-│   ├── page.tsx                       # Landing page
-│   └── globals.css                    # Global styles with Tailwind v4
-├── components/
-│   ├── ui/                           # Reusable UI primitives
-│   ├── landing/                      # Landing page sections
-│   ├── auth/                         # Authentication components
-│   └── instagram/                    # Instagram-specific components
-├── lib/
-│   ├── actions/                      # Next.js Server Actions
-│   ├── auth/                         # Session and OAuth utilities
-│   ├── contexts/                     # React contexts
-│   ├── facebook/                     # Facebook Graph API client
-│   ├── redis/                        # Redis client and repositories
-│   ├── types/                        # TypeScript type definitions
-│   └── env.ts                        # Environment validation
-├── config/
-│   ├── shared.ts                     # Hardcoded constants (client-safe)
-│   ├── client.ts                     # Client-safe environment variables
-│   ├── server.ts                     # Server-only secrets
-│   └── index.ts                      # Configuration exports
-└── design-system/                    # Future design system structure
-```
+### Configuration
+- Client config: `src/config/client.ts` (NEXT_PUBLIC_* only)
+- Server config: `src/config/server.ts` (secrets, validated with Zod)
+- Shared constants: `src/config/shared.ts`
+- See `docs/config.md` for full environment variable reference
 
-### Configuration System
-Uses a three-tier configuration approach:
-- **Shared Config** (`shared.ts`) - Hardcoded constants safe for client/server
-- **Client Config** (`client.ts`) - NEXT_PUBLIC_ environment variables only
-- **Server Config** (`server.ts`) - Server-only secrets with Zod validation
+### Data Models
+- User sessions, temp OAuth data, Instagram cache, export records
+- All Redis key patterns documented in `docs/data-models.md`
+- Repository pattern for all Redis access (see `docs/redis/redis.md`)
 
-### Authentication Flow
-1. **OAuth Initiation** - Generate secure state parameter → redirect to Facebook OAuth
-2. **Callback Processing** - Validate state → exchange code for token → fetch Instagram accounts
-3. **Token Management** - Exchange short-lived for long-lived tokens (60 days)
-4. **Profile Selection** - User selects Instagram Business account → create session
-5. **Session Storage** - Store session in Redis, only session ID in encrypted cookie
+## Common Tasks
 
-### Security Features
-- **CSRF Protection** - Cryptographically secure state parameters with constant-time validation
-- **Session Security** - Iron Session with 7-day expiration, httpOnly, sameSite: 'lax'
-- **Redirect Validation** - Strict URL validation preventing open redirect attacks
-- **Token Security** - Server-side token storage, minimal client-side exposure
+### Adding a New Server Action
+1. Create/update file in `src/lib/actions/`
+2. Mark function with `'use server'`
+3. Handle authentication with `getCurrentUser()` if needed
+4. Use repository pattern for Redis access
+5. Return typed data, handle errors gracefully
+6. Document in `docs/actions/`
 
-## Data Models & Redis Schema
+### Adding a New Page
+1. Create route in `src/app/` using App Router
+2. Use Server Components for data fetching
+3. Call server actions directly (no API routes)
+4. Document in `docs/pages/`
+5. Add to navigation if needed
 
-### User Session Model
-```typescript
-interface UserSession {
-  sessionId: string;
-  instagramId: string;
-  username: string;
-  profilePicture: string;
-  followersCount: number;
-  mediaCount: number;
-  accessToken: string;        // Long-lived Facebook token
-  pageId: string;
-  pageName: string;
-  createdAt: string;
-  expiresAt: string;          // 24-hour expiration
-}
-```
+### Adding a New Redis Repository
+1. Extend `BaseRedisRepository` in `src/lib/redis/repositories/`
+2. Define key prefix and TTL constants
+3. Guard against `this.client` being `null`
+4. Use `this.getKey()` for namespaced keys
+5. Return safe defaults on errors
+6. Document in `docs/redis/redis.md`
 
-### Redis Key Patterns
-- **Sessions**: `user:session:{sessionId}` (TTL: 24 hours)
-- **Temp Data**: `user:temp:{tempId}` (TTL: 5 minutes)
-- **Instagram Cache**: `instagram:profile:{userId}` (TTL: 5 minutes)
-- **Posts Cache**: `instagram:posts:{userId}:{cursor}` (TTL: 5 minutes)
-- **Counters**: `counter:{counterName}` (persistent)
+### Debugging OAuth Flow
+1. Check `docs/oauth-implementation-context.md` for flow details
+2. OAuth callback handler: `src/app/auth/callback/route.ts`
+3. State validation uses constant-time comparison
+4. Temp data stored in Redis for 5 minutes
+5. Profile selection in `src/app/auth/select-profile/page.tsx`
 
-## Facebook/Instagram API Integration
+### Testing Locally
+- Requires Facebook App configured with OAuth redirect
+- Redis optional but recommended (use Docker: `docker run -p 6379:6379 redis`)
+- Copy `.env.example` to `.env.local` and fill in values
+- Run `pnpm dev` and visit `http://localhost:3001`
 
-### Required OAuth Scopes
-- `pages_show_list` - Access to Facebook pages
-- `business_management` - Business account management
-- `instagram_basic` - Basic Instagram access
-- `instagram_manage_comments` - Comment access for giveaways
-- `pages_read_engagement` - Read page engagement data
-- `public_profile` - Basic profile information
+## Security Considerations
 
-### API Endpoints Used
-- **OAuth Flow**: Facebook v22.0 OAuth dialog and token exchange
-- **Pages Discovery**: `/me/accounts` with Instagram business accounts
-- **Profile Details**: `/{instagram-id}` with comprehensive fields
-- **Posts Fetching**: `/{instagram-id}/media` with cursor-based pagination
+**Always**:
+- Keep access tokens in Redis, never expose to client
+- Validate OAuth state with constant-time comparison
+- Use Zod schemas for runtime validation
+- Set proper TTLs on sensitive Redis keys
+- Use Iron Session for cookies (httpOnly, sameSite: 'lax')
 
-### Error Handling
-- Comprehensive Facebook API error response handling
-- Graceful degradation when Redis unavailable
-- User-friendly error messages without exposing internals
+**Never**:
+- Import `serverConfig` in client components
+- Log access tokens or session IDs
+- Expose Facebook API errors directly to users
+- Store sensitive data in local storage or unencrypted cookies
 
-## Environment Variables
+## References
 
-### Required Configuration
-```bash
-# Facebook OAuth (Required)
-FACEBOOK_APP_ID=your_facebook_app_id
-FACEBOOK_APP_SECRET=your_facebook_app_secret
-
-# Session Security (Required)
-SESSION_SECRET=32_character_minimum_secret
-
-# Redis (Optional - app functions without it)
-REDIS_URL=redis://localhost:6379
-
-# Public Configuration (Required)
-NEXT_PUBLIC_DOMAIN=https://yourdomain.com
-NEXT_PUBLIC_NODE_ENV=production
-```
-
-### Validation System
-- **Zod schemas** for type-safe environment validation
-- **Startup validation** - Fails fast with detailed error messages
-- **Dual validation** - Separate client/server environment validation
-
-## Component Architecture
-
-### Landing Page Components (`/components/landing/`)
-- **Header** - Navigation with login/logout functionality and user profile
-- **Hero** - Main CTA with real-time visit counter display
-- **HowItWorks** - Three-step process explanation with animated cards
-- **Benefits** - Security and transparency feature highlights
-- **FuturePlans** - Upcoming features roadmap (filtering, analytics, notifications)
-- **FAQ** - Frequently asked questions about the service
-- **Footer** - Contact information and social links
-
-### Instagram Components (`/components/instagram/`)
-- **InstagramHeader** - Authenticated user navigation
-- **ProfileHeader** - User profile display with follower counts
-- **PostCard** - Individual post component with engagement metrics
-- **PostsGrid** - Infinite scrolling grid with cursor-based pagination
-
-### Authentication Components (`/components/auth/`)
-- **LoginButton** - OAuth login initiation with Instagram branding
-- **UserProfile** - User information display and logout functionality
-
-### UI Components (`/components/ui/`)
-- **Button** - Reusable button with variants (primary, secondary, outline, ghost)
-- **Section** - Layout wrapper with background variants and consistent spacing
-
-## State Management
-
-### Client-Side State
-- **AuthContext** - Global authentication state with React Context
-- **Custom Hook** - `useAuth()` with proper error boundaries and loading states
-- **Component State** - Local UI state with `useState` for interactions
-
-### Server-Side State
-- **Redis Sessions** - User authentication and profile data
-- **Redis Caching** - Instagram API response caching with TTL
-- **Server Actions** - Next.js 15 Server Actions for data fetching and mutations
-
-## Performance Optimizations
-
-### Caching Strategy
-- **Redis Layer**: Profile cache (5min), posts cache (5min), sessions (24hr)
-- **Static Optimization**: Next.js automatic static optimization
-- **Image Optimization**: Next.js Image component with Facebook/Instagram CDN
-- **Font Optimization**: Preloaded Geist fonts with CSS variables
-
-### Data Fetching Patterns
-- **Server Actions**: Direct server-to-server API calls (no client API exposure)
-- **Infinite Scroll**: Cursor-based pagination for Instagram posts
-- **Optimistic Updates**: Immediate UI feedback with background sync
-- **Error Boundaries**: Graceful degradation for failed operations
-
-## Development Patterns
-
-### Code Quality
-- **Biome Configuration**: Modern ESLint/Prettier replacement
-- **Pre-commit Hooks**: TypeScript checking, formatting, and linting
-- **Type Safety**: Comprehensive TypeScript with strict mode
-- **Error Handling**: Structured error handling with fallbacks
-
-### Security Patterns
-- **Constant-time Comparison**: Prevents timing attacks on state validation
-- **Input Validation**: Zod schemas for runtime validation
-- **Secure Headers**: Next.js security headers configuration
-- **No Client Secrets**: All sensitive data server-side only
-
-### Architecture Patterns
-- **Repository Pattern**: Clean data access abstraction
-- **Singleton Pattern**: Redis client with connection management
-- **Factory Pattern**: Configuration builders for different environments
-- **Observer Pattern**: Event-driven Redis connection handling
-
-## Scalability Considerations
-
-### Infrastructure Ready
-- **Stateless Design**: Sessions in Redis, not server memory
-- **Horizontal Scaling**: No server-side state dependencies
-- **CDN Integration**: Static assets optimized for CDN delivery
-- **Database Preparation**: Infrastructure ready for database integration
-
-### Monitoring Ready
-- **Structured Logging**: Consistent logging patterns throughout
-- **Health Checks**: Redis availability monitoring
-- **Error Tracking**: Comprehensive error boundaries and handling
-- **Analytics**: Visit tracking and metrics collection infrastructure
-
-## Production Deployment
-
-### Build Configuration
-- **Next.js**: ESLint disabled during builds for faster CI/CD
-- **TypeScript**: ES2017 target for broad browser compatibility
-- **Images**: Remote patterns configured for Facebook/Instagram CDNs
-- **Security**: Secure cookie configuration for production
-
-### Environment Setup
-- **Redis Clustering**: ioredis supports Redis Cluster out of the box
-- **SSL/TLS**: Redis client configured for secure connections
-- **Graceful Degradation**: Application functions without Redis (with limitations)
-- **Error Handling**: No sensitive information in client-facing errors
-
-## Future Enhancements
-
-### Planned Features
-- Advanced comment filtering and validation
-- Multi-post giveaway support
-- Detailed analytics and reporting
-- Winner history tracking and management
-- Automated winner notification system
-- Instagram Reels and Stories support
-
-### Technical Improvements
-- Automated testing setup (currently not implemented)
-- API documentation with OpenAPI/Swagger
-- Enhanced error monitoring and alerting
-- Performance monitoring and optimization
-- Database integration for persistent data storage
+**Full Documentation**: See `docs/` directory for comprehensive guides
+**Server Actions**: `docs/api.md` + `docs/actions/` for each action
+**Pages**: `docs/pages/` for page-specific implementation details
+**Architecture**: `docs/architecture.md` for system design and patterns

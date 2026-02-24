@@ -3,7 +3,7 @@
 import { AlertCircle, RefreshCw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 
 interface ErrorPageProps {
   error: globalThis.Error & { digest?: string };

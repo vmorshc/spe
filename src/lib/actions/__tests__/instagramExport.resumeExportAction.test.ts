@@ -85,7 +85,6 @@ describe('resumeExportAction integration (Redis + real getCurrentUser)', () => {
     // Counters
     expect(record.counters.appended).toBe(1000);
     expect(record.counters.skipped.duplicates).toBe(0);
-    expect(record.counters.skipped.byAuthor).toBe(0);
   }, 120_000);
 
   it('skips duplicate comments by commentId across pages', async () => {
@@ -129,6 +128,5 @@ describe('resumeExportAction integration (Redis + real getCurrentUser)', () => {
 
     expect(record.counters.appended).toBe(DUP_PAGE_SIZE);
     expect(record.counters.skipped.duplicates).toBe(DUP_PAGE_SIZE);
-    expect(record.counters.skipped.byAuthor).toBe(0);
   }, 120_000);
 });

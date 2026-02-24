@@ -22,9 +22,8 @@ export interface ExportRecord {
   counters: {
     appended: number;
     failed: number;
-    skipped: { duplicates: number; byAuthor: number };
+    skipped: { duplicates: number };
   };
-  dedupe: { byCommentId: true; firstPerAuthor: boolean };
   list: { key: string; length: number };
   file: { key: string; size: number; urlExpiresAt?: string; mime: 'text/csv' } | null;
   error: { code: string; message: string } | null;

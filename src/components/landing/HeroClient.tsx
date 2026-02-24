@@ -5,7 +5,7 @@ import { CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { incrementLandingVisits } from '@/lib/actions/counters';
-import Button from '../ui/Button';
+import { Button } from '../ui/Button';
 import Section from '../ui/Section';
 
 interface HeroClientProps {
@@ -132,7 +132,7 @@ export default function HeroClient({
             {instagramMvpEnabled ? (
               <Button
                 size="lg"
-                variant="primary"
+                variant="default"
                 className="text-lg px-8 py-4"
                 onClick={handleStartGiveaway}
               >
@@ -141,7 +141,7 @@ export default function HeroClient({
             ) : (
               <Button
                 size="lg"
-                variant="primary"
+                variant="default"
                 className="text-lg px-8 py-4"
                 onClick={handleWaitlistScroll}
               >

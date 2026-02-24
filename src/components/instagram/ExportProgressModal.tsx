@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import { getExportAction, resumeExportAction } from '@/lib/actions/instagramExport';
 
 type ExportStatus = 'pending' | 'running' | 'csv_pending' | 'done' | 'failed' | null;

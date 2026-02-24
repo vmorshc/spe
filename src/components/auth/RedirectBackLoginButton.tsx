@@ -4,9 +4,9 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import LoginButton from './LoginButton';
 
 interface RedirectBackLoginButtonProps {
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'default' | 'lg';
   className?: string;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  variant?: 'default' | 'secondary' | 'outline' | 'ghost';
 }
 
 /**
@@ -16,7 +16,7 @@ interface RedirectBackLoginButtonProps {
 export default function RedirectBackLoginButton({
   size = 'lg',
   className = 'w-full justify-center',
-  variant = 'primary',
+  variant = 'default',
 }: RedirectBackLoginButtonProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();

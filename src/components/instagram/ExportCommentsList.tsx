@@ -6,7 +6,7 @@ import { Heart, MessageCircle } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import ExportProgressModal from '@/components/instagram/ExportProgressModal';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import { fetchExportCommentsAction } from '@/lib/actions/instagramExport';
 import type { ExportRecord } from '@/lib/instagramExport/types';
 

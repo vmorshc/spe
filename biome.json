@@ -54,5 +54,16 @@
     "formatter": {
       "indentWidth": 2
     }
+  },
+  "css": {
+    "parser": {
+      "cssModules": false,
+      "allowWrongLineComments": true,
+      "tailwindDirectives": true
+    },
+    "formatter": {
+      "enabled": true,
+      "indentWidth": 2
+    }
   }
 }

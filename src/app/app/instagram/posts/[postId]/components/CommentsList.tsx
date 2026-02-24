@@ -5,7 +5,7 @@ import { uk } from 'date-fns/locale';
 import { Heart, MessageCircle } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { VariableSizeList as List } from 'react-window';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import {
   getLastCommentsAction,
   getPostDetailsAction,

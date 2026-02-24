@@ -1,55 +1,20 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Dice4, Download, Settings } from 'lucide-react';
+import { Dice4, Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import Button from '@/components/ui/Button';
-import FullScreenLoader from '@/components/ui/FullScreenLoader';
-import { pickWinnerAction } from '@/lib/actions/instagram';
-import { startExportAction } from '@/lib/actions/instagramExport';
+import { Button } from '@/components/ui/Button';
 
 interface ActionBarProps {
   postId: string;
-  mode?: 'live' | 'export';
   exportId?: string;
 }
 
-export default function ActionBar({ postId, mode = 'live', exportId }: ActionBarProps) {
-  const [isExporting, setIsExporting] = useState(false);
-  const [isPickingWinner, setIsPickingWinner] = useState(false);
+export default function ActionBar({ postId }: ActionBarProps) {
   const router = useRouter();
 
-  const handleExportCsv = async () => {
-    try {
-      setIsExporting(true);
-      if (mode === 'export') {
-        if (!exportId) return;
-        router.push(`/api/exports/${exportId}/csv`);
-      } else {
-        const { exportId } = await startExportAction(postId);
-        router.push(`/app/instagram/posts/${postId}/exports/${exportId}`);
-      }
-    } catch (error) {
-      console.error('Error exporting CSV:', error);
-      alert('Помилка експорту CSV. Спробуйте ще раз.');
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
   const handlePickWinner = async () => {
-    try {
-      setIsPickingWinner(true);
-      await pickWinnerAction(postId);
-      // Show success message (placeholder for now)
-      alert('Функція вибору переможця буде доступна незабаром!');
-    } catch (error) {
-      console.error('Error picking winner:', error);
-      alert('Помилка вибору переможця. Спробуйте ще раз.');
-    } finally {
-      setIsPickingWinner(false);
-    }
+    router.push(`/app/instagram/export/${postId}`);
   };
 
   return (
@@ -59,35 +24,17 @@ export default function ActionBar({ postId, mode = 'live', exportId }: ActionBar
       transition={{ delay: 0.2 }}
       className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50"
     >
-      <FullScreenLoader
-        show={isExporting}
-        title="Готуємо експорт"
-        subtitle="Будь ласка, зачекайте..."
-      />
       <div className="max-w-4xl mx-auto px-4 py-4">
         <div className="flex items-center justify-center space-x-4">
           {/* Pick Winner Button */}
           <Button
             onClick={handlePickWinner}
-            disabled={isPickingWinner}
-            variant="primary"
+            variant="default"
             size="lg"
             className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
           >
-            <Dice4 className={`w-5 h-5 ${isPickingWinner ? 'animate-spin' : ''}`} />
+            <Dice4 className="w-5 h-5" />
             <span>Обрати переможця</span>
-          </Button>
-
-          {/* Export/Download CSV Button */}
-          <Button
-            onClick={handleExportCsv}
-            disabled={isExporting}
-            variant="outline"
-            size="lg"
-            className="flex items-center space-x-2"
-          >
-            <Download className={`w-5 h-5 ${isExporting ? 'animate-bounce' : ''}`} />
-            <span>{mode === 'export' ? 'Завантажити CSV' : 'Експорт'}</span>
           </Button>
 
           {/* Filters Button (Placeholder) */}

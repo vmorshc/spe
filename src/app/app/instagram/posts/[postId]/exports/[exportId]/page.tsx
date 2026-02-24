@@ -61,10 +61,10 @@ export default async function ExportPage({ params }: PageProps) {
 
       {/* Action Components */}
       <div className="hidden md:block">
-        <ActionBar postId={postId} mode="export" exportId={exportId} />
+        <ActionBar postId={postId} exportId={exportId} />
       </div>
       <div className="md:hidden">
-        <ActionDrawer postId={postId} mode="export" exportId={exportId} />
+        <ActionDrawer postId={postId} exportId={exportId} />
       </div>
     </div>
   );

@@ -1,61 +1,26 @@
 'use client';
 
 import { AnimatePresence, motion, useDragControls } from 'framer-motion';
-import { Dice4, Download, Settings, X } from 'lucide-react';
+import { Dice4, Settings, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import Button from '@/components/ui/Button';
-import { pickWinnerAction } from '@/lib/actions/instagram';
-import { startExportAction } from '@/lib/actions/instagramExport';
+import { Button } from '@/components/ui/Button';
 
 interface ActionDrawerProps {
   postId: string;
-  mode?: 'live' | 'export';
   exportId?: string;
 }
 
-export default function ActionDrawer({ postId, mode = 'live', exportId }: ActionDrawerProps) {
+export default function ActionDrawer({ postId }: ActionDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
-  const [isPickingWinner, setIsPickingWinner] = useState(false);
   const router = useRouter();
 
   const dragControls = useDragControls();
   const constraintsRef = useRef(null);
 
-  const handleExportCsv = async () => {
-    try {
-      setIsExporting(true);
-      if (mode === 'export') {
-        if (!exportId) return;
-        setIsOpen(false);
-        router.push(`/api/exports/${exportId}/csv`);
-      } else {
-        const { exportId } = await startExportAction(postId);
-        setIsOpen(false);
-        router.push(`/app/instagram/posts/${postId}/exports/${exportId}`);
-      }
-    } catch (error) {
-      console.error('Error exporting CSV:', error);
-      alert('Помилка експорту CSV. Спробуйте ще раз.');
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
   const handlePickWinner = async () => {
-    try {
-      setIsPickingWinner(true);
-      await pickWinnerAction(postId);
-      // Show success message (placeholder for now)
-      alert('Функція вибору переможця буде доступна незабаром!');
-      setIsOpen(false);
-    } catch (error) {
-      console.error('Error picking winner:', error);
-      alert('Помилка вибору переможця. Спробуйте ще раз.');
-    } finally {
-      setIsPickingWinner(false);
-    }
+    setIsOpen(false);
+    router.push(`/app/instagram/export/${postId}`);
   };
 
   // Close drawer when clicking outside
@@ -155,25 +120,12 @@ export default function ActionDrawer({ postId, mode = 'live', exportId }: Action
                 {/* Pick Winner Button */}
                 <Button
                   onClick={handlePickWinner}
-                  disabled={isPickingWinner}
-                  variant="primary"
+                  variant="default"
                   size="lg"
                   className="w-full flex items-center justify-center space-x-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                 >
-                  <Dice4 className={`w-5 h-5 ${isPickingWinner ? 'animate-spin' : ''}`} />
+                  <Dice4 className="w-5 h-5" />
                   <span>Обрати переможця</span>
-                </Button>
-
-                {/* Export/Download CSV Button */}
-                <Button
-                  onClick={handleExportCsv}
-                  disabled={isExporting}
-                  variant="secondary"
-                  size="lg"
-                  className="w-full flex items-center justify-center space-x-3"
-                >
-                  <Download className={`w-5 h-5 ${isExporting ? 'animate-bounce' : ''}`} />
-                  <span>{mode === 'export' ? 'Завантажити CSV' : 'Експорт'}</span>
                 </Button>
 
                 {/* Filters Button (Placeholder) */}

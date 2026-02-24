@@ -4,7 +4,7 @@ import { RefreshCw } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import { refreshInstagramData } from '@/lib/actions/instagram';
 import type { InstagramProfile } from '@/lib/facebook/types';
 
