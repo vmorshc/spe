@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useWizard } from '@/lib/contexts/WizardContext';
 import type { NormalizedComment } from '@/lib/instagramExport/types';
@@ -9,7 +10,8 @@ import WinnerCardGlass from './WinnerCardGlass';
 import WinnerDetailsOverlay from './WinnerDetailsOverlay';
 
 export default function Step4Winners() {
-  const { winners, goBack } = useWizard();
+  const { winners } = useWizard();
+  const router = useRouter();
   const [showRoulette, setShowRoulette] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
   const [selectedWinner, setSelectedWinner] = useState<NormalizedComment | null>(null);
@@ -88,10 +90,10 @@ export default function Step4Winners() {
       >
         <button
           type="button"
-          onClick={goBack}
+          onClick={() => router.push('/app/instagram/posts')}
           className="text-sm text-muted-foreground/60 hover:text-muted-foreground transition-colors duration-200 px-4 py-2 rounded-lg bg-transparent hover:bg-muted/30"
         >
-          Назад
+          До публікацій
         </button>
       </motion.div>
     </motion.div>
