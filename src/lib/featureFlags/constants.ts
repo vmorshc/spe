@@ -1,9 +1,7 @@
 /**
  * Feature flag names - used as keys in the feature flags object
  */
-export const FEATURE_FLAGS = {
-  INSTAGRAM_MVP: 'instagram_mvp',
-} as const;
+export const FEATURE_FLAGS = {} as const;
 
 export type FeatureFlagName = (typeof FEATURE_FLAGS)[keyof typeof FEATURE_FLAGS];
 
@@ -17,14 +15,7 @@ export interface FeatureFlagDefinition {
   defaultValue: boolean;
 }
 
-export const FEATURE_FLAG_DEFINITIONS: FeatureFlagDefinition[] = [
-  {
-    name: FEATURE_FLAGS.INSTAGRAM_MVP,
-    displayName: 'Instagram MVP',
-    description: 'Увімкнути функціонал Instagram включаючи вхід та функції розіграшу',
-    defaultValue: false,
-  },
-];
+export const FEATURE_FLAG_DEFINITIONS: FeatureFlagDefinition[] = [];
 
 /**
  * Get default feature flags object

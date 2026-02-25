@@ -10,13 +10,9 @@ import Section from '../ui/Section';
 
 interface HeroClientProps {
   initialVisitCount: number;
-  instagramMvpEnabled?: boolean;
 }
 
-export default function HeroClient({
-  initialVisitCount,
-  instagramMvpEnabled = false,
-}: HeroClientProps) {
+export default function HeroClient({ initialVisitCount }: HeroClientProps) {
   const [visitCount, setVisitCount] = useState<number>(initialVisitCount);
   const [isIncrementing, setIsIncrementing] = useState<boolean>(false);
   const router = useRouter();
@@ -43,32 +39,6 @@ export default function HeroClient({
 
   const handleStartGiveaway = () => {
     router.push('/app/instagram/posts');
-  };
-
-  const handleWaitlistScroll = () => {
-    try {
-      const form = document.getElementById('waitlist-form');
-      if (form && 'scrollIntoView' in form) {
-        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-
-      // Focus management after scroll
-      window.setTimeout(() => {
-        const emailInput = document.querySelector(
-          '#waitlist-form input[name="email"]'
-        ) as HTMLInputElement | null;
-        if (emailInput) {
-          emailInput.focus();
-          return;
-        }
-        const heading = document.querySelector('#waitlist h3') as HTMLElement | null;
-        if (heading) {
-          heading.focus?.();
-        }
-      }, 400);
-    } catch {
-      // no-op
-    }
   };
 
   return (
@@ -129,25 +99,9 @@ export default function HeroClient({
             transition={{ duration: 0.8, delay: 0.8 }}
             className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
           >
-            {instagramMvpEnabled ? (
-              <Button
-                size="lg"
-                variant="default"
-                className="text-lg px-8 py-4"
-                onClick={handleStartGiveaway}
-              >
-                Почати розіграш
-              </Button>
-            ) : (
-              <Button
-                size="lg"
-                variant="default"
-                className="text-lg px-8 py-4"
-                onClick={handleWaitlistScroll}
-              >
-                Долучитись до waitlist
-              </Button>
-            )}
+            <Button size="hero" variant="hero" onClick={handleStartGiveaway}>
+              Почати розіграш
+            </Button>
           </motion.div>
         </motion.div>
 

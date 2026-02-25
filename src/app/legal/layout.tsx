@@ -27,13 +27,9 @@ export default function LegalLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // For static legal pages, we default to false for feature flags
-  // since these pages are force-static and can't access session data
-  const instagramMvpEnabled = false;
-
   return (
     <main>
-      <Header instagramMvpEnabled={instagramMvpEnabled} />
+      <Header />
       <div className="min-h-screen bg-white">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="legal-content-container">

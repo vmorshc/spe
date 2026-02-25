@@ -48,9 +48,6 @@ export default function ContactPage() {
         <p>
           Електронна пошта: <a href="mailto:support@pickly.com.ua">support@pickly.com.ua</a>
         </p>
-        <p>
-          Телефон: <a href="tel:+380636605116">+38 (063) 660-51-16</a>
-        </p>
       </address>
       <p>
         З питань зловживань або безпеки:{' '}

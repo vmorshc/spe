@@ -1,16 +1,15 @@
 import Footer from '@/components/landing/Footer';
 import Header from '@/components/landing/Header';
 import FeatureFlagsClient from '@/components/system/FeatureFlagsClient';
-import { getFeatureFlag, getFeatureFlags } from '@/lib/featureFlags';
-import { FEATURE_FLAG_DEFINITIONS, FEATURE_FLAGS } from '@/lib/featureFlags/constants';
+import { getFeatureFlags } from '@/lib/featureFlags';
+import { FEATURE_FLAG_DEFINITIONS } from '@/lib/featureFlags/constants';
 
 export default async function SystemFlagsPage() {
   const currentFlags = await getFeatureFlags();
-  const instagramMvpEnabled = await getFeatureFlag(FEATURE_FLAGS.INSTAGRAM_MVP);
 
   return (
     <>
-      <Header instagramMvpEnabled={instagramMvpEnabled} />
+      <Header />
       <main className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg shadow-sm p-6">

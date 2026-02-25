@@ -7,7 +7,7 @@ export const sharedConfig = {
   // OAuth configuration
   FACEBOOK_REDIRECT_PATH: '/auth/callback',
 
-  SUPPORT_EMAIL: 'support@pickly.com',
+  SUPPORT_EMAIL: 'support@pickly.com.ua',
   INSTAGRAM_URL: 'https://www.instagram.com/pickly.dev',
   FACEBOOK_PAGE_URL: 'https://www.facebook.com/pickly.com.ua',
   // Add other hardcoded constants here as needed
