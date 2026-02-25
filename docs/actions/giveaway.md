@@ -155,12 +155,13 @@ Implementation lives in `src/lib/giveaway/engine.ts` (`GiveawayEngine` class).
 - `Step4Winners.tsx` — displays `NormalizedComment[]` winners from context (no direct action call)
 
 ### Data Flow
-1. User configures `winnerCount`, `uniqueUsers`, `uniqueWinners` in Step 3
-2. Client calls `runGiveawayAction({ exportId, media, winnerCount, ... })`
-3. Server runs draw, persists `GiveawayRecord`, returns `{ giveawayId, winners }`
-4. `winners` (`NormalizedComment[]`) stored in `WizardContext`
-5. Step 4 displays winners with confetti animation
-6. Full record retrievable at any time via `getGiveawayAction(giveawayId)` for audit
+1. User configures `uniqueUsers`, `uniqueWinners` (both default **on**) and `winnerCount` in Step 3
+2. When `uniqueUsers` is toggled, `maxWinners` switches between `exportRecord.list.length` (total comments) and `exportRecord.counters.uniqUsers` (unique commenters); `winnerCount` is clamped if it exceeds the new max
+3. Client calls `runGiveawayAction({ exportId, media, winnerCount, uniqueUsers, uniqueWinners })`
+4. Server runs draw, persists `GiveawayRecord`, returns `{ giveawayId, winners }`
+5. `winners` (`NormalizedComment[]`) stored in `WizardContext`
+6. Step 4 displays winners with confetti animation
+7. Full record retrievable at any time via `getGiveawayAction(giveawayId)` for audit
 
 ---
 

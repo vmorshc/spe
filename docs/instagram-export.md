@@ -26,11 +26,18 @@ Purpose: Export Instagram post comments into a Redis-backed job with progress tr
 - Hard cap: 5,000 appended comments (`HARD_CAP`).
 - Dedupe by comment ID prevents the same comment being stored twice across paginated fetches.
 
+## Unique Users Counter
+
+- `counters.uniqUsers` tracks the approximate number of distinct users who commented.
+- Uses Redis HyperLogLog (`PFADD`/`PFCOUNT`) via `countUniqUsers(exportId, userId?)`.
+- Each comment's `userId` is added during `resumeExportAction`; the count is saved to the export record after each batch.
+
 ## Redis Storage
 
 - Record: `igexp:{exportId}` (7d TTL).
 - Comments list: `igexp:{exportId}:comments` (3d TTL).
 - Dedupe set: `igexp:{exportId}:dedupe:comments` (3d TTL).
+- Unique users HLL: `igexp:{exportId}:hll:users` (3d TTL).
 - Indexes: `igexp:index:media:{mediaId}` and `igexp:index:user:{instagramId}` (14d TTL).
 
 ## Pagination

@@ -26,6 +26,10 @@ export class InstagramExportRepository extends BaseRedisRepository {
     return this.getKey(`${exportId}:dedupe:comments`);
   }
 
+  private uniqUsersKey(exportId: string): string {
+    return this.getKey(`${exportId}:hll:users`);
+  }
+
   private postIndexKey(mediaId: string): string {
     return this.getKey(`index:media:${mediaId}`);
   }
@@ -104,6 +108,16 @@ export class InstagramExportRepository extends BaseRedisRepository {
   async getCommentsCount(exportId: string): Promise<number> {
     if (!this.client) return 0;
     return await this.client.llen(this.listKey(exportId));
+  }
+
+  async countUniqUsers(exportId: string, userId?: string): Promise<number> {
+    if (!this.client) return 0;
+    const key = this.uniqUsersKey(exportId);
+    if (userId) {
+      await this.client.pfadd(key, userId);
+      await this.client.expire(key, this.LIST_TTL_SECONDS);
+    }
+    return await this.client.pfcount(key);
   }
 
   async addToPostIndex(mediaId: string, exportId: string, createdAtEpoch: number): Promise<void> {

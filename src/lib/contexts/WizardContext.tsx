@@ -18,6 +18,8 @@ interface WizardState {
   postDetails: InstagramMedia;
   existingExports: ExportListItem[];
   isNextLoading: boolean;
+  uniqueUsers: boolean;
+  uniqueWinners: boolean;
 }
 
 interface WizardNavigation {
@@ -30,6 +32,8 @@ interface WizardNavigation {
   setWinners: (winners: NormalizedComment[]) => void;
   setIsNextLoading: (loading: boolean) => void;
   setCanGoNext: (canGo: boolean) => void;
+  setUniqueUsers: (value: boolean) => void;
+  setUniqueWinners: (value: boolean) => void;
   registerNextHandler: (handler: (() => void | Promise<void>) | null) => void;
 }
 
@@ -61,6 +65,8 @@ export function WizardProvider({
   const [winners, setWinners] = useState<NormalizedComment[]>([]);
   const [isNextLoading, setIsNextLoading] = useState(false);
   const [canGoNext, setCanGoNext] = useState(false);
+  const [uniqueUsers, setUniqueUsers] = useState(true);
+  const [uniqueWinners, setUniqueWinners] = useState(true);
   const [nextHandler, setNextHandler] = useState<(() => void | Promise<void>) | null>(null);
 
   const maxSteps = 4;
@@ -141,6 +147,8 @@ export function WizardProvider({
       postDetails,
       existingExports,
       isNextLoading,
+      uniqueUsers,
+      uniqueWinners,
       canGoBack,
       canGoNext,
       goNext,
@@ -150,6 +158,8 @@ export function WizardProvider({
       setWinners,
       setIsNextLoading,
       setCanGoNext,
+      setUniqueUsers,
+      setUniqueWinners,
       registerNextHandler,
       prompt,
       showDownloadButton,
@@ -163,6 +173,8 @@ export function WizardProvider({
       postDetails,
       existingExports,
       isNextLoading,
+      uniqueUsers,
+      uniqueWinners,
       canGoBack,
       canGoNext,
       goNext,

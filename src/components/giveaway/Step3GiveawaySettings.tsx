@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { Label } from '@/components/ui/label';
+import { SettingCheckbox } from '@/components/ui/setting-checkbox';
 import { SliderWithInput } from '@/components/ui/slider-with-input';
 import { runGiveawayAction } from '@/lib/actions/giveaway';
 import { getExportAction } from '@/lib/actions/instagramExport';
@@ -17,10 +18,17 @@ export default function Step3GiveawaySettings() {
     setCanGoNext,
     setIsNextLoading,
     registerNextHandler,
+    uniqueUsers,
+    uniqueWinners,
+    setUniqueUsers,
+    setUniqueWinners,
   } = useWizard();
   const [winnerCount, setWinnerCount] = useState(1);
-  const [maxWinners, setMaxWinners] = useState(1);
+  const [totalComments, setTotalComments] = useState(1);
+  const [uniqUsers, setUniqUsers] = useState(1);
   const [exportDate, setExportDate] = useState<string>('');
+
+  const maxWinners = uniqueUsers ? uniqUsers : totalComments;
 
   useEffect(() => {
     if (!exportId) return;
@@ -28,7 +36,8 @@ export default function Step3GiveawaySettings() {
     const loadExportInfo = async () => {
       try {
         const record = await getExportAction(exportId);
-        setMaxWinners(record.list.length);
+        setTotalComments(record.list.length);
+        setUniqUsers(record.counters.uniqUsers);
         setExportDate(new Date(record.createdAt).toLocaleDateString('uk-UA'));
       } catch (error) {
         console.error('Failed to load export info:', error);
@@ -36,6 +45,13 @@ export default function Step3GiveawaySettings() {
     };
     void loadExportInfo();
   }, [exportId]);
+
+  // Clamp winnerCount when maxWinners changes
+  useEffect(() => {
+    if (winnerCount > maxWinners) {
+      setWinnerCount(maxWinners);
+    }
+  }, [maxWinners, winnerCount]);
 
   const handleWinnerCountChange = (value: number) => {
     setWinnerCount(value);
@@ -57,8 +73,8 @@ export default function Step3GiveawaySettings() {
         exportId,
         media: postDetails,
         winnerCount,
-        uniqueUsers: false,
-        uniqueWinners: false,
+        uniqueUsers,
+        uniqueWinners,
       });
       setWinners(winners);
     } catch (error) {
@@ -68,7 +84,16 @@ export default function Step3GiveawaySettings() {
     } finally {
       setIsNextLoading(false);
     }
-  }, [winnerCount, maxWinners, exportId, postDetails, setIsNextLoading, setWinners]);
+  }, [
+    winnerCount,
+    maxWinners,
+    exportId,
+    postDetails,
+    setIsNextLoading,
+    setWinners,
+    uniqueUsers,
+    uniqueWinners,
+  ]);
 
   useEffect(() => {
     if (currentStep === 3) {
@@ -93,6 +118,20 @@ export default function Step3GiveawaySettings() {
         <p className="text-muted-foreground">
           Використовується список від {exportDate} ({maxWinners.toLocaleString('uk-UA')} учасників)
         </p>
+      </div>
+      <div className="space-y-3">
+        <SettingCheckbox
+          checked={uniqueUsers}
+          onCheckedChange={setUniqueUsers}
+          title="Унікальні учасники"
+          description="Враховувати лише перший коментар від кожного користувача"
+        />
+        <SettingCheckbox
+          checked={uniqueWinners}
+          onCheckedChange={setUniqueWinners}
+          title="Унікальні переможці"
+          description="Кожен користувач може виграти лише один раз"
+        />
       </div>
       <div className="space-y-4">
         <Label>Кількість переможців</Label>

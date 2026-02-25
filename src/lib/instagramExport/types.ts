@@ -23,6 +23,7 @@ export interface ExportRecord {
     appended: number;
     failed: number;
     skipped: { duplicates: number };
+    uniqUsers: number;
   };
   list: { key: string; length: number };
   file: { key: string; size: number; urlExpiresAt?: string; mime: 'text/csv' } | null;

@@ -33,6 +33,7 @@ Sources: `src/lib/redis/README.md`, `src/lib/redis/client.ts`, `src/lib/redis/re
 - Export record: `igexp:{exportId}` with 7d TTL.
 - Comment list: `igexp:{exportId}:comments` with 3d TTL.
 - Dedupe sets: `igexp:{exportId}:dedupe:*` with 3d TTL.
+- Unique users HLL: `igexp:{exportId}:hll:users` with 3d TTL.
 - Indexes: `igexp:index:media:{mediaId}` and `igexp:index:user:{instagramId}` with 14d TTL.
 
 `GiveawayRepository` (`giveaway:*`)

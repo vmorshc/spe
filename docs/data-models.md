@@ -104,6 +104,7 @@ interface ExportRecord {
     fetched: number;           // Total fetched from API
     appended: number;          // Actually stored (after dedupe)
     skippedDupes: number;      // Skipped duplicate comment IDs
+    uniqUsers: number;         // Approximate unique commenters (HyperLogLog)
   };
 
   list: {
@@ -161,6 +162,7 @@ interface NormalizedComment {
 - `igexp:{exportId}` - TTL 7d - Export record
 - `igexp:{exportId}:comments` - TTL 3d - List of NormalizedComment (JSON)
 - `igexp:{exportId}:dedupe:comments` - TTL 3d - Set of comment IDs
+- `igexp:{exportId}:hll:users` - TTL 3d - HyperLogLog of unique user IDs
 - `igexp:index:media:{mediaId}` - TTL 14d - Set of export IDs for media
 - `igexp:index:user:{instagramId}` - TTL 14d - Set of export IDs for user
 

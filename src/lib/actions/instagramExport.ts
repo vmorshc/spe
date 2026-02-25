@@ -37,7 +37,7 @@ export async function startExportAction(mediaId: string): Promise<{ exportId: st
     owner: { instagramId: user.instagramId, username: user.username },
     post: { mediaId },
     igPaging: { afterCursor: null },
-    counters: { appended: 0, failed: 0, skipped: { duplicates: 0 } },
+    counters: { appended: 0, failed: 0, skipped: { duplicates: 0 }, uniqUsers: 0 },
     list: { key: instagramExportRepository.buildListKey(exportId), length: 0 },
     file: null,
     error: null,
@@ -127,6 +127,11 @@ export async function resumeExportAction(exportId: string, budgetMs = 1500): Pro
         record.counters.skipped.duplicates += res.skippedDuplicates;
         const newLen = await instagramExportRepository.getCommentsCount(exportId);
         record.list.length = newLen;
+
+        for (const c of slice) {
+          await instagramExportRepository.countUniqUsers(exportId, c.userId);
+        }
+        record.counters.uniqUsers = await instagramExportRepository.countUniqUsers(exportId);
 
         // Update paging cursor
         after = data.paging?.cursors?.after;
