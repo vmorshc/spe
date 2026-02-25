@@ -26,7 +26,7 @@ export default function WinnerDetailsOverlay({ winner, onClose }: WinnerDetailsO
     // biome-ignore lint/a11y/noStaticElementInteractions: backdrop dismiss is intentional
     // biome-ignore lint/a11y/useKeyWithClickEvents: handled by onKeyDown on close button
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm p-4"
       onClick={onClose}
     >
       <motion.div
@@ -36,20 +36,11 @@ export default function WinnerDetailsOverlay({ winner, onClose }: WinnerDetailsO
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         onClick={(e) => e.stopPropagation()}
         onMouseMove={handleMouseMove}
-        className="relative overflow-hidden rounded-2xl backdrop-blur-sm bg-white/95 border border-amber-400/50 shadow-2xl shadow-amber-500/20 group max-w-lg w-full max-h-[90vh] overflow-y-auto"
+        className="relative overflow-hidden rounded-2xl backdrop-blur-sm bg-white/95 border border-amber-400/50 shadow-2xl shadow-amber-500/20 max-w-lg w-full max-h-[90vh] overflow-y-auto"
         style={{
           backgroundImage: `radial-gradient(circle at ${glarePosition.x}% ${glarePosition.y}%, rgba(251, 191, 36, 0.15), transparent 60%)`,
         }}
       >
-        {/* Close button — visible only on hover */}
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-black/10 hover:bg-black/20 flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100"
-        >
-          <X className="w-4 h-4 text-foreground/60" />
-        </button>
-
         <div className="p-8 space-y-6">
           {/* User avatar and info */}
           <div className="flex flex-col items-center space-y-4">
@@ -82,6 +73,20 @@ export default function WinnerDetailsOverlay({ winner, onClose }: WinnerDetailsO
           </p>
         </div>
       </motion.div>
+
+      {/* Dismiss hint below the modal */}
+      <motion.button
+        type="button"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0 }}
+        transition={{ delay: 0.3 }}
+        onClick={onClose}
+        className="mt-4 flex items-center gap-1.5 text-white/50 hover:text-white/70 transition-colors text-xs"
+      >
+        <X className="w-3 h-3" />
+        <span>натисніть щоб закрити</span>
+      </motion.button>
     </div>
   );
 }

@@ -45,7 +45,7 @@ export default function WizardBottomNav() {
           </div>
           <div className="flex items-center gap-2">
             {exportRecord && exportRecord.counters.appended > 0 && (
-              <div className="text-sm text-muted-foreground mr-2">
+              <div className="hidden sm:block text-sm text-muted-foreground mr-2">
                 Коментарів {exportRecord.counters.appended.toLocaleString('uk-UA')}
               </div>
             )}

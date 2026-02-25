@@ -30,8 +30,8 @@ export default async function InstagramPostsPage() {
       <div className="min-h-screen bg-white">
         <AppHeader title="Instagram публікації" />
 
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="flex justify-center mb-8">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
+          <div className="flex justify-center mb-4 sm:mb-8">
             <div className="w-full max-w-4xl">
               <Suspense fallback={<ProfileHeaderSkeleton />}>
                 <ProfileHeader profile={profile} />
@@ -41,8 +41,8 @@ export default async function InstagramPostsPage() {
 
           <div className="flex justify-center">
             <div className="w-full max-w-3xl">
-              <div className="border-b border-gray-200 mb-8">
-                <nav className="flex justify-center space-x-16">
+              <div className="border-b border-gray-200 mb-4 sm:mb-8">
+                <nav className="flex justify-center space-x-8 sm:space-x-16">
                   <button
                     type="button"
                     className="py-3 px-1 border-b-2 border-gray-900 text-sm font-medium text-gray-900 tracking-wide"
@@ -89,13 +89,13 @@ export default async function InstagramPostsPage() {
 
 function ProfileHeaderSkeleton() {
   return (
-    <div className="p-6">
-      <div className="flex items-center space-x-6">
-        <div className="w-20 h-20 bg-gray-200 rounded-full animate-pulse"></div>
-        <div className="flex-1">
+    <div className="pb-6 sm:pb-8">
+      <div className="flex items-center space-x-4 sm:space-x-8">
+        <div className="w-20 h-20 sm:w-32 sm:h-32 bg-gray-200 rounded-full animate-pulse flex-shrink-0"></div>
+        <div className="flex-1 min-w-0">
           <div className="h-6 bg-gray-200 rounded w-32 mb-2 animate-pulse"></div>
           <div className="h-4 bg-gray-200 rounded w-48 mb-4 animate-pulse"></div>
-          <div className="flex space-x-8">
+          <div className="flex space-x-4 sm:space-x-8">
             <div className="h-4 bg-gray-200 rounded w-16 animate-pulse"></div>
             <div className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
           </div>
