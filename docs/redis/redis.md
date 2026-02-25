@@ -35,6 +35,11 @@ Sources: `src/lib/redis/README.md`, `src/lib/redis/client.ts`, `src/lib/redis/re
 - Dedupe sets: `igexp:{exportId}:dedupe:*` with 3d TTL.
 - Indexes: `igexp:index:media:{mediaId}` and `igexp:index:user:{instagramId}` with 14d TTL.
 
+`GiveawayRepository` (`giveaway:*`)
+- Giveaway record: `giveaway:{giveawayId}` with 30d TTL.
+- Methods: `createGiveaway`, `getGiveaway`, `listByPost`, `listByProfile`.
+- Indexes: `giveaway:index:post:{mediaId}` and `giveaway:index:profile:{instagramId}` — sorted sets scored by `createdAt` epoch, 30d TTL.
+
 `NewsletterRateLimiter` (`newsletter_rate_limit:*`)
 - Sliding window limiter for newsletter subscriptions.
 
@@ -44,4 +49,5 @@ Sources: `src/lib/redis/README.md`, `src/lib/redis/client.ts`, `src/lib/redis/re
 - `InstagramRepository` in `src/lib/actions/instagram.ts`.
 - `UserRepository` in `src/lib/actions/auth.ts` and OAuth flow.
 - `InstagramExportRepository` in `src/lib/actions/instagramExport.ts`.
+- `GiveawayRepository` in `src/lib/actions/giveaway.ts`.
 - `NewsletterRateLimiter` in `src/lib/actions/newsletter.ts`.

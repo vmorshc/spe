@@ -164,6 +164,11 @@ interface NormalizedComment {
 - `igexp:index:media:{mediaId}` - TTL 14d - Set of export IDs for media
 - `igexp:index:user:{instagramId}` - TTL 14d - Set of export IDs for user
 
+### Giveaway Records
+- `giveaway:{giveawayId}` - TTL 30d - Full GiveawayRecord (JSON)
+- `giveaway:index:post:{mediaId}` - TTL 30d - Sorted set of giveawayIds by createdAt epoch
+- `giveaway:index:profile:{instagramId}` - TTL 30d - Sorted set of giveawayIds by createdAt epoch
+
 ### Counters
 - `counter:{counterName}` - No TTL - Persistent counter (e.g., `landing-visits`)
 
@@ -186,40 +191,81 @@ Current flags:
 
 ## Giveaway Data Models
 
-### WinnerSelection
+Source: `src/lib/giveaway/types.ts`
+
+### GiveawayRecord
+Full draw record persisted in Redis after each giveaway. Contains all data needed for independent public verification of the result.
+
 ```typescript
-interface WinnerSelection {
-  postId: string;
-  postCaption?: string;
-  postPermalink: string;
-  totalComments: number;
-  totalParticipants: number;
+interface GiveawayRecord {
+  giveawayId: string;          // UUID v4
+  createdAt: string;           // ISO timestamp — draw time
 
-  filters: {
-    firstPerAuthor: boolean;
-    excludeReplies: boolean;
+  exportId: string;            // Source export
+  profileId: string;           // Owner instagramId
+
+  post: {
+    mediaId: string;
+    postDateIso: string;       // Post publication date — part of the deterministic seed
+    permalink?: string;
+    caption?: string;
   };
 
-  seed: {
-    clientSeed: string;        // Client-generated random hex
-    serverHash: string;        // SHA-256 hash for verification
+  commentCount: number;        // commentsCountAtStart or list.length — part of seed
+
+  participantsHash: string;    // SHA-256 of newline-joined commentIds (filtered, sorted asc)
+  filteredParticipantCount: number; // Participant count after unique-users filter
+
+  options: {
+    uniqueUsers: boolean;      // Only first comment per userId participates
+    uniqueWinners: boolean;    // Each userId can win at most once
+    winnerCount: number;
   };
 
-  winner: {
-    commentId: string;
-    username: string;
-    userId: string;
-    text: string;
-    timestamp: string;
-    selectedIndex: number;
-  };
-
-  timestamp: string;
+  winners: GiveawayWinner[];   // All draw attempts — active and deprecated
 }
 ```
 
-**Storage**: Currently not persisted (future enhancement)
-**Usage**: Displayed in wizard step 4 with audit trail
+**Storage**: Redis `giveaway:{giveawayId}` with 30d TTL
+**Indexes**:
+- `giveaway:index:post:{mediaId}` — sorted set, score = createdAt epoch, 30d TTL
+- `giveaway:index:profile:{instagramId}` — sorted set, score = createdAt epoch, 30d TTL
+
+**Usage**: Giveaway audit trail, winner display, public seed verification
+
+### GiveawayWinner
+One draw attempt for one winner slot. Multiple entries exist for the same `winnerNumber` when a re-draw is forced by `uniqueWinners`; only the last attempt has `status === 'active'`.
+
+```typescript
+type GiveawayWinnerStatus = 'active' | 'deprecated';
+
+interface GiveawayWinner {
+  winnerNumber: number;        // 1-based slot (1 = first place, 2 = second, ...)
+  attempt: number;             // 1 = first draw, incremented on each re-draw
+  status: GiveawayWinnerStatus; // 'active' = this is the accepted winner; 'deprecated' = superseded
+  seedInput: string;           // Canonical seed string: postId|postDateIso|commentCount|giveawayDateIso|participantsHash|winnerNumber|attempt
+  seedHash: string;            // SHA-256 hex of seedInput — used as 32-byte ChaCha20 key
+  winnerIndex: number;         // Index in the filtered, sorted participants list
+  participant: {
+    commentId: string;
+    userId: string;
+    username: string;
+  };
+}
+```
+
+### GiveawayListItem
+Lightweight summary for list views.
+
+```typescript
+interface GiveawayListItem {
+  giveawayId: string;
+  createdAt: string;
+  post: { mediaId: string; permalink?: string };
+  options: { winnerCount: number };
+  activeWinnerCount: number;   // Winners with status === 'active'
+}
+```
 
 ## Data Lifecycle
 
@@ -234,6 +280,13 @@ interface WinnerSelection {
 3. When complete, moves to `csv_pending` then `done`
 4. Export record expires after 7 days, comments after 3 days
 
+### Giveaway Lifecycle
+1. User completes export (status `done`) and triggers draw from wizard Step 3
+2. `runGiveawayAction()` loads comments, runs `GiveawayEngine`, persists `GiveawayRecord`
+3. Winners returned as `NormalizedComment[]` to display in Step 4
+4. Record retrievable at any time via `getGiveawayAction(giveawayId)` for audit
+5. Record expires after 30 days
+
 ### Cache Lifecycle
 - Instagram profile/posts cache expires after 5 minutes
 - Can be manually invalidated via `refreshInstagramData()`
@@ -242,11 +295,11 @@ interface WinnerSelection {
 ## Migration Notes
 
 **Current State**: Redis-only storage with TTL-based expiration
-**Future State**: PostgreSQL for persistent data (exports, winners, analytics)
+**Future State**: PostgreSQL for persistent data (exports, giveaway records, analytics)
 
 Migration strategy:
 1. Keep Redis for caching and sessions
 2. Add PostgreSQL repositories parallel to Redis
 3. Migrate export records to DB tables
-4. Add winner history table
+4. Migrate giveaway records to DB (permanent audit trail, no TTL expiry)
 5. Implement audit logging

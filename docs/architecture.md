@@ -60,7 +60,7 @@ src/
 │   │   ├── auth.ts                # OAuth, session management
 │   │   ├── instagram.ts           # Profile, posts, comments
 │   │   ├── instagramExport.ts     # Comment export jobs
-│   │   ├── giveaway.ts            # Winner selection logic
+│   │   ├── giveaway.ts            # Giveaway draw, list, and detail actions
 │   │   ├── featureFlags.ts        # Session-scoped flags
 │   │   ├── counters.ts            # Visit counter
 │   │   └── newsletter.ts          # Waitlist signup
@@ -69,7 +69,7 @@ src/
 │   ├── facebook/                  # Facebook Graph API client
 │   ├── redis/                     # Redis client + repositories
 │   ├── instagramExport/           # Export types + utilities
-│   ├── giveaway/                  # Winner selection logic
+│   ├── giveaway/                  # GiveawayEngine (pure domain logic), types, unit tests
 │   └── types/                     # Shared TypeScript types
 │
 ├── config/
@@ -101,11 +101,15 @@ src/
 6. User downloads via `/api/exports/[exportId]/csv`
 
 ### Giveaway Wizard Flow
-1. User initiates wizard from post details
-2. Wizard loads post metadata and recent comments
-3. Step 1: Review post, Step 2: Configure filters
-4. Step 3: Generate random seed client-side, hash server-side
-5. Step 4: Display winner with confetti + audit trail
+1. User initiates wizard from post details (`WizardProvider` receives `postDetails: InstagramMedia`)
+2. **Step 1**: Select or start a comment export; waits until export status is `done`
+3. **Step 2**: Review the participant list (paginated comment viewer)
+4. **Step 3**: Configure `winnerCount`, `uniqueUsers`, `uniqueWinners`; click "Run Draw"
+   - Calls `runGiveawayAction({ exportId, media, winnerCount, uniqueUsers, uniqueWinners })`
+   - Server runs `GiveawayEngine` (ChaCha20-based, deterministic), persists `GiveawayRecord` in Redis
+   - Returns `{ giveawayId, winners: NormalizedComment[] }` to client
+5. **Step 4**: Display active winners with confetti animation
+   - Full `GiveawayRecord` (with seeds and hash) retrievable via `getGiveawayAction(giveawayId)` for public audit
 
 ## Security Architecture
 
@@ -139,6 +143,7 @@ All OAuth redirects validated against domain whitelist to prevent open redirect 
 - Sessions: 24 hours
 - Export records: 7 days
 - Comment lists: 3 days
+- Giveaway records: 30 days
 
 ### Database Preparation
 Infrastructure ready for PostgreSQL/MySQL integration. Current Redis usage is designed for easy migration to relational storage.

@@ -5,6 +5,7 @@ This project avoids traditional HTTP APIs. Data mutations and queries are done t
 - `src/lib/actions/auth.ts` (OAuth login, session, user state).
 - `src/lib/actions/instagram.ts` (profile, posts, comments, refresh, access checks).
 - `src/lib/actions/instagramExport.ts` (comment export jobs, export status, CSV prep).
+- `src/lib/actions/giveaway.ts` (run draw, list giveaways, get giveaway details — see `docs/actions/giveaway.md`).
 - `src/lib/actions/featureFlags.ts` (session-scoped flags).
 - `src/lib/actions/counters.ts` (landing visit counter).
 - `src/lib/actions/newsletter.ts` (waitlist signup).

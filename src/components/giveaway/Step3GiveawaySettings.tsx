@@ -4,13 +4,20 @@ import { motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { SliderWithInput } from '@/components/ui/slider-with-input';
-import { pickWinnersAction } from '@/lib/actions/giveaway';
+import { runGiveawayAction } from '@/lib/actions/giveaway';
 import { getExportAction } from '@/lib/actions/instagramExport';
 import { useWizard } from '@/lib/contexts/WizardContext';
 
 export default function Step3GiveawaySettings() {
-  const { exportId, setWinners, currentStep, setCanGoNext, setIsNextLoading, registerNextHandler } =
-    useWizard();
+  const {
+    exportId,
+    postDetails,
+    setWinners,
+    currentStep,
+    setCanGoNext,
+    setIsNextLoading,
+    registerNextHandler,
+  } = useWizard();
   const [winnerCount, setWinnerCount] = useState(1);
   const [maxWinners, setMaxWinners] = useState(1);
   const [exportDate, setExportDate] = useState<string>('');
@@ -46,8 +53,14 @@ export default function Step3GiveawaySettings() {
 
     setIsNextLoading(true);
     try {
-      const selectedWinners = await pickWinnersAction(exportId, winnerCount);
-      setWinners(selectedWinners);
+      const { winners } = await runGiveawayAction({
+        exportId,
+        media: postDetails,
+        winnerCount,
+        uniqueUsers: false,
+        uniqueWinners: false,
+      });
+      setWinners(winners);
     } catch (error) {
       console.error('Failed to pick winners:', error);
       alert('Помилка вибору переможців. Спробуйте ще раз.');
@@ -55,7 +68,7 @@ export default function Step3GiveawaySettings() {
     } finally {
       setIsNextLoading(false);
     }
-  }, [winnerCount, maxWinners, exportId, setIsNextLoading, setWinners]);
+  }, [winnerCount, maxWinners, exportId, postDetails, setIsNextLoading, setWinners]);
 
   useEffect(() => {
     if (currentStep === 3) {
