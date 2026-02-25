@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { Label } from '@/components/ui/label';
+import { NumberStepper } from '@/components/ui/number-stepper';
 import { SettingCheckbox } from '@/components/ui/setting-checkbox';
 import { SliderWithInput } from '@/components/ui/slider-with-input';
 import { runGiveawayAction } from '@/lib/actions/giveaway';
@@ -135,16 +136,24 @@ export default function Step3GiveawaySettings() {
       </div>
       <div className="space-y-4">
         <Label>Кількість переможців</Label>
+        <p className="text-xs text-muted-foreground">
+          Максимум: {maxWinners.toLocaleString('uk-UA')} учасників
+        </p>
         <SliderWithInput
           value={winnerCount}
           min={1}
           max={maxWinners}
           sliderMax={10}
           onChange={handleWinnerCountChange}
+          className="hidden lg:block"
         />
-        <p className="text-xs text-muted-foreground">
-          Максимум: {maxWinners.toLocaleString('uk-UA')} учасників
-        </p>
+        <NumberStepper
+          value={winnerCount}
+          min={1}
+          max={maxWinners}
+          onChange={handleWinnerCountChange}
+          className="block max-w-md lg:hidden"
+        />
       </div>
     </motion.div>
   );

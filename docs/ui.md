@@ -19,7 +19,8 @@
 - `src/components/ui/Section.tsx` section wrapper with background variants and consistent spacing.
 - `src/components/ui/AppHeader.tsx` authenticated app header with back and logout.
 - `src/components/ui/FullScreenLoader.tsx` blocking overlay for long operations.
-- `src/components/ui/slider-with-input.tsx` slider with inline editable numeric value display (mobile-optimized with numeric keyboard).
+- `src/components/ui/slider-with-input.tsx` slider with inline editable numeric value display (desktop only, `hidden lg:block`).
+- `src/components/ui/number-stepper.tsx` touch-friendly stepper with chevron arrows and inline editable input (mobile/tablet only, `block lg:hidden`).
 - `src/components/ui/setting-checkbox.tsx` card-style checkbox with title + description text, primary border/fill when checked. Used for giveaway options.
 - `src/components/instagram/InstagramHeader.tsx` legacy Instagram header (similar to AppHeader).
 - `src/components/giveaway/WizardContainer.tsx` consistent width container (`max-w-4xl mx-auto px-4`) for wizard layout and navigation alignment.
@@ -69,5 +70,5 @@
 - Responsive navigation with adaptive button text: `src/components/giveaway/WizardBottomNav.tsx` - shows icons on mobile/tablet, full text on desktop (lg+).
 - Real-time data display from context: `src/components/giveaway/WizardBottomNav.tsx` - displays comment counter using synchronized exportRecord.
 - Slider with editable value: `src/components/ui/slider-with-input.tsx` - combined slider and inline numeric input with auto-focus at max value, mobile numeric keyboard support.
-- Number input pattern: `src/components/giveaway/Step3GiveawaySettings.tsx` - uses SliderWithInput for winner count selection.
+- Number input pattern: `src/components/giveaway/Step3GiveawaySettings.tsx` - uses SliderWithInput on desktop (lg+), NumberStepper on mobile/tablet.
 - Card-style checkbox: `src/components/ui/setting-checkbox.tsx` - label wrapping hidden input with visual checkbox indicator, title, and muted description.
