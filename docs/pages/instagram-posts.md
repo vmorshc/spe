@@ -26,7 +26,7 @@ Main authenticated area to browse Instagram posts and choose a post for a giveaw
 
 **Actions**
 - Refresh Instagram data (clears cache, reloads).
-- Open a post to view details.
+- Click a post to open the giveaway wizard (`/app/instagram/export/[postId]`).
 - Logout from header.
 
 **States**

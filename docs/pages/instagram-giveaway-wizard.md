@@ -144,9 +144,8 @@ This pattern eliminates redundant API calls and ensures the UI always displays c
 ## Entry Points
 
 Users access the wizard from:
-- **ActionBar** (desktop): "Обрати переможця" button
-- **ActionDrawer** (mobile): FAB opens drawer with giveaway button
-- Both route to `/app/instagram/export/${postId}`
+- **Posts grid**: Clicking any post in the grid navigates directly to the wizard
+- **PostCard** link routes to `/app/instagram/export/${postId}`
 
 ## Future Enhancements
 
