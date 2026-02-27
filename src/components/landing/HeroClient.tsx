@@ -69,12 +69,27 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto lg:mx-0"
+            className="text-sm md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto lg:mx-0"
           >
             Наш сервіс автоматично завантажує коментарі, обирає випадкового переможця й одразу
             показує результат. Ніяких екселів, скріншотів і підозрілих «рандомайзерів» — лише
             прозорий процес.
           </motion.p>
+
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8"
+          >
+            <div id="hero-cta" className="flex flex-col md:flex-row items-center gap-2">
+              <Button size="hero" variant="hero" onClick={handleStartGiveaway}>
+                Почати розіграш
+              </Button>
+              <span className="text-sm font-medium text-green-600">повністю безкоштовно</span>
+            </div>
+          </motion.div>
 
           {/* Benefits */}
           <motion.div
@@ -98,21 +113,6 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-5 h-5 text-green-500" />
               <span>За хвилину готово</span>
-            </div>
-          </motion.div>
-
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-          >
-            <div id="hero-cta" className="flex flex-col md:flex-row items-center gap-2">
-              <Button size="hero" variant="hero" onClick={handleStartGiveaway}>
-                Почати розіграш
-              </Button>
-              <span className="text-sm font-medium text-green-600">повністю безкоштовно</span>
             </div>
           </motion.div>
         </motion.div>
