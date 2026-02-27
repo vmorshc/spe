@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import GiveawayHeader from '@/components/giveaway/GiveawayHeader';
 import GiveawayWizardClient from '@/components/giveaway/GiveawayWizardClient';
 import { getPostDetailsAction } from '@/lib/actions/instagram';
 import { listExportsByMediaAction } from '@/lib/actions/instagramExport';
@@ -22,6 +23,7 @@ export default async function GiveawayWizardPage({ params }: PageProps) {
 
   return (
     <div className="h-full">
+      <GiveawayHeader />
       <Suspense fallback={<WizardSkeleton />}>
         <GiveawayWizardClient
           postId={postId}
