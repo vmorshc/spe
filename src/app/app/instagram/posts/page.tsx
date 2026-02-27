@@ -125,6 +125,7 @@ function PostsGridSkeleton() {
 }
 
 export const metadata = {
-  title: 'Instagram Posts | SPE',
-  description: 'Select posts for your Instagram giveaway',
+  title: 'Ваші публікації',
+  description: 'Оберіть публікацію для розіграшу в Instagram',
+  robots: { index: false, follow: false },
 };

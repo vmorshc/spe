@@ -4,6 +4,10 @@
 **Purpose**
 Let the user choose which Instagram Business/Creator profile to use after OAuth.
 
+**SEO**
+- Title: `Автентифікація | Pickly` (inherited from `src/app/auth/layout.tsx`)
+- Not indexed (`robots: noindex, nofollow`), blocked by robots.txt
+
 **Layout (Desktop)**
 ```text
 [Centered title + subtitle]

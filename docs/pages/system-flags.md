@@ -4,6 +4,10 @@
 **Purpose**
 Internal page to toggle feature flags for the current session.
 
+**SEO**
+- Title: `Системні прапорці | Pickly` (via template)
+- Not indexed (`robots: noindex, nofollow`), blocked by robots.txt
+
 **Layout (Desktop)**
 ```text
 [Landing Header]

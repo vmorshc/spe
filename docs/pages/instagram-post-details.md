@@ -4,6 +4,10 @@
 **Purpose**
 Show a single post with metadata and the latest comments. Provides actions to pick a winner or export comments.
 
+**SEO**
+- Title: `Деталі публікації | Pickly` (via `generateMetadata`, template)
+- Not indexed (`robots: noindex, nofollow`), blocked by robots.txt
+
 **Layout (Desktop)**
 ```text
 [AppHeader]

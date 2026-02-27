@@ -5,26 +5,26 @@ export const dynamic = 'force-static';
 export const revalidate = false;
 
 export const metadata: Metadata = {
-  title: 'Угода користувача - Pickly',
+  title: 'Угода користувача',
   description:
     'Угода користувача та правила використання Pickly - платформи для чесних розіграшів в Instagram.',
   keywords: 'угода користувача, правила, умови використання, Pickly, розіграші',
   openGraph: {
-    title: 'Угода користувача - Pickly',
+    title: 'Угода користувача',
     description:
       'Угода користувача та правила використання Pickly - платформи для чесних розіграшів в Instagram.',
-    url: 'https://pickly.com.ua/legal/terms',
+    url: '/legal/terms',
     type: 'website',
     locale: 'uk_UA',
     siteName: 'Pickly',
   },
   twitter: {
     card: 'summary',
-    title: 'Угода користувача - Pickly',
+    title: 'Угода користувача',
     description: 'Угода користувача та правила використання платформи Pickly.',
   },
   alternates: {
-    canonical: 'https://pickly.com.ua/legal/terms',
+    canonical: '/legal/terms',
   },
   robots: {
     index: true,

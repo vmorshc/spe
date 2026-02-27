@@ -4,6 +4,11 @@
 **Purpose**
 Static user agreement / terms of service page.
 
+**SEO**
+- Title: `Угода користувача | Pickly` (via template)
+- Indexed, canonical: `/legal/terms`
+- In sitemap (priority 0.3, yearly)
+
 **Layout (Desktop)**
 ```text
 [Landing Header]

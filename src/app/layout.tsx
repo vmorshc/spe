@@ -16,10 +16,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Pickly - Чесні розіграші в Instagram',
+  metadataBase: new URL('https://pickly.com.ua'),
+  title: {
+    default: 'Pickly — Чесні розіграші в Instagram',
+    template: '%s | Pickly',
+  },
   description:
     'Обери переможця чесно — за хвилину, без сумнівів. Автоматично завантажуємо коментарі, обираємо випадкового переможця й показуємо результат.',
-  keywords: 'розіграш, Instagram, переможець, чесний, прозорий, API, crypto-safe',
+  keywords: [
+    'розіграш',
+    'Instagram',
+    'переможець',
+    'чесний розіграш',
+    'прозорий',
+    'giveaway',
+    'рандомайзер',
+    'визначити переможця',
+    'коментарі Instagram',
+    'розіграш в інстаграм',
+    'випадковий переможець',
+    'crypto-safe',
+  ],
   authors: [{ name: 'Pickly' }],
   creator: 'Pickly',
   icons: {
@@ -31,14 +48,19 @@ export const metadata: Metadata = {
     locale: 'uk_UA',
     url: 'https://pickly.com.ua',
     siteName: 'Pickly',
-    title: 'Pickly - Чесні розіграші в Instagram',
+    title: 'Pickly — Чесні розіграші в Instagram',
     description:
       'Обери переможця чесно — за хвилину, без сумнівів. Автоматично завантажуємо коментарі, обираємо випадкового переможця й показуємо результат.',
+    images: ['/opengraph-image.png'],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Pickly - Чесні розіграші в Instagram',
+    title: 'Pickly — Чесні розіграші в Instagram',
     description: 'Обери переможця чесно — за хвилину, без сумнівів.',
+    images: ['/opengraph-image.png'],
+  },
+  alternates: {
+    canonical: '/',
   },
   robots: {
     index: true,
@@ -52,7 +74,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="uk" className="h-full">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen`}>
         <AuthProvider>{children}</AuthProvider>
       </body>

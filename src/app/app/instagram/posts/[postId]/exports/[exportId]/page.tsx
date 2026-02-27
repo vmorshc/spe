@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import ExportCommentsList from '@/components/instagram/ExportCommentsList';
 import ExportsDropdown from '@/components/instagram/ExportsDropdown';
@@ -9,6 +10,11 @@ import ActionBar from '../../components/ActionBar';
 import ActionDrawer from '../../components/ActionDrawer';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Результати експорту',
+  robots: { index: false, follow: false },
+};
 
 interface PageProps {
   params: Promise<{ postId: string; exportId: string }>;

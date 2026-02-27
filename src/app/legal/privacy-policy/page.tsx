@@ -5,24 +5,24 @@ export const dynamic = 'force-static';
 export const revalidate = false;
 
 export const metadata: Metadata = {
-  title: 'Політика Конфіденційності - Pickly',
+  title: 'Політика Конфіденційності',
   description: 'Політика Конфіденційності Pickly - платформи для чесних розіграшів в Instagram.',
   keywords: 'політика конфіденційності, Pickly, розіграші',
   openGraph: {
-    title: 'Політика Конфіденційності - Pickly',
+    title: 'Політика Конфіденційності',
     description: 'Політика Конфіденційності Pickly - платформи для чесних розіграшів в Instagram.',
-    url: 'https://pickly.com.ua/legal/terms',
+    url: '/legal/privacy-policy',
     type: 'website',
     locale: 'uk_UA',
     siteName: 'Pickly',
   },
   twitter: {
     card: 'summary',
-    title: 'Політика Конфіденційності - Pickly',
+    title: 'Політика Конфіденційності',
     description: 'Політика Конфіденційності платформи Pickly.',
   },
   alternates: {
-    canonical: 'https://pickly.com.ua/legal/terms',
+    canonical: '/legal/privacy-policy',
   },
   robots: {
     index: true,

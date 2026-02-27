@@ -4,6 +4,10 @@
 **Purpose**
 Main authenticated area to browse Instagram posts and choose a post for a giveaway.
 
+**SEO**
+- Title: `Ваші публікації | Pickly` (via template)
+- Not indexed (`robots: noindex, nofollow`), blocked by robots.txt
+
 **Layout (Desktop)**
 ```text
 [AppHeader: back, logo, title, logout]

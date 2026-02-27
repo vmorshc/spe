@@ -4,6 +4,11 @@
 **Purpose**
 Static contact information page for support, billing, and security inquiries.
 
+**SEO**
+- Title: `Контакти | Pickly` (via template)
+- Indexed, canonical: `/legal/contact`
+- In sitemap (priority 0.3, yearly)
+
 **Layout (Desktop)**
 ```text
 [Landing Header]

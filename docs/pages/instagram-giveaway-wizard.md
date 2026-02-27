@@ -6,6 +6,10 @@
 **Purpose**
 A 4-step wizard for conducting transparent, fair Instagram comment-based giveaways with cryptographically secure random winner selection.
 
+**SEO**
+- Title: `Розіграш | Pickly` (via template)
+- Not indexed (`robots: noindex, nofollow`), blocked by robots.txt
+
 **Layout**
 Uses the authenticated app layout (`/app/app/layout.tsx`) for auth guard, but renders without AppHeader for a clean, distraction-free wizard experience.
 

@@ -4,6 +4,10 @@
 **Purpose**
 Show OAuth failure reasons and allow the user to retry.
 
+**SEO**
+- Title: `Автентифікація | Pickly` (inherited from `src/app/auth/layout.tsx`)
+- Not indexed (`robots: noindex, nofollow`), blocked by robots.txt
+
 **Layout (Desktop)**
 ```text
 [Full-screen light background]

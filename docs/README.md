@@ -31,6 +31,9 @@ Start here if you're new to the codebase:
 - [user-flow/user-path.md](./user-flow/user-path.md) - Complete user interaction path
 - [user-flow/ga4-events.md](./user-flow/ga4-events.md) - GA4 event tracking reference
 
+**SEO & GEO**
+- [seo.md](./seo.md) - Technical SEO, structured data, OG images, sitemap, robots.txt, llms.txt
+
 ## Server Actions Reference
 
 All server actions documented in `actions/`:
@@ -65,6 +68,8 @@ Page-specific implementation details in `pages/`:
 - Redis repositories: `src/lib/redis/repositories/`
 - Facebook client: `src/lib/facebook/client.ts`
 - Configuration: `src/config/`
+- SEO schemas: `src/lib/seo/`
+- SEO components: `src/components/seo/`
 - UI components: `src/components/ui/`
 - Landing components: `src/components/landing/`
 - Instagram components: `src/components/instagram/`

@@ -1,8 +1,14 @@
+import type { Metadata } from 'next';
 import Footer from '@/components/landing/Footer';
 import Header from '@/components/landing/Header';
 import FeatureFlagsClient from '@/components/system/FeatureFlagsClient';
 import { getFeatureFlags } from '@/lib/featureFlags';
 import { FEATURE_FLAG_DEFINITIONS } from '@/lib/featureFlags/constants';
+
+export const metadata: Metadata = {
+  title: 'Системні прапорці',
+  robots: { index: false, follow: false },
+};
 
 export default async function SystemFlagsPage() {
   const currentFlags = await getFeatureFlags();

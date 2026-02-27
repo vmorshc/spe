@@ -1,9 +1,15 @@
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import GiveawayWizardClient from '@/components/giveaway/GiveawayWizardClient';
 import { getPostDetailsAction } from '@/lib/actions/instagram';
 import { listExportsByMediaAction } from '@/lib/actions/instagramExport';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Розіграш',
+  robots: { index: false, follow: false },
+};
 
 interface PageProps {
   params: Promise<{ postId: string }>;

@@ -6,6 +6,10 @@ View a specific export of all comments for a post, track export progress, and do
 
 **Note**: This page is being superseded by the new **Giveaway Wizard** at `/app/instagram/export/[postId]`. See `docs/pages/instagram-giveaway-wizard.md` for the redesigned multi-step flow with winner selection.
 
+**SEO**
+- Title: `Результати експорту | Pickly` (via template)
+- Not indexed (`robots: noindex, nofollow`), blocked by robots.txt
+
 **Layout (Desktop)**
 ```text
 [AppHeader]

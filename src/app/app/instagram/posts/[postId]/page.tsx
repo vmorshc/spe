@@ -135,13 +135,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const postDetails = await getPostDetailsAction(postId);
 
     return {
-      title: `Деталі публікації | SPE`,
+      title: 'Деталі публікації',
       description: postDetails.caption || 'Деталі Instagram публікації',
+      robots: { index: false, follow: false },
     };
   } catch (_error) {
     return {
-      title: 'Деталі публікації | SPE',
+      title: 'Деталі публікації',
       description: 'Деталі Instagram публікації',
+      robots: { index: false, follow: false },
     };
   }
 }

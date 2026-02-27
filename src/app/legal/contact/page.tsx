@@ -5,26 +5,26 @@ export const dynamic = 'force-static';
 export const revalidate = false;
 
 export const metadata: Metadata = {
-  title: 'Контакти — Pickly',
+  title: 'Контакти',
   description:
     'Офіційні контакти сервісу розіграшів Pickly: техпідтримка, питання щодо оплати та співпраці.',
   openGraph: {
-    title: 'Контакти — Pickly',
+    title: 'Контакти',
     description:
       'Офіційні контакти сервісу розіграшів Pickly: техпідтримка, питання щодо оплати та співпраці.',
-    url: 'https://pickly.com.ua/legal/contact',
+    url: '/legal/contact',
     type: 'website',
     locale: 'uk_UA',
     siteName: 'Pickly',
   },
   twitter: {
     card: 'summary',
-    title: 'Контакти — Pickly',
+    title: 'Контакти',
     description:
       'Офіційні контакти сервісу розіграшів Pickly: техпідтримка, питання щодо оплати та співпраці.',
   },
   alternates: {
-    canonical: 'https://pickly.com.ua/legal/contact',
+    canonical: '/legal/contact',
   },
   robots: {
     index: true,

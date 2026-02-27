@@ -4,6 +4,11 @@
 **Purpose**
 Static legal page describing privacy policy and data processing.
 
+**SEO**
+- Title: `Політика Конфіденційності | Pickly` (via template)
+- Indexed, canonical: `/legal/privacy-policy`
+- In sitemap (priority 0.3, yearly)
+
 **Layout (Desktop)**
 ```text
 [Landing Header]
