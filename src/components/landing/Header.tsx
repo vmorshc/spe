@@ -100,7 +100,7 @@ export default function Header() {
               FAQ
             </motion.button>
             <AnimatePresence>
-              {showCta && (
+              {isAuthenticated && showCta && (
                 <motion.div
                   layout
                   initial={{ opacity: 0, width: 0 }}
@@ -131,7 +131,7 @@ export default function Header() {
           {/* Mobile CTA + menu button */}
           <div className="md:hidden flex items-center gap-3">
             <AnimatePresence>
-              {showCta && (
+              {isAuthenticated && showCta && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
