@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -65,9 +66,13 @@ export default function Header() {
                 whileHover={{ scale: 1.05 }}
                 className="flex items-center space-x-2 cursor-pointer"
               >
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">SP</span>
-                </div>
+                <Image
+                  src="/images/pickly_character/pickly_neutral_head.png"
+                  alt="Pickly"
+                  width={32}
+                  height={32}
+                  className="rounded-lg"
+                />
                 <span className="text-xl font-bold text-gray-900">{sharedConfig.SITE_NAME}</span>
               </motion.div>
             </Link>
