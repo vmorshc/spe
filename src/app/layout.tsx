@@ -51,13 +51,13 @@ export const metadata: Metadata = {
     title: 'Pickly — Чесні розіграші в Instagram',
     description:
       'Обери переможця чесно — за хвилину, без сумнівів. Автоматично завантажуємо коментарі, обираємо випадкового переможця й показуємо результат.',
-    images: ['/opengraph-image.png'],
+    images: [{ url: '/images/logo_square.png', width: 1024, height: 1024, alt: 'Pickly' }],
   },
   twitter: {
-    card: 'summary_large_image',
+    card: 'summary',
     title: 'Pickly — Чесні розіграші в Instagram',
     description: 'Обери переможця чесно — за хвилину, без сумнівів.',
-    images: ['/opengraph-image.png'],
+    images: [{ url: '/images/logo_square.png', width: 1024, height: 1024, alt: 'Pickly' }],
   },
   alternates: {
     canonical: '/',

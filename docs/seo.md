@@ -19,7 +19,7 @@ The root layout sets global defaults inherited by all pages:
 - `metadataBase: new URL('https://pickly.com.ua')` — allows relative URLs in metadata
 - Title template: `{ default: '...', template: '%s | Pickly' }` — child pages only set the page-specific part
 - Expanded `keywords` array (Ukrainian + English search terms)
-- OG and Twitter images pointing to `/opengraph-image.png`
+- OG and Twitter images pointing to `/images/logo_square.png` (1024x1024 static PNG)
 - Canonical URL via `alternates.canonical`
 - Authors, creator, icons
 
@@ -80,17 +80,13 @@ Sitemap: https://pickly.com.ua/sitemap.xml
 
 FAQ data in schemas is kept in sync with `src/components/landing/FAQ.tsx`. When updating FAQ content, update both locations.
 
-## OG Image
+## OG / Social Image
 
-**File**: `src/app/opengraph-image.tsx`
-**URL**: `/opengraph-image` (auto-serves as `/opengraph-image.png`)
+**File**: `public/images/logo_square.png` (1024x1024 static PNG)
 
-Dynamic 1200x630 PNG generated with Next.js `ImageResponse` (edge runtime):
-- Dark gradient background (#0f172a → #1e293b → #334155)
-- Branded "P" logo box with blue-purple gradient
-- "Pickly" title + Ukrainian tagline
+Used as the image for all OpenGraph and Twitter meta tags. Referenced by root layout in both `openGraph.images` and `twitter.images`. Twitter card type is `summary` (square-friendly) rather than `summary_large_image`.
 
-Referenced by root layout in both `openGraph.images` and `twitter.images`.
+Also used as the `logo` in the Organization JSON-LD schema and `image` in the SoftwareApplication schema.
 
 ## PWA Manifest
 
@@ -129,7 +125,7 @@ SEO-related constants in `src/config/shared.ts`:
 | `src/app/layout.tsx` | Root metadata (title template, metadataBase, OG, etc.) |
 | `src/app/robots.ts` | robots.txt generation |
 | `src/app/sitemap.ts` | XML sitemap |
-| `src/app/opengraph-image.tsx` | Dynamic OG image |
+| `public/images/logo_square.png` | Static OG / social image (1024x1024) |
 | `src/app/manifest.ts` | PWA manifest |
 | `src/app/llms.txt/route.ts` | GEO for AI crawlers |
 | `src/app/auth/layout.tsx` | Auth pages noindex layout |

@@ -6,7 +6,7 @@ export function getOrganizationSchema() {
     '@type': 'Organization',
     name: sharedConfig.SITE_NAME,
     url: sharedConfig.SITE_URL,
-    logo: `${sharedConfig.SITE_URL}/icon.png`,
+    logo: `${sharedConfig.SITE_URL}/images/logo_square.png`,
     contactPoint: {
       '@type': 'ContactPoint',
       email: sharedConfig.SUPPORT_EMAIL,
@@ -30,6 +30,7 @@ export function getSoftwareApplicationSchema() {
       price: '0',
       priceCurrency: 'UAH',
     },
+    image: `${sharedConfig.SITE_URL}/images/logo_square.png`,
     description: sharedConfig.SITE_DESCRIPTION,
     inLanguage: 'uk',
     featureList: [

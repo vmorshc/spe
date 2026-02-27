@@ -8,7 +8,7 @@ Marketing landing page, explains the product and drives login or waitlist signup
 - Title: `Pickly — Чесні розіграші в Instagram` (root layout default)
 - Indexed, canonical: `/`
 - JSON-LD structured data: Organization, SoftwareApplication, FAQPage, WebSite
-- OG image: dynamic `/opengraph-image.png` (1200x630)
+- OG image: `/images/logo_square.png` (1024x1024)
 - In sitemap (priority 1.0, weekly)
 
 **Layout (Desktop)**
