@@ -3,10 +3,11 @@
 import { Image as ImageIcon, Instagram, Users } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import Section from '@/components/ui/Section';
 import { getTempProfileData, selectInstagramProfile } from '@/lib/actions/auth';
+import { trackEvent } from '@/lib/analytics';
 import { useAuth } from '@/lib/contexts/AuthContext';
 
 interface ProfileData {
@@ -28,8 +29,22 @@ function SelectProfileContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { refreshAuth } = useAuth();
+  const loginCallbackTracked = useRef(false);
 
   useEffect(() => {
+    // Track login_callback event (from OAuth redirect)
+    if (!loginCallbackTracked.current) {
+      loginCallbackTracked.current = true;
+      const loginStatus = searchParams.get('login_status');
+      const accountsCount = searchParams.get('accounts_count');
+      if (loginStatus) {
+        trackEvent('login_callback', {
+          status: loginStatus,
+          accounts_count: accountsCount ? Number(accountsCount) : 0,
+        });
+      }
+    }
+
     const tempId = searchParams.get('tempId');
     if (!tempId) {
       setError('Відсутній ідентифікатор сесії');
@@ -61,6 +76,13 @@ function SelectProfileContent() {
       if (!tempId) {
         throw new Error('Відсутній ідентифікатор сесії');
       }
+      const selectedProfile = profiles.find((p) => p.pageId === pageId);
+      trackEvent('profile_selected', {
+        profile_id: selectedProfile?.instagramId || '',
+        followers_count: selectedProfile?.followersCount || 0,
+        media_count: selectedProfile?.mediaCount || 0,
+        profiles_available_count: profiles.length,
+      });
       const result = await selectInstagramProfile(tempId, pageId);
       // Refresh auth state so Header shows correct state
       await refreshAuth();

@@ -2,7 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { trackEvent } from '@/lib/analytics';
 import { useWizard } from '@/lib/contexts/WizardContext';
 import type { NormalizedComment } from '@/lib/instagramExport/types';
 import ConfettiCanvas from './ConfettiCanvas';
@@ -10,19 +11,30 @@ import WinnerCardGlass from './WinnerCardGlass';
 import WinnerDetailsOverlay from './WinnerDetailsOverlay';
 
 export default function Step4Winners() {
-  const { winners } = useWizard();
+  const { winners, uniqueUsers, uniqueWinners } = useWizard();
   const router = useRouter();
   const [showRoulette, setShowRoulette] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
   const [selectedWinner, setSelectedWinner] = useState<NormalizedComment | null>(null);
+  const giveawayTracked = useRef(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowRoulette(false);
       setShowConfetti(true);
+
+      // Track giveaway completion when winners are revealed
+      if (!giveawayTracked.current) {
+        giveawayTracked.current = true;
+        trackEvent('giveaway_completed', {
+          winners_count: winners.length,
+          unique_users_enabled: uniqueUsers,
+          unique_winners_enabled: uniqueWinners,
+        });
+      }
     }, 2500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [winners, uniqueUsers, uniqueWinners]);
 
   if (showRoulette) {
     return (
@@ -74,7 +86,13 @@ export default function Step4Winners() {
               winner={winner}
               rank={index + 1}
               delay={index * 0.15}
-              onClick={() => setSelectedWinner(winner)}
+              onClick={() => {
+                trackEvent('winner_card_clicked', {
+                  winner_position: index + 1,
+                  winner_username: winner.username,
+                });
+                setSelectedWinner(winner);
+              }}
             />
           ))}
         </div>

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Download, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
+import { trackEvent } from '@/lib/analytics';
 import { useWizard } from '@/lib/contexts/WizardContext';
 import { WizardContainer } from './WizardContainer';
 import WizardDots from './WizardDots';
@@ -25,6 +26,10 @@ export default function WizardBottomNav() {
 
   const handleDownload = () => {
     if (exportId) {
+      trackEvent('comments_csv_downloaded', {
+        export_id: exportId,
+        comments_count: exportRecord?.counters.appended ?? 0,
+      });
       router.push(`/api/exports/${exportId}/csv`);
     }
   };

@@ -1,13 +1,14 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { NumberStepper } from '@/components/ui/number-stepper';
 import { SettingCheckbox } from '@/components/ui/setting-checkbox';
 import { SliderWithInput } from '@/components/ui/slider-with-input';
 import { runGiveawayAction } from '@/lib/actions/giveaway';
 import { getExportAction } from '@/lib/actions/instagramExport';
+import { trackEvent } from '@/lib/analytics';
 import { useWizard } from '@/lib/contexts/WizardContext';
 
 export default function Step3GiveawaySettings() {
@@ -28,6 +29,7 @@ export default function Step3GiveawaySettings() {
   const [totalComments, setTotalComments] = useState(1);
   const [uniqUsers, setUniqUsers] = useState(1);
   const [exportDate, setExportDate] = useState<string>('');
+  const stepStartTime = useRef(Date.now());
 
   const maxWinners = uniqueUsers ? uniqUsers : totalComments;
 
@@ -78,6 +80,13 @@ export default function Step3GiveawaySettings() {
         uniqueWinners,
       });
       setWinners(winners);
+      trackEvent('wizard_step3_completed', {
+        winner_count: winnerCount,
+        unique_users_enabled: uniqueUsers,
+        unique_winners_enabled: uniqueWinners,
+        total_participants: maxWinners,
+        step_duration_sec: Math.round((Date.now() - stepStartTime.current) / 1000),
+      });
     } catch (error) {
       console.error('Failed to pick winners:', error);
       alert('Помилка вибору переможців. Спробуйте ще раз.');

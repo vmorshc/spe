@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import PostsGrid from '@/components/instagram/PostsGrid';
+import PostsGridTracker from '@/components/instagram/PostsGridTracker';
 import ProfileHeader from '@/components/instagram/ProfileHeader';
 import AppHeader from '@/components/ui/AppHeader';
 import { getInstagramPosts, getInstagramProfile } from '@/lib/actions/instagram';
@@ -28,6 +29,11 @@ export default async function InstagramPostsPage() {
 
     return (
       <div className="min-h-screen bg-white">
+        <PostsGridTracker
+          profileUsername={profile.username}
+          followersCount={profile.followers_count}
+          postsLoadedCount={postsData.posts.length}
+        />
         <AppHeader title="Instagram публікації" />
 
         <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-8">

@@ -1,6 +1,9 @@
+'use client';
+
 import { Heart, MessageCircle, Play } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { trackEvent } from '@/lib/analytics';
 import type { InstagramMedia } from '@/lib/facebook/types';
 
 interface PostCardProps {
@@ -14,10 +17,20 @@ export default function PostCard({ post }: PostCardProps) {
   // Use thumbnail_url for videos, media_url for images
   const imageUrl = isVideo && post.thumbnail_url ? post.thumbnail_url : post.media_url;
 
+  const handlePostClick = () => {
+    trackEvent('post_selected', {
+      post_id: post.id,
+      media_type: post.media_type,
+      comments_count: post.comments_count ?? 0,
+      like_count: post.like_count ?? 0,
+    });
+  };
+
   return (
     <Link
       href={`/app/instagram/export/${post.id}`}
       className="group relative aspect-square block overflow-hidden bg-gray-100"
+      onClick={handlePostClick}
     >
       <div className="relative w-full h-full">
         <Image

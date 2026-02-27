@@ -5,6 +5,7 @@ import { CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { incrementLandingVisits } from '@/lib/actions/counters';
+import { trackEvent } from '@/lib/analytics';
 import { Button } from '../ui/Button';
 import Section from '../ui/Section';
 
@@ -38,6 +39,10 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
   }, []);
 
   const handleStartGiveaway = () => {
+    trackEvent('landing_cta_click', {
+      cta_type: 'start_giveaway',
+      cta_location: 'hero',
+    });
     router.push('/app/instagram/posts');
   };
 

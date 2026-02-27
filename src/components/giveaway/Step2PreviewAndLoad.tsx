@@ -21,11 +21,18 @@ import {
   getExportAction,
   resumeExportAction,
 } from '@/lib/actions/instagramExport';
+import { trackEvent } from '@/lib/analytics';
 import { useWizard } from '@/lib/contexts/WizardContext';
 import type { ExportRecord, ExportStatus, NormalizedComment } from '@/lib/instagramExport/types';
 
 export default function Step2PreviewAndLoad() {
-  const { exportId, setCanGoNext, setExportRecord: setWizardExportRecord } = useWizard();
+  const {
+    exportId,
+    setCanGoNext,
+    setExportRecord: setWizardExportRecord,
+    registerNextHandler,
+    currentStep,
+  } = useWizard();
   const [status, setStatus] = useState<ExportStatus>('pending');
   const [exportRecord, setExportRecord] = useState<ExportRecord | null>(null);
   const [comments, setComments] = useState<NormalizedComment[]>([]);
@@ -34,6 +41,10 @@ export default function Step2PreviewAndLoad() {
   const [loading, setLoading] = useState(false);
   const loadingRef = useRef(false);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
+  const exportStartTracked = useRef(false);
+  const exportEndTracked = useRef(false);
+  const exportStartTime = useRef(Date.now());
+  const stepStartTime = useRef(Date.now());
 
   const { ref: sentinelRef, inView } = useInView({ threshold: 0.5 });
 
@@ -76,9 +87,29 @@ export default function Step2PreviewAndLoad() {
         setStatus(rec.status);
 
         if (rec.status === 'pending' || rec.status === 'running' || rec.status === 'csv_pending') {
+          if (!exportStartTracked.current) {
+            exportStartTracked.current = true;
+            exportStartTime.current = Date.now();
+            trackEvent('export_started', {
+              export_id: exportId,
+              post_id: rec.post.mediaId,
+              expected_comments_count: rec.post.commentsCountAtStart ?? 0,
+            });
+          }
           await resumeExportAction(exportId, 1500);
           pollingRef.current = setTimeout(poll, 2500);
         } else if (rec.status === 'done') {
+          if (!exportEndTracked.current) {
+            exportEndTracked.current = true;
+            trackEvent('export_completed', {
+              export_id: exportId,
+              comments_loaded: rec.counters.appended,
+              comments_failed: rec.counters.failed,
+              duplicates_count: rec.counters.skipped.duplicates,
+              unique_users_count: rec.counters.uniqUsers,
+              export_duration_sec: Math.round((Date.now() - exportStartTime.current) / 1000),
+            });
+          }
           // Update the wizard context with the final export record
           setWizardExportRecord(rec);
           void loadComments();
@@ -86,7 +117,16 @@ export default function Step2PreviewAndLoad() {
         }
       } catch (error) {
         console.error('Polling error:', error);
-        if (mounted) setStatus('failed');
+        if (mounted) {
+          setStatus('failed');
+          if (!exportEndTracked.current) {
+            exportEndTracked.current = true;
+            trackEvent('export_failed', {
+              export_id: exportId,
+              error_message: error instanceof Error ? error.message : 'Unknown error',
+            });
+          }
+        }
       }
     };
 
@@ -97,6 +137,24 @@ export default function Step2PreviewAndLoad() {
       if (pollingRef.current) clearTimeout(pollingRef.current);
     };
   }, [exportId, loadComments, setCanGoNext, setWizardExportRecord]);
+
+  const handleStep2Next = useCallback(() => {
+    trackEvent('wizard_step2_completed', {
+      export_id: exportId || '',
+      total_comments: exportRecord?.counters.appended || 0,
+      unique_users_count: exportRecord?.counters.uniqUsers || 0,
+      step_duration_sec: Math.round((Date.now() - stepStartTime.current) / 1000),
+    });
+  }, [exportId, exportRecord]);
+
+  useEffect(() => {
+    if (currentStep === 2 && status === 'done') {
+      registerNextHandler(handleStep2Next);
+    }
+    return () => {
+      registerNextHandler(null);
+    };
+  }, [currentStep, status, registerNextHandler, handleStep2Next]);
 
   const columns: ColumnDef<NormalizedComment>[] = [
     {

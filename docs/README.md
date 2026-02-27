@@ -27,6 +27,10 @@ Start here if you're new to the codebase:
 **UI & Components**
 - [ui.md](./ui.md) - Component architecture and patterns
 
+**User Flow & Analytics**
+- [user-flow/user-path.md](./user-flow/user-path.md) - Complete user interaction path
+- [user-flow/ga4-events.md](./user-flow/ga4-events.md) - GA4 event tracking reference
+
 ## Server Actions Reference
 
 All server actions documented in `actions/`:

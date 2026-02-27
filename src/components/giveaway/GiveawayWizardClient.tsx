@@ -5,6 +5,7 @@ import type { InstagramMedia } from '@/lib/facebook/types';
 import type { ExportListItem } from '@/lib/instagramExport/types';
 import WizardBottomNav from './WizardBottomNav';
 import WizardShell from './WizardShell';
+import WizardTracker from './WizardTracker';
 
 interface GiveawayWizardClientProps {
   postId: string;
@@ -19,6 +20,7 @@ export default function GiveawayWizardClient({
 }: GiveawayWizardClientProps) {
   return (
     <WizardProvider postId={postId} postDetails={postDetails} existingExports={existingExports}>
+      <WizardTracker />
       <WizardShell />
       <WizardBottomNav />
     </WizardProvider>

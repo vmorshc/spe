@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { startExportAction } from '@/lib/actions/instagramExport';
+import { trackEvent } from '@/lib/analytics';
 import { useWizard } from '@/lib/contexts/WizardContext';
 
 export default function Step1ExportSetup() {
@@ -25,6 +26,7 @@ export default function Step1ExportSetup() {
     currentStep,
   } = useWizard();
   const [selectedValue, setSelectedValue] = useState<string>('new');
+  const stepStartRef = useRef(Date.now());
 
   const handleNext = useCallback(async () => {
     setIsNextLoading(true);
@@ -35,6 +37,11 @@ export default function Step1ExportSetup() {
       } else {
         setExportId(selectedValue);
       }
+      trackEvent('wizard_step1_completed', {
+        export_source: selectedValue === 'new' ? 'new' : 'existing',
+        export_id: selectedValue === 'new' ? '' : selectedValue,
+        step_duration_sec: Math.round((Date.now() - stepStartRef.current) / 1000),
+      });
     } catch (error) {
       console.error('Failed to start export:', error);
       alert('Помилка створення експорту. Спробуйте ще раз.');

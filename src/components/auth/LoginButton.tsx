@@ -4,6 +4,7 @@ import { Instagram } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { initiateOAuthLogin } from '@/lib/actions/auth';
+import { trackEvent } from '@/lib/analytics';
 import { useAuth } from '@/lib/contexts/AuthContext';
 
 interface LoginButtonProps {
@@ -27,6 +28,10 @@ export default function LoginButton({
   const handleLogin = async () => {
     try {
       setIsLoading(true);
+      trackEvent('login_start', {
+        auth_provider: 'facebook',
+        entry_point: redirectUrl || 'header',
+      });
       await initiateOAuthLogin({ redirectUrl });
       // Auth state will be refreshed when user returns from OAuth
     } catch (error) {

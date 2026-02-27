@@ -102,7 +102,12 @@ export async function GET(request: NextRequest) {
       await clearRedirectUrl();
 
       // Redirect to profile selection page
-      return NextResponse.redirect(new URL(`/auth/select-profile?tempId=${tempId}`, request.url));
+      return NextResponse.redirect(
+        new URL(
+          `/auth/select-profile?tempId=${tempId}&login_status=success&accounts_count=${instagramAccounts.length}`,
+          request.url
+        )
+      );
     } catch (error) {
       console.error('Token exchange or profile fetch failed:', error);
       return NextResponse.redirect(
