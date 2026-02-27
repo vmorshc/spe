@@ -2,10 +2,10 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Pickly — Чесні розіграші в Instagram',
+    name: 'Pickly — Безкоштовні чесні розіграші в Instagram',
     short_name: 'Pickly',
     description:
-      'Обери переможця чесно — за хвилину, без сумнівів. Автоматично завантажуємо коментарі, обираємо випадкового переможця й показуємо результат.',
+      'Безкоштовний сервіс для чесних розіграшів в Instagram. Автоматично завантажуємо коментарі, обираємо випадкового переможця й показуємо результат — без підписок та прихованих платежів.',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',

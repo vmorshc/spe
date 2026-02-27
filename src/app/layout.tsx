@@ -18,11 +18,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://pickly.com.ua'),
   title: {
-    default: 'Pickly — Чесні розіграші в Instagram',
+    default: 'Pickly — Безкоштовні чесні розіграші в Instagram',
     template: '%s | Pickly',
   },
   description:
-    'Обери переможця чесно — за хвилину, без сумнівів. Автоматично завантажуємо коментарі, обираємо випадкового переможця й показуємо результат.',
+    'Безкоштовний сервіс для чесних розіграшів в Instagram. Автоматично завантажуємо коментарі, обираємо випадкового переможця й показуємо результат — без підписок та прихованих платежів.',
   keywords: [
     'розіграш',
     'Instagram',
@@ -36,6 +36,10 @@ export const metadata: Metadata = {
     'розіграш в інстаграм',
     'випадковий переможець',
     'crypto-safe',
+    'безкоштовно',
+    'безкоштовний розіграш',
+    'безкоштовний рандомайзер',
+    'free giveaway picker',
   ],
   authors: [{ name: 'Pickly' }],
   creator: 'Pickly',
@@ -48,15 +52,16 @@ export const metadata: Metadata = {
     locale: 'uk_UA',
     url: 'https://pickly.com.ua',
     siteName: 'Pickly',
-    title: 'Pickly — Чесні розіграші в Instagram',
+    title: 'Pickly — Безкоштовні чесні розіграші в Instagram',
     description:
-      'Обери переможця чесно — за хвилину, без сумнівів. Автоматично завантажуємо коментарі, обираємо випадкового переможця й показуємо результат.',
+      'Безкоштовний сервіс для чесних розіграшів в Instagram. Автоматично завантажуємо коментарі, обираємо випадкового переможця й показуємо результат — без підписок та прихованих платежів.',
     images: [{ url: '/images/logo_square.png', width: 1024, height: 1024, alt: 'Pickly' }],
   },
   twitter: {
     card: 'summary',
-    title: 'Pickly — Чесні розіграші в Instagram',
-    description: 'Обери переможця чесно — за хвилину, без сумнівів.',
+    title: 'Pickly — Безкоштовні чесні розіграші в Instagram',
+    description:
+      'Безкоштовний сервіс для чесних розіграшів в Instagram — без підписок та прихованих платежів.',
     images: [{ url: '/images/logo_square.png', width: 1024, height: 1024, alt: 'Pickly' }],
   },
   alternates: {

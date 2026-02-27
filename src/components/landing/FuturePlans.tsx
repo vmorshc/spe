@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { FileText, Filter, Globe, Package } from 'lucide-react';
+import { Cpu, FileText, Filter, Globe, Package } from 'lucide-react';
 import { useCallback, useEffect, useState, useTransition } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { type NewsletterSubscriptionResult, subscribeToUpdates } from '@/lib/actions/newsletter';
@@ -22,9 +22,9 @@ const futurePlans = [
     color: 'bg-green-100 text-green-600',
   },
   {
-    icon: Package,
-    title: 'Пакетні тарифи',
-    description: 'Пакетні тарифи для агенцій та частих розіграшів.',
+    icon: Cpu,
+    title: 'Потужні алгоритми',
+    description: 'Будемо працювати опрацьовувати тисячі коментарів за сенкунди.',
     color: 'bg-purple-100 text-purple-600',
   },
   {
@@ -43,7 +43,10 @@ type FormData = {
 
 export default function FuturePlans() {
   const [isPending, startTransition] = useTransition();
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: 'success' | 'error';
+    text: string;
+  } | null>(null);
   const [formTimestamp] = useState(() => Date.now().toString());
 
   const {
@@ -171,10 +174,10 @@ export default function FuturePlans() {
       >
         <div className="bg-white rounded-xl p-8 shadow-sm">
           <h3 tabIndex={-1} className="text-2xl font-bold text-gray-900 mb-4">
-            Приєднайтесь до вейтліста Pickly
+            Приєднайтесь до Pickly
           </h3>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Залиште email — повідомимо про запуск і великі оновлення. Жодного спаму.
+            Залиште email — повідомимо про великі оновлення. Жодного спаму.
           </p>
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -205,7 +208,7 @@ export default function FuturePlans() {
                   },
                 })}
                 type="email"
-                placeholder="Ваша робоча email-адреса"
+                placeholder="Ваша email-адреса"
                 className={`px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent flex-1 ${
                   errors.email ? 'border-red-300' : 'border-gray-300'
                 }`}
@@ -216,7 +219,7 @@ export default function FuturePlans() {
                 disabled={isPending || isSubmitting}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors font-medium"
               >
-                {isPending || isSubmitting ? 'Підписка...' : 'Додати до вейтліста'}
+                {isPending || isSubmitting ? 'Підписка...' : 'Підписатись'}
               </button>
             </div>
 
