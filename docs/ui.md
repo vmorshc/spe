@@ -26,7 +26,7 @@
 - `src/components/giveaway/WizardContainer.tsx` consistent width container (`max-w-4xl mx-auto px-4`) for wizard layout and navigation alignment.
 
 **Feature Components**
-- Landing sections in `src/components/landing/*` (Header, Hero, HowItWorks, Benefits, FuturePlans, FAQ, Footer).
+- Landing sections in `src/components/landing/*` (Header, Hero, HowItWorks, Benefits, FuturePlans, FAQ, Footer). Header includes a scroll-triggered CTA button (IntersectionObserver on `#hero-cta`) with layout animations in desktop nav and AnimatePresence on mobile.
 - Auth components in `src/components/auth/*` (LoginButton, RedirectBackLoginButton, UserProfile).
 - Instagram flow in `src/components/instagram/*` (PostsGrid, PostCard, ProfileHeader, PostDetails, ExportCommentsList, ExportsDropdown, ExportProgressModal).
 - Giveaway wizard in `src/components/giveaway/*` (GiveawayWizardClient, WizardShell, WizardContainer, WizardBottomNav, WizardDots, Step1-4, WinnerCardGlass, WinnerDetailsOverlay, ConfettiCanvas).

@@ -11,7 +11,7 @@ export const sharedConfig = {
   FACEBOOK_REDIRECT_PATH: '/auth/callback',
 
   SUPPORT_EMAIL: 'support@pickly.com.ua',
-  INSTAGRAM_URL: 'https://www.instagram.com/pickly.dev',
+  INSTAGRAM_URL: 'https://www.instagram.com/pickly.com.ua',
   FACEBOOK_PAGE_URL: 'https://www.facebook.com/pickly.com.ua',
 } as const;
 

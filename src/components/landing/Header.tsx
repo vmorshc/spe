@@ -1,20 +1,43 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { sharedConfig } from '@/config';
+import { trackEvent } from '@/lib/analytics';
 import { useAuth } from '@/lib/contexts/AuthContext';
 import LoginButton from '../auth/LoginButton';
 import UserProfile from '../auth/UserProfile';
+import { Button } from '../ui/Button';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showCta, setShowCta] = useState(false);
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+
+  // Show header CTA when hero CTA scrolls out of view
+  useEffect(() => {
+    const heroCta = document.getElementById('hero-cta');
+    if (!heroCta) return;
+
+    const observer = new IntersectionObserver(([entry]) => setShowCta(!entry.isIntersecting), {
+      threshold: 0,
+    });
+    observer.observe(heroCta);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleCtaClick = () => {
+    trackEvent('landing_cta_click', {
+      cta_type: 'start_giveaway',
+      cta_location: 'header',
+    });
+    router.push('/app/instagram/posts');
+  };
 
   const handleNavigation = (sectionId: string) => {
     if (pathname === '/') {
@@ -51,29 +74,48 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <button
+          <motion.nav layout className="hidden md:flex items-center gap-8">
+            <motion.button
+              layout
               type="button"
               onClick={() => handleNavigation('how-it-works')}
               className="text-gray-700 hover:text-blue-600 transition-colors"
             >
               Як це працює
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              layout
               type="button"
               onClick={() => handleNavigation('benefits')}
               className="text-gray-700 hover:text-blue-600 transition-colors"
             >
               Переваги
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              layout
               type="button"
               onClick={() => handleNavigation('faq')}
               className="text-gray-700 hover:text-blue-600 transition-colors"
             >
               FAQ
-            </button>
-          </nav>
+            </motion.button>
+            <AnimatePresence>
+              {showCta && (
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: 'auto' }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={{ duration: 0.25, ease: 'easeInOut' }}
+                  className="overflow-hidden"
+                >
+                  <Button size="sm" variant="hero" className="rounded-lg" onClick={handleCtaClick}>
+                    Почати розіграш
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.nav>
 
           {/* CTA Button */}
           <div className="hidden md:flex items-center space-x-4">
@@ -86,14 +128,30 @@ export default function Header() {
             )}
           </div>
 
-          {/* Mobile menu button */}
-          <button
-            type="button"
-            className="md:hidden p-2 rounded-md text-gray-700 hover:text-blue-600 transition-colors"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile CTA + menu button */}
+          <div className="md:hidden flex items-center gap-3">
+            <AnimatePresence>
+              {showCta && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Button size="sm" variant="hero" className="rounded-lg" onClick={handleCtaClick}>
+                    Почати розіграш
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <button
+              type="button"
+              className="p-2 rounded-md text-gray-700 hover:text-blue-600 transition-colors"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}

@@ -13,8 +13,8 @@ Marketing landing page, explains the product and drives login or waitlist signup
 
 **Layout (Desktop)**
 ```text
-[Sticky Header: Logo | Nav links | Login/User]
-[Hero: Left text + CTA | Right visual card]
+[Sticky Header: Logo | Nav links (+ CTA on scroll) | Login/User]
+[Hero: Left text + CTA + "безкоштовно" | Right visual card]
 [How It Works: 3-step cards]
 [Why Trust Us: 2x2 cards]
 [Benefits: 4 cards]
@@ -25,7 +25,7 @@ Marketing landing page, explains the product and drives login or waitlist signup
 
 **Layout (Mobile)**
 ```text
-[Header: Logo + hamburger]
+[Header: Logo + (CTA on scroll) + hamburger]
 [Hero stacked]
 [All sections stacked as single column]
 [Footer stacked]
@@ -46,3 +46,4 @@ Marketing landing page, explains the product and drives login or waitlist signup
 **States**
 - CTA switches between "Start giveaway" and "Join waitlist" based on `instagram_mvp` flag.
 - Login button shows loading or user profile if authenticated.
+- Header CTA ("Почати розіграш") appears when hero CTA scrolls out of view (IntersectionObserver on `#hero-cta`). Shown in desktop nav and next to mobile burger menu with animated entrance.

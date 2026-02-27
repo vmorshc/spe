@@ -54,7 +54,7 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center lg:text-left"
+          className="text-center lg:text-left flex flex-col items-center lg:items-start"
         >
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -104,9 +104,12 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
             transition={{ duration: 0.8, delay: 0.8 }}
             className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
           >
-            <Button size="hero" variant="hero" onClick={handleStartGiveaway}>
-              Почати розіграш
-            </Button>
+            <div id="hero-cta" className="flex flex-col md:flex-row items-center gap-2">
+              <Button size="hero" variant="hero" onClick={handleStartGiveaway}>
+                Почати розіграш
+              </Button>
+              <span className="text-sm font-medium text-green-600">повністю безкоштовно</span>
+            </div>
           </motion.div>
         </motion.div>
 
