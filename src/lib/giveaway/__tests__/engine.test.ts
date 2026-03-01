@@ -292,7 +292,7 @@ describe('GiveawayEngine', () => {
         makeInput({
           participants: makeParticipants(2),
           winnerCount: 5,
-          options: { uniqueUsers: false, uniqueWinners: true },
+          options: { uniqueUsers: false, uniqueWinners: false },
         })
       );
       expect(() => engine.run()).toThrow('Cannot select 5 winners from 2 participants');

@@ -35,6 +35,10 @@ export async function runGiveawayAction(params: {
   const totalComments = exportRecord.list.length;
   if (totalComments === 0) throw new Error('Export has no comments');
 
+  const maxWinners =
+    params.uniqueUsers || params.uniqueWinners ? exportRecord.counters.uniqUsers : totalComments;
+  const winnerCount = Math.min(params.winnerCount, maxWinners);
+
   const { items: allComments } = await instagramExportRepository.getCommentsSlice(
     params.exportId,
     0,
@@ -55,7 +59,7 @@ export async function runGiveawayAction(params: {
     commentCount: exportRecord.post.commentsCountAtStart ?? totalComments,
     giveawayDateIso,
     participants,
-    winnerCount: params.winnerCount,
+    winnerCount,
     options: {
       uniqueUsers: params.uniqueUsers,
       uniqueWinners: params.uniqueWinners,
@@ -81,7 +85,7 @@ export async function runGiveawayAction(params: {
     options: {
       uniqueUsers: params.uniqueUsers,
       uniqueWinners: params.uniqueWinners,
-      winnerCount: params.winnerCount,
+      winnerCount,
     },
     winners: result.winners,
   };

@@ -31,7 +31,7 @@ export default function Step3GiveawaySettings() {
   const [exportDate, setExportDate] = useState<string>('');
   const stepStartTime = useRef(Date.now());
 
-  const maxWinners = uniqueUsers ? uniqUsers : totalComments;
+  const maxWinners = uniqueUsers || uniqueWinners ? uniqUsers : totalComments;
 
   useEffect(() => {
     if (!exportId) return;
