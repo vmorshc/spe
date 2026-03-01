@@ -1,6 +1,6 @@
 # Pickly Design System
 
-A comprehensive reference for the visual language, components, and UI patterns used in Pickly — a Ukrainian-language Instagram giveaway platform.
+Comprehensive reference for the visual language, patterns, and UI conventions used in Pickly — a Ukrainian-language Instagram giveaway platform.
 
 ---
 
@@ -13,11 +13,22 @@ A comprehensive reference for the visual language, components, and UI patterns u
 
 ---
 
-## 2. Color System
+## 2. Tooling & Integration
+
+- Styling is **Tailwind CSS v4** with design tokens in `src/app/globals.css` and Geist fonts wired in `src/app/layout.tsx`.
+- **shadcn/ui** configured in `components.json` (root) with `cssVariables: true` for Tailwind v4 compatibility.
+- CSS variables defined in `globals.css`: `--primary`, `--secondary`, `--accent`, `--muted`, `--border`, `--ring`, etc.
+- Components live in `src/components/ui/` — import from `@/components/ui/{component}` (lowercase paths to avoid conflicts with legacy PascalCase components).
+- Utility function `cn()` in `src/lib/utils.ts` for merging Tailwind classes with `clsx` + `tailwind-merge`.
+- **Framer Motion** for animations — keep subtle and fast: fade/slide in, small scale on hover/tap.
+
+---
+
+## 3. Color System
 
 Colors are defined as CSS custom properties in `src/app/globals.css` using the OKLCH color space. All semantic tokens map through `@theme inline` into Tailwind utilities.
 
-### 2.1 Semantic CSS Variables (Light Mode)
+### 3.1 Semantic CSS Variables (Light Mode)
 
 | Token | OKLCH Value | Approx. HEX | Usage |
 |---|---|---|---|
@@ -37,7 +48,7 @@ Colors are defined as CSS custom properties in `src/app/globals.css` using the O
 | `--destructive` | `oklch(0.577 0.245 27)` | `#ef4444` | Errors, delete actions |
 | `--radius` | `0.5rem` | `8px` | Base border radius |
 
-### 2.2 Tailwind Gray Palette (used directly in landing/app components)
+### 3.2 Tailwind Gray Palette
 
 | Class | Visual Role |
 |---|---|
@@ -50,7 +61,7 @@ Colors are defined as CSS custom properties in `src/app/globals.css` using the O
 | `border-gray-100` | Subtle card borders |
 | `border-gray-200` | Stronger borders, dividers |
 
-### 2.3 Blue Accent Palette
+### 3.3 Blue Accent Palette
 
 | Class | Visual Role |
 |---|---|
@@ -61,9 +72,9 @@ Colors are defined as CSS custom properties in `src/app/globals.css` using the O
 | `bg-blue-500` | Progress bar fill |
 | `hover:bg-blue-700` | Button hover (inline links) |
 
-### 2.4 Status / Icon Color Chips
+### 3.4 Status / Icon Color Chips
 
-These appear as small `w-12 h-12 rounded-lg` icon containers:
+Small `w-12 h-12 rounded-lg` icon containers:
 
 | Color | Usage |
 |---|---|
@@ -73,7 +84,7 @@ These appear as small `w-12 h-12 rounded-lg` icon containers:
 | `bg-orange-100 text-orange-600` | Certificates / planned features |
 | `bg-yellow-100 text-yellow-600` | Localization |
 
-### 2.5 Winner Card Tier Colors
+### 3.5 Winner Card Tier Colors
 
 `WinnerCardGlass` applies tier-specific glass gradients based on rank:
 
@@ -84,7 +95,7 @@ These appear as small `w-12 h-12 rounded-lg` icon containers:
 | 3rd | `from-orange-700/20 via-amber-700/10 to-orange-800/20` | `border-orange-600/50` | Orange |
 | Other | `from-blue-500/10 via-purple-500/5 to-blue-600/10` | `border-border` | Light blue |
 
-### 2.6 Gradient Accents
+### 3.6 Gradient Accents
 
 - **Hero visual gradient**: `from-blue-50 to-indigo-100` — soft pill-shaped background
 - **Winner pill gradient**: `from-blue-500 to-purple-600` — result badge in hero mock
@@ -93,7 +104,7 @@ These appear as small `w-12 h-12 rounded-lg` icon containers:
 - **Winners title**: `from-purple-600 to-pink-600` text gradient via `bg-clip-text text-transparent`
 - **Trophy avatar (vertical)**: `from-amber-400 to-amber-600`
 
-### 2.7 Dark Mode
+### 3.7 Dark Mode
 
 Dark mode tokens are defined but the app does not expose a toggle — dark mode applies when the `.dark` class is present on a parent. Key dark values:
 
@@ -107,9 +118,9 @@ Dark mode tokens are defined but the app does not expose a toggle — dark mode 
 
 ---
 
-## 3. Typography
+## 4. Typography
 
-### 3.1 Fonts
+### 4.1 Fonts
 
 - **Primary**: Geist Sans (variable) loaded via `next/font/local` in `src/app/layout.tsx`
 - **Monospace**: Geist Mono (variable)
@@ -117,7 +128,7 @@ Dark mode tokens are defined but the app does not expose a toggle — dark mode 
 - **Body line-height**: `1.6`
 - **Antialiasing**: `-webkit-font-smoothing: antialiased`
 
-### 3.2 Type Scale
+### 4.2 Type Scale
 
 | Element | Tailwind Classes | Usage |
 |---|---|---|
@@ -133,16 +144,16 @@ Dark mode tokens are defined but the app does not expose a toggle — dark mode 
 | Muted | `text-muted-foreground` | Wizard sub-headings, timestamps |
 | Mono | `text-xs font-mono` | Comment ID display |
 
-### 3.3 Text Highlighting
+### 4.3 Text Highlighting
 
 - Emphasis keyword in H1: wrapped in `<span className="text-blue-600">` (e.g., the word "чесно")
 - Winner step title: `bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent`
 
 ---
 
-## 4. Spacing & Layout
+## 5. Spacing & Layout
 
-### 4.1 Page Containers
+### 5.1 Page Containers
 
 | Container | Tailwind Classes | Usage |
 |---|---|---|
@@ -152,13 +163,13 @@ Dark mode tokens are defined but the app does not expose a toggle — dark mode 
 | Modal | `max-w-lg w-full` | Winner details overlay |
 | Export modal | `max-w-md mx-4` | Export progress dialog |
 
-### 4.2 Section Padding
+### 5.2 Section Padding
 
 All landing sections use the `Section` component:
 - Vertical: `py-16 lg:py-24`
 - Hero: `pt-8 lg:pt-16` (reduced top)
 
-### 4.3 Grid Layouts
+### 5.3 Grid Layouts
 
 | Grid | Breakpoints | Usage |
 |---|---|---|
@@ -170,7 +181,7 @@ All landing sections use the `Section` component:
 | 2-col (winners) | `grid-cols-1 lg:grid-cols-2 gap-4` | Winner cards grid |
 | Posts grid | `aspect-square`, 3-col Instagram-style | Post thumbnail grid |
 
-### 4.4 Component Spacing
+### 5.4 Component Spacing
 
 - Card inner padding: `p-6` or `p-8`
 - Icon containers: `w-12 h-12 rounded-lg`, `w-8 h-8 rounded-lg` (step numbers)
@@ -179,7 +190,7 @@ All landing sections use the `Section` component:
 
 ---
 
-## 5. Border Radius
+## 6. Border Radius
 
 | Variable | Value | Usage |
 |---|---|---|
@@ -192,7 +203,7 @@ All landing sections use the `Section` component:
 
 ---
 
-## 6. Shadows
+## 7. Shadows
 
 | Class | Usage |
 |---|---|
@@ -204,226 +215,7 @@ All landing sections use the `Section` component:
 
 ---
 
-## 7. Components
-
-### 7.1 Button
-
-File: `src/components/ui/Button.tsx`
-Built with `cva` (class-variance-authority) and `@radix-ui/react-slot`.
-
-**Variants:**
-
-| Variant | Appearance |
-|---|---|
-| `default` | `bg-primary text-primary-foreground` (blue fill, white text) |
-| `destructive` | `bg-destructive text-white` (red) |
-| `outline` | White background, `border-input`, hover fills accent |
-| `secondary` | Light gray fill, dark text |
-| `ghost` | Transparent, fills accent on hover |
-| `link` | Text with underline on hover |
-
-**Sizes:**
-
-| Size | Height | Padding |
-|---|---|---|
-| `sm` | `h-8` | `px-3` |
-| `default` | `h-9` | `px-4 py-2` |
-| `lg` | `h-10` | `px-8` |
-| `icon` | `h-9 w-9` | — |
-
-**Focus**: `focus-visible:ring-1 focus-visible:ring-ring`
-**Disabled**: `opacity-50 pointer-events-none`
-**SVG children**: auto-sized to `size-4`
-
-### 7.2 Section
-
-File: `src/components/ui/Section.tsx`
-
-Wraps landing content with consistent padding and a background variant.
-
-| Prop | Options | Class applied |
-|---|---|---|
-| `background` | `white` | `bg-white` |
-| `background` | `gray` | `bg-gray-50` |
-| `background` | `blue` | `bg-blue-50` |
-
-Inner container: `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`
-
-### 7.3 AppHeader (authenticated)
-
-File: `src/components/ui/AppHeader.tsx`
-
-- **Container**: `bg-white shadow-sm sticky top-0 z-50`, height `h-16`
-- **Left**: Ghost button "Back" (`ArrowLeft` icon + text hidden on mobile) → separator → logo (blue `w-8 h-8 bg-blue-600 rounded-lg` + site name hidden on mobile)
-- **Center**: Page title `text-lg font-medium text-gray-900`
-- **Right**: Ghost button "Вийти" with `LogOut` icon, turns red on hover, shows spinner during logout
-
-### 7.4 Landing Header
-
-File: `src/components/landing/Header.tsx`
-
-- Slides in from top on mount (`motion.header`, `y: -20 → 0`, duration 0.6s)
-- `bg-white shadow-sm sticky top-0 z-50`, height `h-16`
-- **Logo**: `w-8 h-8 bg-blue-600 rounded-lg` with "SP" text + site name, scales 1.05 on hover
-- **Nav links**: `text-gray-700 hover:text-blue-600 transition-colors`, hidden on mobile
-- **Mobile**: Hamburger button (`Menu`/`X` icons), drawer slides in with `opacity: 0, height: 0 → auto`
-- **Auth state**: spinner while loading; `UserProfile` if authenticated; `LoginButton` otherwise
-
-### 7.5 Cards
-
-No generic `<Card>` from shadcn is used in the wizard steps — they use semantic headings and spacing instead. Cards appear in landing sections:
-
-- **Trust/Benefits card**: `bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100`
-- **HowItWorks step card**: same + relative positioning for floating step number badge
-- **Step number badge**: `absolute -top-4 left-6`, `w-8 h-8 bg-blue-600 text-white rounded-full font-bold text-sm`
-- **Stats panel** (bottom of HowItWorks): `bg-white rounded-xl p-8 shadow-sm`, 3-column grid
-
-### 7.6 WinnerCardGlass
-
-File: `src/components/giveaway/WinnerCardGlass.tsx`
-
-A "liquid glass" card with mouse-tracked radial glare effect.
-
-- `rounded-2xl backdrop-blur-xl bg-gradient-to-br` + tier gradient
-- Border and shadow tinted by rank color
-- `backgroundImage` inline style: `radial-gradient(circle at X% Y%, glare-color, transparent 60%)` — follows cursor
-- On hover: subtle scale `1.01` + lift `-2px` (only when clickable)
-- White overlay `group-hover:opacity-100` on hover for glass sheen
-- **Horizontal layout** (list): rank + Trophy icon + username + truncated comment
-- **Vertical layout** (detail): trophy icon top center → large avatar circle (128px) → centered username → comment box with scroll → stats grid (likes + comment ID)
-
-### 7.7 WinnerDetailsOverlay
-
-File: `src/components/giveaway/WinnerDetailsOverlay.tsx`
-
-Full-screen overlay modal for winner detail.
-
-- Backdrop: `fixed inset-0 bg-black/50 backdrop-blur-sm`
-- Card: `rounded-2xl bg-white/95 border border-amber-400/50 shadow-2xl shadow-amber-500/20`
-- Mouse-tracked glare: amber radial gradient inline style
-- Spring animation: `scale: 0.9 → 1`, `y: 20 → 0`, `stiffness: 300, damping: 30`
-- Close button: top-right, `opacity-0 group-hover:opacity-100`
-- Avatar: `w-32 h-32 rounded-full bg-gradient-to-br from-pink-500 to-purple-600`, `ring-4 ring-white`
-- Comment: `text-sm leading-relaxed whitespace-pre-wrap text-foreground/80 text-center`
-
-### 7.8 WizardBottomNav
-
-File: `src/components/giveaway/WizardBottomNav.tsx`
-
-- Fixed bottom bar: `fixed bottom-0 left-0 right-0 bg-background border-t border-border shadow-lg z-50`
-- Slides in from bottom on mount (`y: 100 → 0`, delay 0.2s)
-- Left: `WizardDots` progress indicator
-- Center (optional): comment counter `text-sm text-muted-foreground`
-- Right: Download button (outline, icon only on mobile) + Back (outline, icon+text responsive) + Next (primary fill)
-- Next shows `Loader2` spinner while loading
-
-### 7.9 WizardDots
-
-File: `src/components/giveaway/WizardDots.tsx`
-
-Dot-based step progress indicator:
-
-| State | Appearance |
-|---|---|
-| Active step | `w-8 h-2 bg-primary rounded-full` (pill shape) |
-| Past step | `w-2 h-2 bg-primary/60 rounded-full` |
-| Future step | `w-2 h-2 bg-muted-foreground/20 rounded-full` |
-
-Active dot animates to `scale: 1`; others to `scale: 0.8`.
-
-### 7.10 ExportProgressModal
-
-File: `src/components/instagram/ExportProgressModal.tsx`
-
-Blocking overlay during comment export:
-
-- Backdrop: `fixed inset-0 bg-black/50`
-- Card: `bg-white rounded-lg shadow-lg max-w-md p-6`
-- Progress bar: custom `w-full h-2 bg-gray-200 rounded-full` with `bg-blue-500` fill
-- Status indicator: pulsing `h-2 w-2 animate-pulse rounded-full bg-blue-500` dot
-- Error state: `text-red-600` message + retry button
-
-### 7.11 PostCard
-
-File: `src/components/instagram/PostCard.tsx`
-
-- Aspect-square, `overflow-hidden bg-gray-100`
-- Image fills with `object-cover`, scales `group-hover:scale-105` (duration 300ms)
-- Media type badges: `bg-black/50 rounded-full p-1` top-right (Play icon for video, dots for carousel)
-- Hover overlay: `bg-black/0 → bg-black/70`, shows likes + comments count with Heart + MessageCircle icons
-
-### 7.12 ProfileHeader
-
-File: `src/components/instagram/ProfileHeader.tsx`
-
-Instagram-style profile header (no border, no card):
-
-- `border-b border-gray-200 pb-8`
-- Avatar: `w-32 h-32 rounded-full` image
-- Username: `text-2xl font-light text-gray-900`
-- Stats: `font-semibold text-gray-900` count + `text-gray-500` label
-- Bio: `text-gray-700 max-w-md`
-- Refresh button: outline, small, `RefreshCw` icon (spins when loading)
-
-### 7.13 FullScreenLoader
-
-File: `src/components/ui/FullScreenLoader.tsx`
-
-Blocking overlay for long operations — a spinner centered on a semi-opaque full-screen overlay.
-
-### 7.14 SliderWithInput
-
-File: `src/components/ui/slider-with-input.tsx`
-
-Slider with inline editable number input, auto-focuses input at max value, uses `inputmode="numeric"` for mobile keyboards.
-
----
-
-## 8. Landing Page Structure
-
-The landing page (`/`) is composed of stacked sections in this order:
-
-1. **Header** — sticky, white, 64px tall
-2. **Hero** (`bg-white`) — 2-column grid: text left, mock card right
-   - H1 with blue emphasis word, checklist bullets (green checkmarks), CTA button
-   - Right: gradient pill (`from-blue-50 to-indigo-100`) containing a white mock-up card with blue-to-purple winner badge
-3. **HowItWorks** (`bg-gray-50`) — 3 step cards with step badges, gradient icons, connector dots between cards; stats panel below
-4. **Trust** (`bg-white`) — 2×2 card grid with colored icon chips
-5. **Benefits** (`bg-gray-50`) — 4-column card grid
-6. **FuturePlans / Waitlist** — email waitlist form section
-7. **FAQ** (`bg-white`) — accordion items, expandable with chevron icons; support CTA block (`bg-blue-50`)
-8. **Footer** (`bg-gray-900 text-white`) — 4-column grid: logo/description/socials, contacts, legal links; bottom bar with copyright
-
----
-
-## 9. App Pages Structure
-
-### Posts List (`/app/instagram/posts`)
-
-- `AppHeader` (sticky, white)
-- `ProfileHeader` below header (avatar, stats, bio, refresh button)
-- Tab row (Photos / Reels with "coming soon")
-- `PostsGrid`: responsive grid of `PostCard` thumbnails (square, hover overlay)
-
-### Post Details (`/app/instagram/posts/[postId]`)
-
-- `AppHeader` with back button
-- Post image preview
-- Stats (likes, comments)
-- Export actions via `ActionDrawer` (mobile bottom sheet)
-- `ExportCommentsList` with virtualization
-
-### Giveaway Wizard (`/app/instagram/posts/[postId]/giveaway`)
-
-- `WizardShell` → `WizardContainer` → step content + `WizardBottomNav`
-- **Step 1** — "Оберіть джерело даних": `Select` dropdown (new export or existing)
-- **Step 2** — "Перегляд учасників": loading state with `Progress` bar → data `Table` with infinite scroll
-- **Step 3** — "Налаштування розіграшу": `SliderWithInput` for winner count
-- **Step 4** — "Переможці розіграшу!": roulette spinner (2.5s) → `ConfettiCanvas` + `WinnerCardGlass` grid; click opens `WinnerDetailsOverlay`
-
----
-
-## 10. Motion & Animation
+## 8. Motion & Animation
 
 All animations use **Framer Motion**. Patterns:
 
@@ -447,7 +239,7 @@ All animations use **Framer Motion**. Patterns:
 
 ---
 
-## 11. Icon Library
+## 9. Icon Library
 
 Icons come from **lucide-react** and **react-icons**. Standard size: `w-6 h-6` (cards), `w-5 h-5` (inline), `w-4 h-4` (buttons/nav).
 
@@ -478,7 +270,7 @@ Key icons used:
 
 ---
 
-## 12. Scrollbar Styling
+## 10. Scrollbar Styling
 
 Custom scrollbar applied globally:
 
@@ -491,7 +283,7 @@ Custom scrollbar applied globally:
 
 ---
 
-## 13. Responsive Behavior Summary
+## 11. Responsive Behavior
 
 | Breakpoint | Key Changes |
 |---|---|
@@ -502,7 +294,7 @@ Custom scrollbar applied globally:
 
 ---
 
-## 14. Accessibility
+## 12. Accessibility
 
 - Focus ring: `focus-visible:ring-1 focus-visible:ring-ring` on all interactive elements
 - Custom focus: `focus:ring-2` → `box-shadow: 0 0 0 2px rgba(59,130,246,0.5)` (blue)
@@ -510,3 +302,18 @@ Custom scrollbar applied globally:
 - `next/image` with `alt` attributes
 - `sr-only` not explicitly used but semantic HTML headings (h1 → h2 → h3 → h4) are followed
 - Smooth scroll: `html { scroll-behavior: smooth }`
+
+---
+
+## 13. How To Build "Native" Components
+
+- Prefer Tailwind utility classes over custom CSS. Use `rounded-lg`, `border`, `shadow-sm`, `bg-white`, `text-gray-*`, and `text-blue-*` for consistency.
+- Use `Button` for CTAs and keep variants consistent (`primary`, `secondary`, `outline`, `ghost`).
+- Wrap full-width sections with `Section` so spacing aligns with the landing page.
+- For authenticated pages, use `AppHeader` and keep content centered in `max-w-4xl`.
+- For multi-step wizards, use `WizardContainer` to ensure consistent width between content and fixed navigation.
+- Prefer semantic HTML structure (h2 for titles, p for descriptions, space-y for vertical rhythm) over Card components for cleaner layouts.
+- Add motion with Framer Motion where it improves clarity (entrance, hover, drawers) but avoid heavy or slow animations.
+- For forms, follow the FuturePlans pattern: clear labels, inline validation, disabled states, and a short success/error message.
+- Use `next/image` for media and keep aspect ratios consistent (`aspect-square` for grids).
+- For long lists, prefer virtualization or incremental loading (Intersection Observer).

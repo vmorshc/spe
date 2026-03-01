@@ -25,7 +25,8 @@ Start here if you're new to the codebase:
 - [instagram-export.md](./instagram-export.md) - Comment export system
 
 **UI & Components**
-- [ui.md](./ui.md) - Component architecture and patterns
+- [ui/design-system.md](./ui/design-system.md) - Design system: colors, typography, spacing, motion
+- [ui/components.md](./ui/components.md) - Component reference: props, layout, usage
 
 **User Flow & Analytics**
 - [user-flow/user-path.md](./user-flow/user-path.md) - Complete user interaction path

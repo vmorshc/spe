@@ -16,7 +16,8 @@ This file provides guidance to Claude Code when working with code in this reposi
 - `docs/config.md` - Environment variables and configuration
 - `docs/data-models.md` - Redis schemas, data models, lifecycles
 - `docs/api.md` - Server Actions and route handlers reference
-- `docs/ui.md` - Component architecture and design patterns
+- `docs/ui/design-system.md` - Design system: colors, typography, spacing, motion
+- `docs/ui/components.md` - Component reference: props, layout, usage
 
 **Domain-Specific Docs**
 - `docs/facebook.md` - Facebook Graph API integration
@@ -47,7 +48,7 @@ Pickly (SPE) is a Ukrainian-language web app for transparent Instagram giveaways
 2. Review `docs/architecture.md` for patterns (Repository, Server Actions)
 3. Check `docs/actions/` for related server actions
 4. Add server action in `src/lib/actions/` (see `docs/api.md`)
-5. Create UI components in `src/components/` (see `docs/ui.md`)
+5. Create UI components in `src/components/` (see `docs/ui/`)
 6. Use `AppHeader` for authenticated pages, `Section` for landing sections
 7. Test Redis graceful degradation
 
@@ -68,7 +69,7 @@ Pickly (SPE) is a Ukrainian-language web app for transparent Instagram giveaways
 - Tailwind v4 with CSS variables in `src/app/globals.css`
 - Framer Motion for animations (keep subtle and fast)
 - Virtualize long lists with `react-window`
-- See `docs/ui.md` for component patterns and examples
+- See `docs/ui/` for design system and component reference
 
 ### Configuration
 - Client config: `src/config/client.ts` (NEXT_PUBLIC_* only)
