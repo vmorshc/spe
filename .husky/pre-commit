@@ -6,4 +6,12 @@ pnpm type-check
 echo "🔧 Running Biome linting and formatting..."
 npx lint-staged
 
+# Оновлюємо repomix контекстні файли
+echo "📦 Updating repomix context files..."
+if pnpm repomix:build; then
+  git add pickly-docs.txt pickly-code.txt 2>/dev/null || true
+else
+  echo "⚠️ Repomix update failed, continuing commit..."
+fi
+
 echo "✅ Pre-commit checks passed!"
