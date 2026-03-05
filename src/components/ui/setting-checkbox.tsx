@@ -2,6 +2,7 @@
 
 import { Check } from 'lucide-react';
 import { useId } from 'react';
+import { useHaptic } from '@/lib/hooks/useHaptic';
 import { cn } from '@/lib/utils';
 
 interface SettingCheckboxProps {
@@ -20,6 +21,7 @@ export function SettingCheckbox({
   className,
 }: SettingCheckboxProps) {
   const id = useId();
+  const { haptic } = useHaptic();
 
   return (
     <label
@@ -34,7 +36,10 @@ export function SettingCheckbox({
         id={id}
         type="checkbox"
         checked={checked}
-        onChange={(e) => onCheckedChange(e.target.checked)}
+        onChange={(e) => {
+          haptic('selection');
+          onCheckedChange(e.target.checked);
+        }}
         className="sr-only"
       />
       <div

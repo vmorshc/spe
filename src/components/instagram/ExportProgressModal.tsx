@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { getExportAction, resumeExportAction } from '@/lib/actions/instagramExport';
+import { useHaptic } from '@/lib/hooks/useHaptic';
 
 type ExportStatus = 'pending' | 'running' | 'csv_pending' | 'done' | 'failed' | null;
 
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function ExportProgressModal({ exportId, initialStatus, onDone, onFail }: Props) {
+  const { haptic } = useHaptic();
   const [status, setStatus] = useState<ExportStatus>(initialStatus ?? null);
   const [error, setError] = useState<string | null>(null);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
@@ -82,6 +84,7 @@ export default function ExportProgressModal({ exportId, initialStatus, onDone, o
     }
     if (status === 'failed') {
       stopPolling();
+      haptic('error');
       onFail?.(error ?? undefined);
       return;
     }
@@ -89,7 +92,7 @@ export default function ExportProgressModal({ exportId, initialStatus, onDone, o
       startPolling();
       return;
     }
-  }, [status, onDone, onFail, error, startPolling, stopPolling]);
+  }, [status, onDone, onFail, error, startPolling, stopPolling, haptic]);
 
   useEffect(() => {
     return () => {

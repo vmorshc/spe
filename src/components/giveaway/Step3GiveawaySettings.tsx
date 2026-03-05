@@ -10,6 +10,7 @@ import { runGiveawayAction } from '@/lib/actions/giveaway';
 import { getExportAction } from '@/lib/actions/instagramExport';
 import { trackEvent } from '@/lib/analytics';
 import { useWizard } from '@/lib/contexts/WizardContext';
+import { useHaptic } from '@/lib/hooks/useHaptic';
 
 export default function Step3GiveawaySettings() {
   const {
@@ -25,6 +26,7 @@ export default function Step3GiveawaySettings() {
     setUniqueUsers,
     setUniqueWinners,
   } = useWizard();
+  const { haptic } = useHaptic();
   const [winnerCount, setWinnerCount] = useState(1);
   const [totalComments, setTotalComments] = useState(1);
   const [uniqUsers, setUniqUsers] = useState(1);
@@ -62,6 +64,7 @@ export default function Step3GiveawaySettings() {
 
   const handleStartGiveaway = useCallback(async () => {
     if (winnerCount < 1 || winnerCount > maxWinners) {
+      haptic('warning');
       alert(`Кількість переможців повинна бути від 1 до ${maxWinners}`);
       throw new Error('Invalid winner count');
     }
@@ -103,6 +106,7 @@ export default function Step3GiveawaySettings() {
     setWinners,
     uniqueUsers,
     uniqueWinners,
+    haptic,
   ]);
 
   useEffect(() => {

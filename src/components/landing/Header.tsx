@@ -9,11 +9,13 @@ import { useEffect, useState } from 'react';
 import { sharedConfig } from '@/config';
 import { trackEvent } from '@/lib/analytics';
 import { useAuth } from '@/lib/contexts/AuthContext';
+import { useHaptic } from '@/lib/hooks/useHaptic';
 import LoginButton from '../auth/LoginButton';
 import UserProfile from '../auth/UserProfile';
 import { Button } from '../ui/Button';
 
 export default function Header() {
+  const { haptic } = useHaptic();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showCta, setShowCta] = useState(false);
   const { isAuthenticated, isLoading: authLoading } = useAuth();
@@ -152,7 +154,10 @@ export default function Header() {
             <button
               type="button"
               className="p-2 rounded-md text-gray-700 hover:text-blue-600 transition-colors"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={() => {
+                haptic('selection');
+                setIsMenuOpen(!isMenuOpen);
+              }}
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>

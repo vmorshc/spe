@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 import { sharedConfig } from '@/config';
+import { useHaptic } from '@/lib/hooks/useHaptic';
 import Section from '../ui/Section';
 
 const faqData = [
@@ -38,9 +39,11 @@ const faqData = [
 ];
 
 export default function FAQ() {
+  const { haptic } = useHaptic();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFAQ = (index: number) => {
+    haptic('selection');
     setOpenIndex(openIndex === index ? null : index);
   };
 

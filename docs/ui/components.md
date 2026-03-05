@@ -60,19 +60,19 @@ Blocking overlay for long operations — a spinner centered on a semi-opaque ful
 
 **File**: `src/components/ui/slider-with-input.tsx`
 
-Combined slider and inline editable numeric input. Auto-focuses input at max value, uses `inputmode="numeric"` for mobile keyboards. Desktop only (`hidden lg:block`).
+Combined slider and inline editable numeric input. Auto-focuses input at max value, uses `inputmode="numeric"` for mobile keyboards. Desktop only (`hidden lg:block`). Fires `light` haptic on each slider step change.
 
 ### 1.5 NumberStepper
 
 **File**: `src/components/ui/number-stepper.tsx`
 
-Touch-friendly stepper with chevron arrows and inline editable input. Mobile/tablet only (`block lg:hidden`).
+Touch-friendly stepper with chevron arrows and inline editable input. Mobile/tablet only (`block lg:hidden`). Fires `light` haptic on +/- tap.
 
 ### 1.6 SettingCheckbox
 
 **File**: `src/components/ui/setting-checkbox.tsx`
 
-Card-style checkbox with title + description text. Primary border/fill when checked. Uses label wrapping a hidden input with visual checkbox indicator. Used for giveaway options.
+Card-style checkbox with title + description text. Primary border/fill when checked. Uses label wrapping a hidden input with visual checkbox indicator. Used for giveaway options. Fires `selection` haptic on toggle.
 
 ---
 
@@ -99,7 +99,7 @@ Sticky header for the public landing page.
 - `bg-white shadow-sm sticky top-0 z-50`, height `h-16`
 - **Logo**: `w-8 h-8 bg-blue-600 rounded-lg` with "SP" text + site name, scales 1.05 on hover
 - **Nav links**: `text-gray-700 hover:text-blue-600 transition-colors`, hidden on mobile
-- **Mobile**: Hamburger button (`Menu`/`X` icons), drawer slides in with `opacity: 0, height: 0 → auto`
+- **Mobile**: Hamburger button (`Menu`/`X` icons), drawer slides in with `opacity: 0, height: 0 → auto`. Fires `selection` haptic on toggle
 - **Auth state**: spinner while loading; `UserProfile` if authenticated; `LoginButton` otherwise
 - Scroll-triggered CTA button (IntersectionObserver on `#hero-cta`) with layout animations in desktop nav and AnimatePresence on mobile
 
@@ -118,11 +118,11 @@ Consistent width container (`max-w-4xl mx-auto px-4`) for wizard layout and navi
 | Component | Description |
 |---|---|
 | `Header` | Sticky nav with auth state, mobile drawer (see §2.2) |
-| `HeroClient` | 2-column hero: text with checklist + mock card visual. Section + CTA pattern example |
+| `HeroClient` | 2-column hero: text with checklist + mock card visual. Section + CTA pattern example. `medium` haptic on CTA tap |
 | `HowItWorks` | 3 step cards with badges, gradient icons, connector dots, stats panel |
 | `Benefits` | 4-column card grid. Card grids pattern example |
 | `FuturePlans` | Email waitlist form section |
-| `FAQ` | Accordion items with chevron icons; support CTA block (`bg-blue-50`) |
+| `FAQ` | Accordion items with chevron icons; support CTA block (`bg-blue-50`). `selection` haptic on toggle |
 | `Footer` | 4-column grid: logo/description/socials, contacts, legal links; bottom bar with copyright |
 
 **Card patterns used in landing:**
@@ -139,7 +139,7 @@ Consistent width container (`max-w-4xl mx-auto px-4`) for wizard layout and navi
 
 | Component | Description |
 |---|---|
-| `LoginButton` | Instagram OAuth login trigger |
+| `LoginButton` | Instagram OAuth login trigger. `medium` haptic on tap |
 | `RedirectBackLoginButton` | Login button that preserves redirect URL |
 | `UserProfile` | Displays authenticated user info in header |
 
@@ -179,7 +179,7 @@ Blocking overlay during comment export:
 - Card: `bg-white rounded-lg shadow-lg max-w-md p-6`
 - Progress bar: custom `w-full h-2 bg-gray-200 rounded-full` with `bg-blue-500` fill
 - Status indicator: pulsing `h-2 w-2 animate-pulse rounded-full bg-blue-500` dot
-- Error state: `text-red-600` message + retry button
+- Error state: `text-red-600` message + retry button. Fires `error` haptic on failure
 
 ### 5.4 Other Instagram Components
 
@@ -214,6 +214,7 @@ Fixed bottom navigation bar:
 - **Right**: Download button (outline, icon only on mobile) + Back (outline, icon+text responsive) + Next (primary fill)
 - Next shows `Loader2` spinner while loading
 - Responsive: shows icons on mobile/tablet, full text on desktop (lg+)
+- Haptics: `medium` on Next, `light` on Back and Download
 
 ### 6.3 WizardDots
 
@@ -235,8 +236,8 @@ Active dot animates to `scale: 1`; others to `scale: 0.8`.
 |---|---|---|
 | Step 1 | `Step1ExportSetup.tsx` | "Оберіть джерело даних" — `Select` dropdown (new export or existing). Clean borderless layout example |
 | Step 2 | `Step2ParticipantReview.tsx` | "Перегляд учасників" — loading state with `Progress` bar → data `Table` with infinite scroll |
-| Step 3 | `Step3GiveawaySettings.tsx` | "Налаштування розіграшу" — `SliderWithInput` on desktop (lg+), `NumberStepper` on mobile/tablet |
-| Step 4 | `Step4Winners.tsx` | "Переможці розіграшу!" — roulette spinner (2.5s) → `ConfettiCanvas` + `WinnerCardGlass` grid |
+| Step 3 | `Step3GiveawaySettings.tsx` | "Налаштування розіграшу" — `SliderWithInput` on desktop (lg+), `NumberStepper` on mobile/tablet. `warning` haptic on validation error |
+| Step 4 | `Step4Winners.tsx` | "Переможці розіграшу!" — roulette spinner (2.5s) → `ConfettiCanvas` + `WinnerCardGlass` grid. `success` haptic on winner reveal |
 
 ### 6.5 WinnerCardGlass
 
@@ -247,6 +248,7 @@ Active dot animates to `scale: 1`; others to `scale: 0.8`.
 - Border and shadow tinted by rank color
 - `backgroundImage` inline style: `radial-gradient(circle at X% Y%, glare-color, transparent 60%)` — follows cursor
 - On hover: subtle scale `1.01` + lift `-2px` (only when clickable)
+- Fires `medium` haptic on tap (when clickable)
 - White overlay `group-hover:opacity-100` on hover for glass sheen
 - **Horizontal layout** (list): rank + Trophy icon + username + truncated comment
 - **Vertical layout** (detail): trophy icon top center → large avatar circle (128px) → centered username → comment box with scroll → stats grid (likes + comment ID)
@@ -260,6 +262,7 @@ Full-screen overlay modal for winner detail. Responsive dialog/drawer pattern:
 - Card: `rounded-2xl bg-white/95 border border-amber-400/50 shadow-2xl shadow-amber-500/20`
 - Mouse-tracked glare: amber radial gradient inline style
 - Spring animation: `scale: 0.9 → 1`, `y: 20 → 0`, `stiffness: 300, damping: 30`
+- Haptics: `heavy` on open, `light` on close (backdrop or button dismiss)
 - Close button: top-right, `opacity-0 group-hover:opacity-100`
 - Avatar: `w-32 h-32 rounded-full bg-gradient-to-br from-pink-500 to-purple-600`, `ring-4 ring-white`
 - Comment: `text-sm leading-relaxed whitespace-pre-wrap text-foreground/80 text-center`
@@ -298,7 +301,7 @@ Celebration confetti animation triggered on winner reveal (Step 4).
 |---|---|
 | Section + CTA | `src/components/landing/HeroClient.tsx` |
 | Card grids | `src/components/landing/Benefits.tsx` |
-| Mobile bottom sheet | `src/app/app/instagram/posts/[postId]/components/ActionDrawer.tsx` |
+| Mobile bottom sheet | `src/app/app/instagram/posts/[postId]/components/ActionDrawer.tsx` (`medium`/`heavy` haptics) |
 | Export status modal | `src/components/instagram/ExportProgressModal.tsx` |
 | Multi-step wizard | `src/components/giveaway/*` with context-based state management |
 | Clean borderless layout | `src/components/giveaway/Step1ExportSetup.tsx` |
@@ -310,3 +313,4 @@ Celebration confetti animation triggered on winner reveal (Step 4).
 | Slider with editable value | `src/components/ui/slider-with-input.tsx` |
 | Number input (responsive) | `src/components/giveaway/Step3GiveawaySettings.tsx` |
 | Card-style checkbox | `src/components/ui/setting-checkbox.tsx` |
+| Haptic feedback hook | `src/lib/hooks/useHaptic.ts` (see design-system.md §9) |

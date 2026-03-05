@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Slider } from '@/components/ui/slider';
+import { useHaptic } from '@/lib/hooks/useHaptic';
 
 interface SliderWithInputProps {
   value: number;
@@ -20,6 +21,7 @@ export function SliderWithInput({
   onChange,
   className,
 }: SliderWithInputProps) {
+  const { haptic } = useHaptic();
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value.toString());
   const [shouldFocusInput, setShouldFocusInput] = useState(false);
@@ -45,6 +47,7 @@ export function SliderWithInput({
 
   const handleSliderChange = (newValue: number[]) => {
     const val = newValue[0];
+    haptic('light');
     onChange(val);
     if (val === effectiveSliderMax) {
       setShouldFocusInput(true);

@@ -5,6 +5,7 @@ import { Dice4, Settings, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
+import { useHaptic } from '@/lib/hooks/useHaptic';
 
 interface ActionDrawerProps {
   postId: string;
@@ -12,6 +13,7 @@ interface ActionDrawerProps {
 }
 
 export default function ActionDrawer({ postId }: ActionDrawerProps) {
+  const { haptic } = useHaptic();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
@@ -19,6 +21,7 @@ export default function ActionDrawer({ postId }: ActionDrawerProps) {
   const constraintsRef = useRef(null);
 
   const handlePickWinner = async () => {
+    haptic('heavy');
     setIsOpen(false);
     router.push(`/app/instagram/export/${postId}`);
   };
@@ -53,7 +56,10 @@ export default function ActionDrawer({ postId }: ActionDrawerProps) {
       >
         <button
           type="button"
-          onClick={() => setIsOpen(true)}
+          onClick={() => {
+            haptic('medium');
+            setIsOpen(true);
+          }}
           className="w-14 h-14 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-full shadow-lg flex items-center justify-center text-white transition-all duration-200 hover:shadow-xl"
         >
           <Dice4 className="w-6 h-6" />

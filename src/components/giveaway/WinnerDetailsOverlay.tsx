@@ -2,7 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { Heart, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useHaptic } from '@/lib/hooks/useHaptic';
 import type { NormalizedComment } from '@/lib/instagramExport/types';
 
 interface WinnerDetailsOverlayProps {
@@ -11,9 +12,21 @@ interface WinnerDetailsOverlayProps {
 }
 
 export default function WinnerDetailsOverlay({ winner, onClose }: WinnerDetailsOverlayProps) {
+  const { haptic } = useHaptic();
   const [glarePosition, setGlarePosition] = useState({ x: 50, y: 50 });
 
+  useEffect(() => {
+    if (winner) {
+      haptic('heavy');
+    }
+  }, [winner, haptic]);
+
   if (!winner) return null;
+
+  const handleClose = () => {
+    haptic('light');
+    onClose();
+  };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -27,7 +40,7 @@ export default function WinnerDetailsOverlay({ winner, onClose }: WinnerDetailsO
     // biome-ignore lint/a11y/useKeyWithClickEvents: handled by onKeyDown on close button
     <div
       className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm p-4"
-      onClick={onClose}
+      onClick={handleClose}
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -81,7 +94,7 @@ export default function WinnerDetailsOverlay({ winner, onClose }: WinnerDetailsO
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0 }}
         transition={{ delay: 0.3 }}
-        onClick={onClose}
+        onClick={handleClose}
         className="mt-4 flex items-center gap-1.5 text-white/50 hover:text-white/70 transition-colors text-xs"
       >
         <X className="w-3 h-3" />

@@ -239,7 +239,67 @@ All animations use **Framer Motion**. Patterns:
 
 ---
 
-## 9. Icon Library
+## 9. Haptic Feedback
+
+The app uses **web-haptics** (`web-haptics/react`) to provide native-feeling vibration feedback on mobile devices. Haptics are integrated via a shared hook and fire alongside existing event handlers — they are no-ops on unsupported devices.
+
+### 9.1 Hook
+
+**File**: `src/lib/hooks/useHaptic.ts`
+
+```tsx
+import { useHaptic } from '@/lib/hooks/useHaptic';
+
+const { haptic, isSupported } = useHaptic();
+haptic('light'); // fire a preset
+```
+
+The hook wraps `useWebHaptics` from `web-haptics/react`. Each component that calls `useHaptic()` gets its own lightweight instance with automatic lifecycle cleanup.
+
+### 9.2 Preset Mapping
+
+Presets are chosen to match iOS feedback conventions:
+
+| Preset | Feel | When to use |
+|---|---|---|
+| `light` | Soft single tap | Small state changes: stepper +/-, slider step, back navigation, dismiss |
+| `medium` | Moderate tap | Primary actions: next step, open drawer, CTA buttons, login |
+| `heavy` | Strong tap | High-impact moments: pick winner, open detail modal |
+| `selection` | Subtle tick | Toggle state: checkbox, accordion, menu toggle |
+| `success` | Double-tap celebration | Positive outcome: winner reveal with confetti |
+| `error` | Triple-tap alert | Failure: export error |
+| `warning` | Warning buzz | Validation: invalid input |
+
+### 9.3 Integration by Component
+
+| Component | Interaction | Preset |
+|---|---|---|
+| `NumberStepper` | Tap +/- buttons | `light` |
+| `SettingCheckbox` | Toggle on/off | `selection` |
+| `SliderWithInput` | Each slider step | `light` |
+| `WizardBottomNav` | Next / Back / Download | `medium` / `light` / `light` |
+| `Step4Winners` | Winner reveal (confetti fires) | `success` |
+| `WinnerCardGlass` | Tap to open winner detail | `medium` |
+| `WinnerDetailsOverlay` | Modal open / close | `heavy` / `light` |
+| `Step3GiveawaySettings` | Validation error | `warning` |
+| `ExportProgressModal` | Export fails | `error` |
+| `ActionDrawer` | FAB tap / Pick winner | `medium` / `heavy` |
+| `FAQ` | Accordion toggle | `selection` |
+| `Header` | Mobile hamburger toggle | `selection` |
+| `LoginButton` | Login tap | `medium` |
+| `HeroClient` | CTA tap | `medium` |
+
+### 9.4 Guidelines
+
+- **Call before logic**: fire `haptic()` at the start of the handler, before state changes or async work, so feedback is instant.
+- **No-op on desktop**: `trigger()` is safe to call everywhere — it checks `navigator.vibrate` support internally.
+- **No conditional guards needed**: you do not need to check `isSupported` before calling `haptic()`.
+- **Avoid spamming**: for continuous interactions (like slider dragging), `light` is appropriate since it's the shortest vibration. Avoid `heavy` or `success` on rapid-fire events.
+- **Match intensity to importance**: `light` for minor adjustments, `medium` for intentional actions, `heavy`/`success`/`error` for outcomes.
+
+---
+
+## 10. Icon Library
 
 Icons come from **lucide-react** and **react-icons**. Standard size: `w-6 h-6` (cards), `w-5 h-5` (inline), `w-4 h-4` (buttons/nav).
 
@@ -270,7 +330,7 @@ Key icons used:
 
 ---
 
-## 10. Scrollbar Styling
+## 11. Scrollbar Styling
 
 Custom scrollbar applied globally:
 
@@ -283,7 +343,7 @@ Custom scrollbar applied globally:
 
 ---
 
-## 11. Responsive Behavior
+## 12. Responsive Behavior
 
 | Breakpoint | Key Changes |
 |---|---|
@@ -294,7 +354,7 @@ Custom scrollbar applied globally:
 
 ---
 
-## 12. Accessibility
+## 13. Accessibility
 
 - Focus ring: `focus-visible:ring-1 focus-visible:ring-ring` on all interactive elements
 - Custom focus: `focus:ring-2` → `box-shadow: 0 0 0 2px rgba(59,130,246,0.5)` (blue)
@@ -305,7 +365,7 @@ Custom scrollbar applied globally:
 
 ---
 
-## 13. How To Build "Native" Components
+## 14. How To Build "Native" Components
 
 - Prefer Tailwind utility classes over custom CSS. Use `rounded-lg`, `border`, `shadow-sm`, `bg-white`, `text-gray-*`, and `text-blue-*` for consistency.
 - Use `Button` for CTAs and keep variants consistent (`primary`, `secondary`, `outline`, `ghost`).
@@ -314,6 +374,7 @@ Custom scrollbar applied globally:
 - For multi-step wizards, use `WizardContainer` to ensure consistent width between content and fixed navigation.
 - Prefer semantic HTML structure (h2 for titles, p for descriptions, space-y for vertical rhythm) over Card components for cleaner layouts.
 - Add motion with Framer Motion where it improves clarity (entrance, hover, drawers) but avoid heavy or slow animations.
+- Add haptic feedback to interactive elements with `useHaptic()` — match preset intensity to the action's importance (see §9).
 - For forms, follow the FuturePlans pattern: clear labels, inline validation, disabled states, and a short success/error message.
 - Use `next/image` for media and keep aspect ratios consistent (`aspect-square` for grids).
 - For long lists, prefer virtualization or incremental loading (Intersection Observer).

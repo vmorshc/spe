@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Trophy } from 'lucide-react';
 import { useState } from 'react';
+import { useHaptic } from '@/lib/hooks/useHaptic';
 import type { NormalizedComment } from '@/lib/instagramExport/types';
 
 interface WinnerCardGlassProps {
@@ -22,6 +23,7 @@ export default function WinnerCardGlass({
   layout = 'horizontal',
   showFullComment = false,
 }: WinnerCardGlassProps) {
+  const { haptic } = useHaptic();
   const [glarePosition, setGlarePosition] = useState({ x: 50, y: 50 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -74,7 +76,12 @@ export default function WinnerCardGlass({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, type: 'spring', stiffness: 100 }}
       whileHover={onClick ? { scale: 1.01, y: -2 } : undefined}
-      onClick={onClick}
+      onClick={() => {
+        if (onClick) {
+          haptic('medium');
+          onClick();
+        }
+      }}
       onMouseMove={handleMouseMove}
       className={`relative overflow-hidden rounded-2xl backdrop-blur-xl bg-gradient-to-br ${styles.gradient} border ${styles.border} shadow-lg group ${
         onClick ? 'cursor-pointer' : ''

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { trackEvent } from '@/lib/analytics';
 import { useWizard } from '@/lib/contexts/WizardContext';
+import { useHaptic } from '@/lib/hooks/useHaptic';
 import type { NormalizedComment } from '@/lib/instagramExport/types';
 import ConfettiCanvas from './ConfettiCanvas';
 import WinnerCardGlass from './WinnerCardGlass';
@@ -13,6 +14,7 @@ import WinnerDetailsOverlay from './WinnerDetailsOverlay';
 export default function Step4Winners() {
   const { winners, uniqueUsers, uniqueWinners } = useWizard();
   const router = useRouter();
+  const { haptic } = useHaptic();
   const [showRoulette, setShowRoulette] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
   const [selectedWinner, setSelectedWinner] = useState<NormalizedComment | null>(null);
@@ -22,6 +24,7 @@ export default function Step4Winners() {
     const timer = setTimeout(() => {
       setShowRoulette(false);
       setShowConfetti(true);
+      haptic('success');
 
       // Track giveaway completion when winners are revealed
       if (!giveawayTracked.current) {
@@ -34,7 +37,7 @@ export default function Step4Winners() {
       }
     }, 2500);
     return () => clearTimeout(timer);
-  }, [winners, uniqueUsers, uniqueWinners]);
+  }, [winners, uniqueUsers, uniqueWinners, haptic]);
 
   if (showRoulette) {
     return (

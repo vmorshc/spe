@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { useHaptic } from '@/lib/hooks/useHaptic';
 
 interface NumberStepperProps {
   value: number;
@@ -15,6 +16,7 @@ export function NumberStepper({ value, min = 1, max, onChange, className }: Numb
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value.toString());
   const inputRef = useRef<HTMLInputElement>(null);
+  const { haptic } = useHaptic();
 
   useEffect(() => {
     if (!isEditing) {
@@ -24,12 +26,14 @@ export function NumberStepper({ value, min = 1, max, onChange, className }: Numb
 
   const handleDecrement = () => {
     if (value > min) {
+      haptic('light');
       onChange(value - 1);
     }
   };
 
   const handleIncrement = () => {
     if (value < max) {
+      haptic('light');
       onChange(value + 1);
     }
   };
