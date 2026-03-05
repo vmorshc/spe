@@ -241,20 +241,28 @@ All animations use **Framer Motion**. Patterns:
 
 ## 9. Haptic Feedback
 
-The app uses **web-haptics** (`web-haptics/react`) to provide native-feeling vibration feedback on mobile devices. Haptics are integrated via a shared hook and fire alongside existing event handlers — they are no-ops on unsupported devices.
+The app uses **web-haptics** (`web-haptics/react`) to provide native-feeling vibration feedback on mobile devices. The core principle: **haptics belong inside the component that owns the interaction**. Consumers don't manage haptics — components handle them internally.
 
-### 9.1 Hook
+### 9.1 Architecture
 
-**File**: `src/lib/hooks/useHaptic.ts`
+There are two layers:
+
+1. **`Button` component** (`src/components/ui/Button.tsx`) — has built-in haptic defaults by variant. No prop needed in most cases. Pass `haptic="heavy"` to override or `haptic={false}` to disable.
+2. **Shared hook** (`src/lib/hooks/useHaptic.ts`) — used by non-Button components that have component-level haptic events (sliders, steppers, modals, error states).
+
+**Button defaults**: `default`/`destructive`/`hero` → `medium`, `outline`/`secondary` → `light`, `ghost`/`link` → none.
 
 ```tsx
-import { useHaptic } from '@/lib/hooks/useHaptic';
+// Layer 1: Button — haptics work out of the box
+<Button onClick={handleAction}>Action</Button>           // default variant → medium
+<Button variant="outline" onClick={goBack}>Back</Button>  // outline → light
+<Button haptic="heavy" onClick={pickWinner}>Pick</Button>  // override default
+<Button haptic={false} onClick={handleNav}>Nav</Button>    // disable haptic
 
-const { haptic, isSupported } = useHaptic();
-haptic('light'); // fire a preset
+// Layer 2: Hook for non-button interactions
+const { haptic } = useHaptic();
+haptic('selection'); // accordion toggle, checkbox, etc.
 ```
-
-The hook wraps `useWebHaptics` from `web-haptics/react`. Each component that calls `useHaptic()` gets its own lightweight instance with automatic lifecycle cleanup.
 
 ### 9.2 Preset Mapping
 
@@ -263,7 +271,7 @@ Presets are chosen to match iOS feedback conventions:
 | Preset | Feel | When to use |
 |---|---|---|
 | `light` | Soft single tap | Small state changes: stepper +/-, slider step, back navigation, dismiss |
-| `medium` | Moderate tap | Primary actions: next step, open drawer, CTA buttons, login |
+| `medium` | Moderate tap | Primary actions: next step, CTA buttons, login, open drawer |
 | `heavy` | Strong tap | High-impact moments: pick winner, open detail modal |
 | `selection` | Subtle tick | Toggle state: checkbox, accordion, menu toggle |
 | `success` | Double-tap celebration | Positive outcome: winner reveal with confetti |
@@ -272,28 +280,40 @@ Presets are chosen to match iOS feedback conventions:
 
 ### 9.3 Integration by Component
 
+**Components with built-in haptics** (via `useHaptic` hook):
+
 | Component | Interaction | Preset |
 |---|---|---|
 | `NumberStepper` | Tap +/- buttons | `light` |
 | `SettingCheckbox` | Toggle on/off | `selection` |
 | `SliderWithInput` | Each slider step | `light` |
-| `WizardBottomNav` | Next / Back / Download | `medium` / `light` / `light` |
-| `Step4Winners` | Winner reveal (confetti fires) | `success` |
 | `WinnerCardGlass` | Tap to open winner detail | `medium` |
 | `WinnerDetailsOverlay` | Modal open / close | `heavy` / `light` |
-| `Step3GiveawaySettings` | Validation error | `warning` |
-| `ExportProgressModal` | Export fails | `error` |
-| `ActionDrawer` | FAB tap / Pick winner | `medium` / `heavy` |
 | `FAQ` | Accordion toggle | `selection` |
 | `Header` | Mobile hamburger toggle | `selection` |
-| `LoginButton` | Login tap | `medium` |
-| `HeroClient` | CTA tap | `medium` |
+| `Step4Winners` | Winner reveal (confetti fires) | `success` |
+| `Step3GiveawaySettings` | Validation error | `warning` |
+| `ExportProgressModal` | Export fails | `error` |
+| `ActionDrawer` | FAB tap | `medium` |
+
+**Components using `Button` defaults** (no explicit `haptic` prop needed):
+
+| Component | Button | Variant → Default |
+|---|---|---|
+| `WizardBottomNav` | Next | `default` → `medium` |
+| `WizardBottomNav` | Back / Download | `outline` → `light` |
+| `LoginButton` | Login | `default` → `medium` |
+| `HeroClient` | CTA | `hero` → `medium` |
+| `Header` | CTA | `hero` → `medium` |
+| `ActionDrawer` | Pick winner | `default` + `haptic="heavy"` (override) |
 
 ### 9.4 Guidelines
 
-- **Call before logic**: fire `haptic()` at the start of the handler, before state changes or async work, so feedback is instant.
+- **Haptics belong in the component**: if a component always vibrates on a certain interaction, put the haptic call inside it. Don't make consumers responsible for haptic behavior.
+- **Use `Button` haptic prop for click-based feedback**: instead of wrapping `onClick` with a haptic call, pass `haptic="medium"` to the `Button` component.
+- **Use `useHaptic` hook for non-click events**: slider steps, state-change effects (modal open, error status), accordion toggles.
+- **Props for complex behavior**: if a component needs configurable haptic behavior, accept a `haptic` prop to let the parent control which preset to use.
 - **No-op on desktop**: `trigger()` is safe to call everywhere — it checks `navigator.vibrate` support internally.
-- **No conditional guards needed**: you do not need to check `isSupported` before calling `haptic()`.
 - **Avoid spamming**: for continuous interactions (like slider dragging), `light` is appropriate since it's the shortest vibration. Avoid `heavy` or `success` on rapid-fire events.
 - **Match intensity to importance**: `light` for minor adjustments, `medium` for intentional actions, `heavy`/`success`/`error` for outcomes.
 

@@ -1,7 +1,12 @@
+'use client';
+
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
+import { useHaptic } from '@/lib/hooks/useHaptic';
 import { cn } from '@/lib/utils';
+
+type HapticPreset = 'light' | 'medium' | 'heavy' | 'selection' | 'success' | 'error' | 'warning';
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
@@ -32,17 +37,47 @@ const buttonVariants = cva(
   }
 );
 
+const defaultHapticByVariant: Record<string, HapticPreset> = {
+  default: 'medium',
+  destructive: 'medium',
+  hero: 'medium',
+  outline: 'light',
+  secondary: 'light',
+};
+
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  haptic?: HapticPreset | false;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, haptic: hapticProp, onClick, ...props }, ref) => {
+    const { haptic } = useHaptic();
     const Comp = asChild ? Slot : 'button';
+
+    const resolvedPreset =
+      hapticProp === false
+        ? undefined
+        : (hapticProp ?? defaultHapticByVariant[variant ?? 'default']);
+
+    const handleClick = React.useMemo(() => {
+      if (!resolvedPreset && !onClick) return undefined;
+      if (!resolvedPreset) return onClick;
+      return (e: React.MouseEvent<HTMLButtonElement>) => {
+        haptic(resolvedPreset);
+        onClick?.(e);
+      };
+    }, [resolvedPreset, onClick, haptic]);
+
     return (
-      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        onClick={handleClick}
+        {...props}
+      />
     );
   }
 );

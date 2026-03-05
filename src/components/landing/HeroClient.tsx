@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { incrementLandingVisits } from '@/lib/actions/counters';
 import { trackEvent } from '@/lib/analytics';
-import { useHaptic } from '@/lib/hooks/useHaptic';
 import { Button } from '../ui/Button';
 import Section from '../ui/Section';
 
@@ -15,7 +14,6 @@ interface HeroClientProps {
 }
 
 export default function HeroClient({ initialVisitCount }: HeroClientProps) {
-  const { haptic } = useHaptic();
   const [visitCount, setVisitCount] = useState<number>(initialVisitCount);
   const [isIncrementing, setIsIncrementing] = useState<boolean>(false);
   const router = useRouter();
@@ -41,7 +39,6 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
   }, []);
 
   const handleStartGiveaway = () => {
-    haptic('medium');
     trackEvent('landing_cta_click', {
       cta_type: 'start_giveaway',
       cta_location: 'hero',

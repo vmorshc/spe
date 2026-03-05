@@ -21,7 +21,6 @@ export default function ActionDrawer({ postId }: ActionDrawerProps) {
   const constraintsRef = useRef(null);
 
   const handlePickWinner = async () => {
-    haptic('heavy');
     setIsOpen(false);
     router.push(`/app/instagram/export/${postId}`);
   };
@@ -128,6 +127,7 @@ export default function ActionDrawer({ postId }: ActionDrawerProps) {
                   onClick={handlePickWinner}
                   variant="default"
                   size="lg"
+                  haptic="heavy"
                   className="w-full flex items-center justify-center space-x-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                 >
                   <Dice4 className="w-5 h-5" />

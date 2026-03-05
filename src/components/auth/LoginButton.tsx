@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/Button';
 import { initiateOAuthLogin } from '@/lib/actions/auth';
 import { trackEvent } from '@/lib/analytics';
 import { useAuth } from '@/lib/contexts/AuthContext';
-import { useHaptic } from '@/lib/hooks/useHaptic';
 
 interface LoginButtonProps {
   className?: string;
@@ -24,11 +23,9 @@ export default function LoginButton({
   disabled = false,
 }: LoginButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const { haptic } = useHaptic();
   useAuth();
 
   const handleLogin = async () => {
-    haptic('medium');
     try {
       setIsLoading(true);
       trackEvent('login_start', {

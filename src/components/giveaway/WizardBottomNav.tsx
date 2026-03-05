@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { trackEvent } from '@/lib/analytics';
 import { useWizard } from '@/lib/contexts/WizardContext';
-import { useHaptic } from '@/lib/hooks/useHaptic';
 import { WizardContainer } from './WizardContainer';
 import WizardDots from './WizardDots';
 
@@ -24,10 +23,8 @@ export default function WizardBottomNav() {
     isNextLoading,
   } = useWizard();
   const router = useRouter();
-  const { haptic } = useHaptic();
 
   const handleDownload = () => {
-    haptic('light');
     if (exportId) {
       trackEvent('comments_csv_downloaded', {
         export_id: exportId,
@@ -69,10 +66,7 @@ export default function WizardBottomNav() {
             )}
             <Button
               variant="outline"
-              onClick={() => {
-                haptic('light');
-                goBack();
-              }}
+              onClick={goBack}
               disabled={!canGoBack}
               className="h-9 px-3 sm:h-10 sm:px-8"
             >
@@ -80,10 +74,7 @@ export default function WizardBottomNav() {
               <span className="hidden sm:inline">Назад</span>
             </Button>
             <Button
-              onClick={() => {
-                haptic('medium');
-                goNext();
-              }}
+              onClick={goNext}
               disabled={!canGoNext || isNextLoading}
               className="h-9 px-3 sm:h-10 sm:px-8"
             >

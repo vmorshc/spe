@@ -31,6 +31,12 @@ Built with `cva` (class-variance-authority) and `@radix-ui/react-slot`.
 | `lg` | `h-10` | `px-8` |
 | `icon` | `h-9 w-9` | — |
 
+**Haptic prop:**
+- Optional `haptic` prop: `'light' | 'medium' | 'heavy' | 'selection' | 'success' | 'error' | 'warning' | false`
+- **Defaults by variant**: `default`/`destructive`/`hero` → `medium`, `outline`/`secondary` → `light`, `ghost`/`link` → none
+- Pass `haptic={false}` to disable, or a specific preset to override the default
+- No-op on unsupported devices
+
 **Behavior:**
 - Focus: `focus-visible:ring-1 focus-visible:ring-ring`
 - Disabled: `opacity-50 pointer-events-none`
@@ -214,7 +220,7 @@ Fixed bottom navigation bar:
 - **Right**: Download button (outline, icon only on mobile) + Back (outline, icon+text responsive) + Next (primary fill)
 - Next shows `Loader2` spinner while loading
 - Responsive: shows icons on mobile/tablet, full text on desktop (lg+)
-- Haptics: `medium` on Next, `light` on Back and Download
+- Haptics via Button defaults: `medium` on Next (default variant), `light` on Back and Download (outline variant)
 
 ### 6.3 WizardDots
 
