@@ -1,8 +1,10 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { useId } from 'react';
 import { useHaptic } from '@/lib/hooks/useHaptic';
+import { tapScale } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
 interface SettingCheckboxProps {
@@ -24,8 +26,9 @@ export function SettingCheckbox({
   const { haptic } = useHaptic();
 
   return (
-    <label
+    <motion.label
       htmlFor={id}
+      {...tapScale}
       className={cn(
         'flex items-center w-full cursor-pointer gap-3 rounded-lg border p-3 text-left transition-colors',
         checked ? 'border-primary' : 'border-input',
@@ -54,6 +57,6 @@ export function SettingCheckbox({
         <span className="text-sm font-medium leading-none">{title}</span>
         <span className="text-xs text-muted-foreground">{description}</span>
       </div>
-    </label>
+    </motion.label>
   );
 }

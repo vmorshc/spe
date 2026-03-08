@@ -208,7 +208,7 @@ All landing sections use the `Section` component:
 | Class | Usage |
 |---|---|
 | `shadow-sm` | Default card/header |
-| `shadow-md` | Card on hover (via `hover:shadow-md transition-shadow`) |
+| `shadow-md` | Card on hover (via `.card-interactive` CSS class) |
 | `shadow-lg` | Hero visual, winner glass cards, bottom nav |
 | `shadow-xl` | User avatar in vertical winner card |
 | `shadow-2xl` | WinnerDetailsOverlay modal |
@@ -217,7 +217,108 @@ All landing sections use the `Section` component:
 
 ## 8. Motion & Animation
 
-### 8.1 Framer Motion Patterns
+### 8.1 Easing Curves
+
+Three CSS custom properties defined in `:root` (in `globals.css`) and exposed to Tailwind via `@theme inline`:
+
+| Variable | Value | Feel | When to use |
+|---|---|---|---|
+| `--ease-spring` | `cubic-bezier(0.34, 1.56, 0.64, 1)` | Overshoots slightly, snaps back | Hover lifts, button press, card float |
+| `--ease-smooth` | `cubic-bezier(0.16, 1, 0.3, 1)` | Fast start, gentle stop | Entrance animations, slide-ins |
+| `--ease-fast` | `cubic-bezier(0.4, 0, 0.2, 1)` | Quick and decisive | Active/press states, instant feedback |
+
+Usage in Tailwind: `ease-spring`, `ease-smooth`, `ease-fast`. Usage in CSS: `var(--ease-spring)`, etc.
+
+### 8.2 CSS Micro-Interaction Classes
+
+Three utility classes in `globals.css` (after `@layer base`) provide consistent hover/active animations. All three disable transforms and transitions under `prefers-reduced-motion: reduce`.
+
+#### `.btn-interactive`
+
+Hover lift + active press for buttons. Applied to `default`, `destructive`, `outline`, `secondary`, and `hero` Button variants via CVA.
+
+```css
+.btn-interactive {
+  transition: transform 200ms var(--ease-spring),
+              color 200ms ease, background-color 200ms ease,
+              border-color 200ms ease, box-shadow 200ms ease;
+}
+.btn-interactive:hover  { transform: translateY(-2px); }
+.btn-interactive:active { transform: translateY(0); transition-duration: 80ms;
+                          transition-timing-function: var(--ease-fast); }
+```
+
+**Note:** `ghost` and `link` variants use `transition-colors` instead (no lift).
+
+#### `.card-interactive`
+
+Hover float + shadow for cards. Applied to the **inner visual div**, not to the `motion.div` wrapper (avoids Framer Motion inline transform conflict).
+
+```css
+.card-interactive {
+  transition: transform 200ms var(--ease-spring),
+              box-shadow 200ms var(--ease-spring);
+}
+.card-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+```
+
+**Important pattern — separating animation from interaction:**
+
+When a `motion.div` uses `whileInView` with `y` transforms, Framer Motion keeps inline `style.transform` after animation, overriding CSS `:hover`. Fix: use `motion.div` as the entrance wrapper and a plain `div` with `card-interactive` as the visual card:
+
+```tsx
+<motion.div initial={...} whileInView={...} viewport={{ once: true }} transition={...}>
+  <div className="bg-white rounded-xl p-6 shadow-sm card-interactive">
+    {/* card content */}
+  </div>
+</motion.div>
+```
+
+Components using this pattern: `Benefits`, `FuturePlans`. Components where the inner div already exists: `HowItWorks`. Components where `card-interactive` goes directly on the element (no transform conflict): `FAQ` button.
+
+#### `.link-animated`
+
+Animated underline on hover using background-image gradient (no layout shift).
+
+```css
+.link-animated {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 200ms ease-out, color 150ms ease-out;
+}
+.link-animated:hover { background-size: 100% 1px; }
+```
+
+Used on: Header desktop nav links (`Як це працює`, `Переваги`, `FAQ`). Not used on mobile nav (full-width buttons, underline not appropriate).
+
+### 8.3 Shared Framer Motion Constants (`src/lib/motion.ts`)
+
+Centralized spring presets and gesture configs for reuse across components:
+
+```ts
+export const springPresets = {
+  gentle: { type: 'spring', stiffness: 100, damping: 15 },  // Winner cards, soft entrances
+  snappy: { type: 'spring', stiffness: 300, damping: 30 },  // Modals, quick transitions
+  bouncy: { type: 'spring', stiffness: 200, damping: 10 },  // Playful elements
+};
+
+export const tapScale = {
+  whileTap: { scale: 0.97 },
+  transition: { duration: 0.1 },
+};
+```
+
+**Usage:**
+- `springPresets.gentle` — `WinnerCardGlass` entrance animation
+- `springPresets.snappy` — `WinnerDetailsOverlay` modal spring
+- `tapScale` — spread onto `motion.label` in `SettingCheckbox` for tap feedback
+
+### 8.4 Framer Motion Patterns
 
 All component animations use **Framer Motion**, wrapped in `<MotionConfig reducedMotion="user">` via `MotionProvider` (see §13.1).
 
@@ -229,8 +330,8 @@ All component animations use **Framer Motion**, wrapped in `<MotionConfig reduce
 | Staggered cards | `delay: index * 0.1` or `0.2` | Card grids |
 | Header entrance | `y: -20 → 0`, `duration: 0.6` | Landing header |
 | Bottom nav entrance | `y: 100 → 0`, `delay: 0.2` | Wizard bottom bar |
-| Modal spring | `scale: 0.9 → 1`, `y: 20 → 0`, `stiffness: 300, damping: 30` | Winner overlay |
-| Winner card spring | `y: 30 → 0`, `stiffness: 100` + stagger by delay | Winner cards list |
+| Modal spring | `springPresets.snappy` (`stiffness: 300, damping: 30`) | Winner overlay |
+| Winner card spring | `springPresets.gentle` + stagger by delay | Winner cards list |
 | Roulette spinner | `rotate: 360`, `repeat: Infinity, ease: 'linear', duration: 1` | Step 4 loading |
 | Logo hover | `whileHover: {scale: 1.05}` | Logo in header |
 | Winner card hover | `whileHover: {scale: 1.01, y: -2}` | Clickable winner cards |
@@ -238,8 +339,23 @@ All component animations use **Framer Motion**, wrapped in `<MotionConfig reduce
 | Mobile menu | `height: 0 → auto`, `opacity: 0 → 1` | Header mobile nav |
 | Wizard step transition | `x: 20 → 0` in / `x: -20` out, `duration: 0.3` | Step changes |
 | WizardDots | `scale: 0.8 → 1` for active dot | Progress indicator |
+| SettingCheckbox tap | `tapScale` (`whileTap: {scale: 0.97}`) | Checkbox toggle |
 
-### 8.2 View Transitions
+### 8.5 Component Animation Summary
+
+| Component | CSS Class | Framer Motion | Notes |
+|---|---|---|---|
+| `Button` (default/destructive/outline/secondary/hero) | `btn-interactive` | — | Hover lift + active press via CSS |
+| `Button` (ghost/link) | `transition-colors` | — | No lift, color transition only |
+| `Benefits` cards | `card-interactive` (inner div) | `whileInView` entrance (wrapper) | Separated wrapper/card pattern |
+| `HowItWorks` cards | `card-interactive` (inner div) | `whileInView` entrance (wrapper) | Inner div already existed |
+| `FuturePlans` cards | `card-interactive` (inner div) | `whileInView` entrance (wrapper) | Separated wrapper/card pattern |
+| `FAQ` items | `card-interactive` (button) | `whileInView` entrance (wrapper) | No transform conflict |
+| `Header` desktop nav | `link-animated` | — | Animated underline |
+| `SettingCheckbox` | — | `motion.label` + `tapScale` | Subtle scale on tap |
+| `WinnerCardGlass` | — | `springPresets.gentle` | Shared spring constant |
+
+### 8.6 View Transitions
 
 Cross-fade page transitions enabled via Next.js experimental API:
 - `next.config.ts`: `experimental: { viewTransition: true }`
@@ -247,7 +363,7 @@ Cross-fade page transitions enabled via Next.js experimental API:
 - Progressive enhancement: Chrome/Edge 111+, Safari 18+ get cross-fade; Firefox sees normal navigation
 - No custom CSS needed — default cross-fade behavior
 
-### 8.3 Loading Skeletons
+### 8.7 Loading Skeletons
 
 Every route has a `loading.tsx` for instant skeleton feedback during navigation. All skeletons use `motion-safe:animate-pulse` to respect reduced-motion preferences.
 
@@ -403,16 +519,18 @@ Custom scrollbar applied globally:
 
 ### 13.1 Reduced Motion (`prefers-reduced-motion`)
 
-All animations respect the user's OS-level `prefers-reduced-motion` setting via three layers:
+All animations respect the user's OS-level `prefers-reduced-motion` setting via four layers:
 
 **Framer Motion (global):**
 - `src/components/ui/MotionProvider.tsx` wraps the app with `<MotionConfig reducedMotion="user">`
 - Added in `src/app/layout.tsx` — all Framer Motion components automatically respect the OS setting
 
+**CSS micro-interaction classes (global):**
+- `.btn-interactive`, `.card-interactive`, `.link-animated` all disable transforms and transitions under `@media (prefers-reduced-motion: reduce)` in `globals.css`
+
 **Tailwind CSS animations (per-element):**
 - `animate-pulse` → `motion-safe:animate-pulse` (all loading skeletons, progress indicators)
 - `animate-spin` → `motion-safe:animate-spin` (all spinners: FullScreenLoader, auth loading states)
-- `active:scale-[0.98]` → + `motion-reduce:active:scale-100` (Button hero variant)
 - `group-hover:scale-105` → + `motion-reduce:group-hover:scale-100` (PostCard image)
 
 **Canvas animations (manual check):**

@@ -78,7 +78,7 @@ export default function Header() {
               layout
               type="button"
               onClick={() => handleNavigation('how-it-works')}
-              className="text-gray-700 hover:text-blue-600 transition-colors"
+              className="text-gray-700 hover:text-blue-600 transition-colors link-animated"
             >
               Як це працює
             </motion.button>
@@ -86,7 +86,7 @@ export default function Header() {
               layout
               type="button"
               onClick={() => handleNavigation('benefits')}
-              className="text-gray-700 hover:text-blue-600 transition-colors"
+              className="text-gray-700 hover:text-blue-600 transition-colors link-animated"
             >
               Переваги
             </motion.button>
@@ -94,7 +94,7 @@ export default function Header() {
               layout
               type="button"
               onClick={() => handleNavigation('faq')}
-              className="text-gray-700 hover:text-blue-600 transition-colors"
+              className="text-gray-700 hover:text-blue-600 transition-colors link-animated"
             >
               FAQ
             </motion.button>

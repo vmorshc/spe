@@ -83,7 +83,7 @@ export default function FAQ() {
             <button
               type="button"
               onClick={() => toggleFAQ(index)}
-              className="w-full bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 text-left border border-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full bg-white rounded-xl p-6 shadow-sm text-left border border-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent card-interactive"
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-gray-900 pr-4">{faq.question}</h3>

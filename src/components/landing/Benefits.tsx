@@ -93,15 +93,16 @@ export default function Benefits() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: index * 0.1 }}
-              className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100"
             >
-              <div
-                className={`w-12 h-12 rounded-lg ${reason.color} flex items-center justify-center mb-4`}
-              >
-                <reason.icon className="w-6 h-6" />
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 card-interactive">
+                <div
+                  className={`w-12 h-12 rounded-lg ${reason.color} flex items-center justify-center mb-4`}
+                >
+                  <reason.icon className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">{reason.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{reason.description}</p>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">{reason.title}</h3>
-              <p className="text-gray-600 leading-relaxed">{reason.description}</p>
             </motion.div>
           ))}
         </div>
@@ -138,15 +139,16 @@ export default function Benefits() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: index * 0.1 }}
-              className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-shadow duration-300"
             >
-              <div
-                className={`w-12 h-12 rounded-lg ${benefit.color} flex items-center justify-center mx-auto mb-4`}
-              >
-                <benefit.icon className="w-6 h-6" />
+              <div className="bg-white rounded-xl p-6 text-center shadow-sm card-interactive">
+                <div
+                  className={`w-12 h-12 rounded-lg ${benefit.color} flex items-center justify-center mx-auto mb-4`}
+                >
+                  <benefit.icon className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">{benefit.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{benefit.description}</p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">{benefit.title}</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">{benefit.description}</p>
             </motion.div>
           ))}
         </div>

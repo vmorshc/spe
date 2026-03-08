@@ -5,6 +5,7 @@ import { Trophy } from 'lucide-react';
 import { useState } from 'react';
 import { useHaptic } from '@/lib/hooks/useHaptic';
 import type { NormalizedComment } from '@/lib/instagramExport/types';
+import { springPresets } from '@/lib/motion';
 
 interface WinnerCardGlassProps {
   winner: NormalizedComment;
@@ -74,7 +75,7 @@ export default function WinnerCardGlass({
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, type: 'spring', stiffness: 100 }}
+      transition={{ delay, ...springPresets.gentle }}
       whileHover={onClick ? { scale: 1.01, y: -2 } : undefined}
       onClick={() => {
         if (onClick) {

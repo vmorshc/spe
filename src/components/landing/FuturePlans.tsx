@@ -148,17 +148,18 @@ export default function FuturePlans() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: index * 0.1 }}
-            className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 relative overflow-hidden"
           >
-            <div
-              className={`w-12 h-12 rounded-lg ${plan.color} flex items-center justify-center mb-4`}
-            >
-              <plan.icon className="w-6 h-6" />
+            <div className="bg-white rounded-xl p-6 shadow-sm relative overflow-hidden card-interactive">
+              <div
+                className={`w-12 h-12 rounded-lg ${plan.color} flex items-center justify-center mb-4`}
+              >
+                <plan.icon className="w-6 h-6" />
+              </div>
+
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">{plan.title}</h3>
+
+              <p className="text-gray-600 leading-relaxed">{plan.description}</p>
             </div>
-
-            <h3 className="text-xl font-semibold text-gray-900 mb-3">{plan.title}</h3>
-
-            <p className="text-gray-600 leading-relaxed">{plan.description}</p>
           </motion.div>
         ))}
       </div>

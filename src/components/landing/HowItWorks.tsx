@@ -59,7 +59,7 @@ export default function HowItWorks() {
             transition={{ duration: 0.8, delay: index * 0.2 }}
             className="relative"
           >
-            <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className="bg-white rounded-xl p-6 shadow-sm card-interactive">
               {/* Step Number */}
               <div className="absolute -top-4 left-6">
                 <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
