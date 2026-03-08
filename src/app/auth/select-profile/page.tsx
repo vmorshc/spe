@@ -102,7 +102,7 @@ function SelectProfileContent() {
     return (
       <Section className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="motion-safe:animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
           <p className="text-gray-600">Завантаження профілів...</p>
         </div>
       </Section>
@@ -118,7 +118,7 @@ function SelectProfileContent() {
             <h2 className="text-xl font-semibold">Помилка</h2>
           </div>
           <p className="text-gray-600 mb-4">{error}</p>
-          <Button onClick={() => router.push('/')}>Повернутися на головну</Button>
+          <Button href="/">Повернутися на головну</Button>
         </div>
       </Section>
     );
@@ -144,7 +144,7 @@ function SelectProfileContent() {
               <li>Переконайтеся, що у вас є права адміністратора</li>
             </ol>
           </div>
-          <Button onClick={() => router.push('/')}>Повернутися на головну</Button>
+          <Button href="/">Повернутися на головну</Button>
         </div>
       </Section>
     );
@@ -200,7 +200,7 @@ function SelectProfileContent() {
                 >
                   {selecting === profile.pageId ? (
                     <div className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      <div className="motion-safe:animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                       Вибираю...
                     </div>
                   ) : (
@@ -213,7 +213,7 @@ function SelectProfileContent() {
         </div>
 
         <div className="text-center mt-8">
-          <Button variant="outline" onClick={() => router.push('/')}>
+          <Button variant="outline" href="/">
             Скасувати
           </Button>
         </div>
@@ -226,7 +226,7 @@ function SelectProfileLoading() {
   return (
     <Section className="min-h-screen flex items-center justify-center">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+        <div className="motion-safe:animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
         <p className="text-gray-600">Завантаження профілів...</p>
       </div>
     </Section>

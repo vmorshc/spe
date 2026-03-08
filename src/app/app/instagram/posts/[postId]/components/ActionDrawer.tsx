@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useDragControls } from 'framer-motion';
 import { Dice4, Settings, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { useHaptic } from '@/lib/hooks/useHaptic';
@@ -15,15 +15,9 @@ interface ActionDrawerProps {
 export default function ActionDrawer({ postId }: ActionDrawerProps) {
   const { haptic } = useHaptic();
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
 
   const dragControls = useDragControls();
   const constraintsRef = useRef(null);
-
-  const handlePickWinner = async () => {
-    setIsOpen(false);
-    router.push(`/app/instagram/export/${postId}`);
-  };
 
   // Close drawer when clicking outside
   useEffect(() => {
@@ -123,16 +117,20 @@ export default function ActionDrawer({ postId }: ActionDrawerProps) {
               {/* Actions */}
               <div className="px-6 py-4 space-y-3">
                 {/* Pick Winner Button */}
-                <Button
-                  onClick={handlePickWinner}
-                  variant="default"
-                  size="lg"
-                  haptic="heavy"
-                  className="w-full flex items-center justify-center space-x-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                >
-                  <Dice4 className="w-5 h-5" />
-                  <span>Обрати переможця</span>
-                </Button>
+                <Link href={`/app/instagram/export/${postId}`} onClick={() => setIsOpen(false)}>
+                  <Button
+                    variant="default"
+                    size="lg"
+                    haptic="heavy"
+                    className="w-full flex items-center justify-center space-x-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                    asChild
+                  >
+                    <span>
+                      <Dice4 className="w-5 h-5" />
+                      <span>Обрати переможця</span>
+                    </span>
+                  </Button>
+                </Link>
 
                 {/* Filters Button (Placeholder) */}
                 <Button

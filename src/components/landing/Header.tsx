@@ -34,14 +34,6 @@ export default function Header() {
     return () => observer.disconnect();
   }, []);
 
-  const handleCtaClick = () => {
-    trackEvent('landing_cta_click', {
-      cta_type: 'start_giveaway',
-      cta_location: 'header',
-    });
-    router.push('/app/instagram/posts');
-  };
-
   const handleNavigation = (sectionId: string) => {
     if (pathname === '/') {
       // On home page, scroll to section
@@ -116,7 +108,18 @@ export default function Header() {
                   transition={{ duration: 0.25, ease: 'easeInOut' }}
                   className="overflow-hidden"
                 >
-                  <Button size="sm" variant="hero" className="rounded-lg" onClick={handleCtaClick}>
+                  <Button
+                    href="/app/instagram/posts"
+                    size="sm"
+                    variant="hero"
+                    className="rounded-lg"
+                    onNavigate={() =>
+                      trackEvent('landing_cta_click', {
+                        cta_type: 'start_giveaway',
+                        cta_location: 'header',
+                      })
+                    }
+                  >
                     Почати розіграш
                   </Button>
                 </motion.div>
@@ -127,7 +130,7 @@ export default function Header() {
           {/* CTA Button */}
           <div className="hidden md:flex items-center space-x-4">
             {authLoading ? (
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+              <div className="motion-safe:animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
             ) : isAuthenticated ? (
               <UserProfile />
             ) : (
@@ -145,7 +148,18 @@ export default function Header() {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Button size="sm" variant="hero" className="rounded-lg" onClick={handleCtaClick}>
+                  <Button
+                    href="/app/instagram/posts"
+                    size="sm"
+                    variant="hero"
+                    className="rounded-lg"
+                    onNavigate={() =>
+                      trackEvent('landing_cta_click', {
+                        cta_type: 'start_giveaway',
+                        cta_location: 'header',
+                      })
+                    }
+                  >
                     Почати розіграш
                   </Button>
                 </motion.div>
@@ -205,7 +219,7 @@ export default function Header() {
               </button>
               {authLoading ? (
                 <div className="flex justify-center py-2">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                  <div className="motion-safe:animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                 </div>
               ) : isAuthenticated ? (
                 <UserProfile className="w-full" />

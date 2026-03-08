@@ -48,7 +48,7 @@ src/
 │   └── globals.css                # Tailwind v4 + CSS variables
 │
 ├── components/
-│   ├── ui/                        # shadcn/ui + custom primitives
+│   ├── ui/                        # shadcn/ui + custom primitives (Button, MotionProvider, FullScreenLoader, etc.)
 │   ├── landing/                   # Landing page sections
 │   ├── auth/                      # Login/logout components
 │   ├── instagram/                 # Posts, comments, export UI
@@ -150,6 +150,12 @@ Infrastructure ready for PostgreSQL/MySQL integration. Current Redis usage is de
 
 ## Performance Optimizations
 
+### Navigation & Prefetching
+- `Button` component supports link-mode rendering (`href` prop) using Next.js `<Link>` for automatic prefetch and client-side transitions
+- Most `router.push()` calls migrated to `<Button href>` or `<Link>` — only kept for async-before-navigate patterns (logout, dynamic redirects)
+- Every route has a `loading.tsx` skeleton for instant feedback during navigation
+- View Transitions API enabled (`experimental: { viewTransition: true }`) for cross-fade page transitions (Chrome/Edge/Safari 18+)
+
 ### Image Optimization
 - Next.js Image component with automatic WebP/AVIF
 - Facebook/Instagram CDN integration
@@ -169,3 +175,8 @@ Infrastructure ready for PostgreSQL/MySQL integration. Current Redis usage is de
 - Preloaded Geist Sans/Mono fonts
 - CSS variables for consistent typography
 - No FOUT (Flash of Unstyled Text)
+
+### Accessibility & Motion
+- `MotionProvider` wraps app with `<MotionConfig reducedMotion="user">` for Framer Motion
+- All Tailwind animations use `motion-safe:` variants
+- Canvas animations check `prefers-reduced-motion` media query

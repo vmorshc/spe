@@ -37,7 +37,7 @@ export default function PostCard({ post }: PostCardProps) {
           src={imageUrl}
           alt={post.caption || 'Instagram post'}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className="object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:group-hover:scale-100"
           sizes="(max-width: 768px) 33vw, (max-width: 1200px) 25vw, 20vw"
         />
 

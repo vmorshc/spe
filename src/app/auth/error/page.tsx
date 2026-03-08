@@ -2,12 +2,12 @@
 
 import { motion } from 'framer-motion';
 import { XCircle } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
+import { Button } from '@/components/ui/Button';
 
 function AuthErrorContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const error = searchParams.get('error');
   const description = searchParams.get('description');
 
@@ -58,20 +58,15 @@ function AuthErrorContent() {
       )}
 
       <div className="space-y-3">
-        <button
-          type="button"
-          onClick={() => router.push('/')}
+        <Button
+          href="/"
           className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
         >
           Спробувати знову
-        </button>
-        <button
-          type="button"
-          onClick={() => router.push('/')}
-          className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors"
-        >
+        </Button>
+        <Button href="/" variant="outline" className="w-full">
           Повернутися на головну
-        </button>
+        </Button>
       </div>
     </motion.div>
   );
@@ -80,7 +75,7 @@ function AuthErrorContent() {
 function LoadingFallback() {
   return (
     <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-red-500 mx-auto mb-4"></div>
+      <div className="motion-safe:animate-spin rounded-full h-16 w-16 border-b-2 border-red-500 mx-auto mb-4"></div>
       <h1 className="text-2xl font-bold text-gray-900 mb-2">Завантаження...</h1>
       <p className="text-gray-600">Обробка помилки автентифікації</p>
     </div>

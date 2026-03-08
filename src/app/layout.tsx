@@ -1,7 +1,9 @@
 import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { ViewTransition } from 'react';
 import './globals.css';
+import MotionProvider from '@/components/ui/MotionProvider';
 import { clientConfig } from '@/config';
 import { AuthProvider } from '@/lib/contexts/AuthContext';
 
@@ -81,7 +83,11 @@ export default function RootLayout({
   return (
     <html lang="uk" className="h-full">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen`}>
-        <AuthProvider>{children}</AuthProvider>
+        <MotionProvider>
+          <AuthProvider>
+            <ViewTransition>{children}</ViewTransition>
+          </AuthProvider>
+        </MotionProvider>
       </body>
       {clientConfig.GA_MEASUREMENT_ID ? (
         <GoogleAnalytics gaId={clientConfig.GA_MEASUREMENT_ID} />

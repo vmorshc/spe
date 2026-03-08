@@ -38,7 +38,7 @@ export default async function GiveawayWizardPage({ params }: PageProps) {
 function WizardSkeleton() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="animate-pulse space-y-8">
+      <div className="motion-safe:animate-pulse space-y-8">
         <div className="h-12 bg-muted rounded-lg w-3/4 mx-auto" />
         <div className="h-64 bg-muted rounded-lg" />
       </div>

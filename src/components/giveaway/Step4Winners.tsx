@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { trackEvent } from '@/lib/analytics';
 import { useWizard } from '@/lib/contexts/WizardContext';
@@ -13,7 +13,6 @@ import WinnerDetailsOverlay from './WinnerDetailsOverlay';
 
 export default function Step4Winners() {
   const { winners, uniqueUsers, uniqueWinners } = useWizard();
-  const router = useRouter();
   const { haptic } = useHaptic();
   const [showRoulette, setShowRoulette] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -109,13 +108,12 @@ export default function Step4Winners() {
         transition={{ delay: 0.6 }}
         className="fixed bottom-0 left-0 right-0 flex justify-center py-4 z-50"
       >
-        <button
-          type="button"
-          onClick={() => router.push('/app/instagram/posts')}
+        <Link
+          href="/app/instagram/posts"
           className="text-sm text-muted-foreground/60 hover:text-muted-foreground transition-colors duration-200 px-4 py-2 rounded-lg bg-transparent hover:bg-muted/30"
         >
           До публікацій
-        </button>
+        </Link>
       </motion.div>
     </motion.div>
   );

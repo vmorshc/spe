@@ -1,7 +1,7 @@
 export default function LegalLoading() {
   return (
     <div className="legal-loading">
-      <div className="animate-pulse">
+      <div className="motion-safe:animate-pulse">
         {/* Title skeleton */}
         <div className="h-10 bg-gray-200 rounded-md w-3/4 mb-8"></div>
 

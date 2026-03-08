@@ -1,6 +1,7 @@
 'use client';
 
 import { ArrowLeft, LogOut } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
@@ -30,10 +31,6 @@ export default function AppHeader({ title, backUrl = '/', showBackButton = true 
     }
   };
 
-  const handleBackClick = () => {
-    router.push(backUrl);
-  };
-
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,9 +39,9 @@ export default function AppHeader({ title, backUrl = '/', showBackButton = true 
           <div className="flex items-center space-x-4">
             {showBackButton && (
               <Button
+                href={backUrl}
                 variant="ghost"
                 size="sm"
-                onClick={handleBackClick}
                 className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
@@ -54,9 +51,8 @@ export default function AppHeader({ title, backUrl = '/', showBackButton = true 
 
             {showBackButton && <div className="h-6 w-px bg-gray-200 hidden sm:block" />}
 
-            <button
-              type="button"
-              onClick={() => router.push('/')}
+            <Link
+              href="/"
               className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
             >
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -65,7 +61,7 @@ export default function AppHeader({ title, backUrl = '/', showBackButton = true 
               <span className="text-xl font-bold text-gray-900 hidden sm:inline">
                 {sharedConfig.SITE_NAME}
               </span>
-            </button>
+            </Link>
           </div>
 
           {/* Page Title */}

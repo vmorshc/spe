@@ -217,7 +217,9 @@ All landing sections use the `Section` component:
 
 ## 8. Motion & Animation
 
-All animations use **Framer Motion**. Patterns:
+### 8.1 Framer Motion Patterns
+
+All component animations use **Framer Motion**, wrapped in `<MotionConfig reducedMotion="user">` via `MotionProvider` (see §13.1).
 
 | Pattern | Props | Usage |
 |---|---|---|
@@ -236,6 +238,29 @@ All animations use **Framer Motion**. Patterns:
 | Mobile menu | `height: 0 → auto`, `opacity: 0 → 1` | Header mobile nav |
 | Wizard step transition | `x: 20 → 0` in / `x: -20` out, `duration: 0.3` | Step changes |
 | WizardDots | `scale: 0.8 → 1` for active dot | Progress indicator |
+
+### 8.2 View Transitions
+
+Cross-fade page transitions enabled via Next.js experimental API:
+- `next.config.ts`: `experimental: { viewTransition: true }`
+- `src/app/layout.tsx`: children wrapped in `<ViewTransition>` from `'react'`
+- Progressive enhancement: Chrome/Edge 111+, Safari 18+ get cross-fade; Firefox sees normal navigation
+- No custom CSS needed — default cross-fade behavior
+
+### 8.3 Loading Skeletons
+
+Every route has a `loading.tsx` for instant skeleton feedback during navigation. All skeletons use `motion-safe:animate-pulse` to respect reduced-motion preferences.
+
+| Route | File |
+|---|---|
+| `/` (root) | `src/app/loading.tsx` |
+| `/app/instagram/posts` | `src/app/app/instagram/posts/loading.tsx` |
+| `/app/instagram/posts/[postId]` | `src/app/app/instagram/posts/[postId]/loading.tsx` |
+| `/app/instagram/export/[postId]` | `src/app/app/instagram/export/[postId]/loading.tsx` |
+| `/auth/select-profile` | `src/app/auth/select-profile/loading.tsx` |
+| `/auth/error` | `src/app/auth/error/loading.tsx` |
+| `/legal/*` | `src/app/legal/loading.tsx` |
+| `/system/flags` | `src/app/system/flags/loading.tsx` |
 
 ---
 
@@ -375,6 +400,25 @@ Custom scrollbar applied globally:
 ---
 
 ## 13. Accessibility
+
+### 13.1 Reduced Motion (`prefers-reduced-motion`)
+
+All animations respect the user's OS-level `prefers-reduced-motion` setting via three layers:
+
+**Framer Motion (global):**
+- `src/components/ui/MotionProvider.tsx` wraps the app with `<MotionConfig reducedMotion="user">`
+- Added in `src/app/layout.tsx` — all Framer Motion components automatically respect the OS setting
+
+**Tailwind CSS animations (per-element):**
+- `animate-pulse` → `motion-safe:animate-pulse` (all loading skeletons, progress indicators)
+- `animate-spin` → `motion-safe:animate-spin` (all spinners: FullScreenLoader, auth loading states)
+- `active:scale-[0.98]` → + `motion-reduce:active:scale-100` (Button hero variant)
+- `group-hover:scale-105` → + `motion-reduce:group-hover:scale-100` (PostCard image)
+
+**Canvas animations (manual check):**
+- `ConfettiCanvas.tsx`: checks `window.matchMedia('(prefers-reduced-motion: reduce)')` and skips confetti entirely
+
+### 13.2 Focus & Semantics
 
 - Focus ring: `focus-visible:ring-1 focus-visible:ring-ring` on all interactive elements
 - Custom focus: `focus:ring-2` → `box-shadow: 0 0 0 2px rgba(59,130,246,0.5)` (blue)

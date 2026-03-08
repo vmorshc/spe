@@ -2,7 +2,9 @@
 
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
+import Link from 'next/link';
 import * as React from 'react';
+import FullScreenLoader from '@/components/ui/FullScreenLoader';
 import { useHaptic } from '@/lib/hooks/useHaptic';
 import { cn } from '@/lib/utils';
 
@@ -20,7 +22,7 @@ const buttonVariants = cva(
         secondary: 'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
-        hero: 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:from-blue-500 hover:to-indigo-500 active:scale-[0.98] transition-all duration-200',
+        hero: 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:from-blue-500 hover:to-indigo-500 active:scale-[0.98] motion-reduce:active:scale-100 transition-all duration-200',
       },
       size: {
         default: 'h-9 px-4 py-2',
@@ -45,38 +47,172 @@ const defaultHapticByVariant: Record<string, HapticPreset> = {
   secondary: 'light',
 };
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-  haptic?: HapticPreset | false;
+async function waitForCallback(
+  callback: () => void | Promise<void>,
+  timeoutMs: number
+): Promise<void> {
+  return Promise.race([
+    Promise.resolve(callback()).catch(() => {}),
+    new Promise<void>((resolve) => setTimeout(resolve, timeoutMs)),
+  ]);
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, haptic: hapticProp, onClick, ...props }, ref) => {
+type ButtonBaseProps = VariantProps<typeof buttonVariants> & {
+  haptic?: HapticPreset | false;
+};
+
+type ButtonElementProps = ButtonBaseProps &
+  React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    asChild?: boolean;
+    href?: undefined;
+    external?: undefined;
+    onNavigate?: undefined;
+    onNavigateTimeout?: undefined;
+  };
+
+type InternalLinkProps = ButtonBaseProps &
+  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
+    href: string;
+    external?: false;
+    asChild?: undefined;
+    onNavigate?: () => void | Promise<void>;
+    onNavigateTimeout?: undefined;
+  };
+
+type ExternalLinkProps = ButtonBaseProps &
+  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
+    href: string;
+    external: true;
+    asChild?: undefined;
+    onNavigate?: () => void | Promise<void>;
+    onNavigateTimeout?: number;
+  };
+
+export type ButtonProps = ButtonElementProps | InternalLinkProps | ExternalLinkProps;
+
+const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
+  (props, ref) => {
     const { haptic } = useHaptic();
-    const Comp = asChild ? Slot : 'button';
+    const [showLoader, setShowLoader] = React.useState(false);
+
+    const { className, variant, size, haptic: hapticProp, ...rest } = props;
 
     const resolvedPreset =
       hapticProp === false
         ? undefined
         : (hapticProp ?? defaultHapticByVariant[variant ?? 'default']);
 
-    const handleClick = React.useMemo(() => {
-      if (!resolvedPreset && !onClick) return undefined;
-      if (!resolvedPreset) return onClick;
-      return (e: React.MouseEvent<HTMLButtonElement>) => {
-        haptic(resolvedPreset);
+    const classes = cn(buttonVariants({ variant, size, className }));
+
+    // --- Internal link mode ---
+    if (rest.href != null && !rest.external) {
+      const {
+        href,
+        external: _external,
+        asChild: _asChild,
+        onNavigate,
+        onNavigateTimeout: _onNavigateTimeout,
+        onClick,
+        ...linkProps
+      } = rest as InternalLinkProps & { onClick?: React.MouseEventHandler<HTMLAnchorElement> };
+
+      const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        if (resolvedPreset) haptic(resolvedPreset);
+        if (onNavigate) {
+          // Fire-and-forget — don't block navigation
+          Promise.resolve(onNavigate()).catch(() => {});
+        }
         onClick?.(e);
       };
-    }, [resolvedPreset, onClick, haptic]);
+
+      return (
+        <Link
+          href={href}
+          className={classes}
+          ref={ref as React.Ref<HTMLAnchorElement>}
+          onClick={handleClick}
+          {...linkProps}
+        />
+      );
+    }
+
+    // --- External link mode ---
+    if (rest.href != null && rest.external) {
+      const {
+        href,
+        external: _external,
+        asChild: _asChild,
+        onNavigate,
+        onNavigateTimeout = 2000,
+        onClick,
+        target,
+        ...anchorProps
+      } = rest as ExternalLinkProps & { onClick?: React.MouseEventHandler<HTMLAnchorElement> };
+
+      const isSameTab = target === '_self';
+
+      const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        if (resolvedPreset) haptic(resolvedPreset);
+
+        if (isSameTab && onNavigate) {
+          // Same-tab external: show loader, await callback with timeout, then navigate
+          e.preventDefault();
+          setShowLoader(true);
+          waitForCallback(onNavigate, onNavigateTimeout).then(() => {
+            window.location.href = href;
+          });
+        } else if (onNavigate) {
+          // New-tab external: fire-and-forget
+          Promise.resolve(onNavigate()).catch(() => {});
+        }
+
+        onClick?.(e);
+      };
+
+      return (
+        <>
+          <a
+            href={href}
+            className={classes}
+            ref={ref as React.Ref<HTMLAnchorElement>}
+            onClick={handleClick}
+            target={isSameTab ? '_self' : '_blank'}
+            rel={isSameTab ? undefined : 'noopener noreferrer'}
+            {...anchorProps}
+          />
+          {showLoader && <FullScreenLoader show />}
+        </>
+      );
+    }
+
+    // --- Regular button mode ---
+    const {
+      asChild = false,
+      external: _external,
+      onNavigate: _onNavigate,
+      onNavigateTimeout: _onNavigateTimeout,
+      onClick,
+      ...buttonProps
+    } = rest as ButtonElementProps & { onClick?: React.MouseEventHandler<HTMLButtonElement> };
+
+    const Comp = asChild ? Slot : 'button';
+
+    const handleClick =
+      !resolvedPreset && !onClick
+        ? undefined
+        : !resolvedPreset
+          ? onClick
+          : (e: React.MouseEvent<HTMLButtonElement>) => {
+              haptic(resolvedPreset);
+              onClick?.(e);
+            };
 
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
+        className={classes}
+        ref={ref as React.Ref<HTMLButtonElement>}
         onClick={handleClick}
-        {...props}
+        {...buttonProps}
       />
     );
   }

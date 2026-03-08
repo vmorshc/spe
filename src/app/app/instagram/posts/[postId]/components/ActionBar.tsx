@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { Dice4, Settings } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 
 interface ActionBarProps {
@@ -11,12 +10,6 @@ interface ActionBarProps {
 }
 
 export default function ActionBar({ postId }: ActionBarProps) {
-  const router = useRouter();
-
-  const handlePickWinner = async () => {
-    router.push(`/app/instagram/export/${postId}`);
-  };
-
   return (
     <motion.div
       initial={{ y: 100, opacity: 0 }}
@@ -28,7 +21,7 @@ export default function ActionBar({ postId }: ActionBarProps) {
         <div className="flex items-center justify-center space-x-4">
           {/* Pick Winner Button */}
           <Button
-            onClick={handlePickWinner}
+            href={`/app/instagram/export/${postId}`}
             variant="default"
             size="lg"
             className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"

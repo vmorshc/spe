@@ -49,3 +49,7 @@ Pickly (SPE) is a Ukrainian-language web app for transparent Instagram giveaways
 **Notes / Status**
 - Winner selection UI exists, but the current action shows a placeholder alert.
 - Reels tab and filters are visible but marked "coming soon".
+- Navigation uses `<Button href>` / `<Link>` prefetching — only a few `router.push()` calls remain (logout, dynamic redirects).
+- View Transitions API enabled for cross-fade page transitions.
+- All routes have `loading.tsx` skeletons.
+- Reduced-motion accessible: `MotionProvider` + `motion-safe:` Tailwind variants + canvas media query check.

@@ -9,7 +9,7 @@ All reusable UI components, their props, layout details, and usage patterns.
 ### 1.1 Button
 
 **File**: `src/components/ui/Button.tsx`
-Built with `cva` (class-variance-authority) and `@radix-ui/react-slot`.
+Built with `cva` (class-variance-authority) and `@radix-ui/react-slot`. Supports three render modes via discriminated union types.
 
 **Variants:**
 
@@ -21,6 +21,7 @@ Built with `cva` (class-variance-authority) and `@radix-ui/react-slot`.
 | `secondary` | Light gray fill, dark text |
 | `ghost` | Transparent, fills accent on hover |
 | `link` | Text with underline on hover |
+| `hero` | Blue-indigo gradient, shadow, press scale (+ `motion-reduce:active:scale-100`) |
 
 **Sizes:**
 
@@ -30,17 +31,56 @@ Built with `cva` (class-variance-authority) and `@radix-ui/react-slot`.
 | `default` | `h-9` | `px-4 py-2` |
 | `lg` | `h-10` | `px-8` |
 | `icon` | `h-9 w-9` | — |
+| `hero` | `h-14` | `px-10 py-4`, `rounded-xl text-lg font-semibold` |
+
+**Render modes (discriminated union):**
+
+| Props | Renders | Behavior |
+|---|---|---|
+| No `href` | `<button>` (or `<Slot>` if `asChild`) | Standard button |
+| `href` (no `external`) | Next.js `<Link>` | Prefetch, client-side navigation |
+| `href` + `external` | `<a target="_blank" rel="noopener noreferrer">` | External link, new tab |
+| `href` + `external` + `target="_self"` | `<a>` + `FullScreenLoader` | Same-tab external with loading overlay |
+
+```tsx
+// Internal link — prefetch + client-side nav
+<Button href="/app/instagram/posts" variant="hero" size="lg">Start</Button>
+
+// Internal link with fire-and-forget callback (e.g. GA4 event)
+<Button href="/checkout" onNavigate={() => trackEvent('cta_click')}>Go</Button>
+
+// External link — new tab
+<Button href="https://t.me/support" external>Telegram</Button>
+
+// External link — same tab with loader + timeout
+<Button href="https://partner.com" external target="_self"
+  onNavigate={() => trackEvent('outbound')} onNavigateTimeout={1500}>
+  Go
+</Button>
+
+// Regular button (unchanged from before)
+<Button onClick={handleClick}>Save</Button>
+```
+
+**Link-mode props:**
+- `href?: string` — triggers link rendering
+- `external?: boolean` — renders `<a>` instead of `<Link>`
+- `onNavigate?: () => void | Promise<void>` — fire-and-forget callback (for internal + new-tab external), or awaited with timeout (same-tab external)
+- `onNavigateTimeout?: number` — timeout in ms for same-tab external (default 2000). Uses `Promise.race` pattern
 
 **Haptic prop:**
 - Optional `haptic` prop: `'light' | 'medium' | 'heavy' | 'selection' | 'success' | 'error' | 'warning' | false`
 - **Defaults by variant**: `default`/`destructive`/`hero` → `medium`, `outline`/`secondary` → `light`, `ghost`/`link` → none
 - Pass `haptic={false}` to disable, or a specific preset to override the default
+- Haptics fire across all render modes (button, Link, anchor)
 - No-op on unsupported devices
 
 **Behavior:**
 - Focus: `focus-visible:ring-1 focus-visible:ring-ring`
 - Disabled: `opacity-50 pointer-events-none`
 - SVG children: auto-sized to `size-4`
+- Ref type: `HTMLButtonElement | HTMLAnchorElement`
+- `asChild` only works in no-href (button) mode
 
 ### 1.2 Section
 
@@ -91,9 +131,9 @@ Card-style checkbox with title + description text. Primary border/fill when chec
 Sticky header for authenticated app pages.
 
 - **Container**: `bg-white shadow-sm sticky top-0 z-50`, height `h-16`
-- **Left**: Ghost button "Back" (`ArrowLeft` icon + text hidden on mobile) → separator → logo (blue `w-8 h-8 bg-blue-600 rounded-lg` + site name hidden on mobile)
+- **Left**: Back button (`<Button href={backUrl}>` with `ArrowLeft` icon + text hidden on mobile) → separator → logo (`<Link href="/">` with blue `w-8 h-8 bg-blue-600 rounded-lg` + site name hidden on mobile)
 - **Center**: Page title `text-lg font-medium text-gray-900`
-- **Right**: Ghost button "Вийти" with `LogOut` icon, turns red on hover, shows spinner during logout
+- **Right**: Ghost button "Вийти" with `LogOut` icon, turns red on hover, shows spinner during logout. Logout still uses `router.push('/')` after async action
 
 ### 2.2 Landing Header
 
@@ -172,7 +212,7 @@ Instagram-style profile header (no border, no card):
 **File**: `src/components/instagram/PostCard.tsx`
 
 - Aspect-square, `overflow-hidden bg-gray-100`
-- Image fills with `object-cover`, scales `group-hover:scale-105` (duration 300ms)
+- Image fills with `object-cover`, scales `group-hover:scale-105 motion-reduce:group-hover:scale-100` (duration 300ms)
 - Media type badges: `bg-black/50 rounded-full p-1` top-right (Play icon for video, dots for carousel)
 - Hover overlay: `bg-black/0 → bg-black/70`, shows likes + comments count with Heart + MessageCircle icons
 
@@ -275,7 +315,7 @@ Full-screen overlay modal for winner detail. Responsive dialog/drawer pattern:
 
 ### 6.7 ConfettiCanvas
 
-Celebration confetti animation triggered on winner reveal (Step 4).
+Celebration confetti animation triggered on winner reveal (Step 4). Respects `prefers-reduced-motion: reduce` — skips animation entirely when the OS setting is enabled.
 
 ---
 

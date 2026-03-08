@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { incrementLandingVisits } from '@/lib/actions/counters';
 import { trackEvent } from '@/lib/analytics';
@@ -16,7 +15,6 @@ interface HeroClientProps {
 export default function HeroClient({ initialVisitCount }: HeroClientProps) {
   const [visitCount, setVisitCount] = useState<number>(initialVisitCount);
   const [isIncrementing, setIsIncrementing] = useState<boolean>(false);
-  const router = useRouter();
 
   // Increment counter after component mounts
   useEffect(() => {
@@ -37,14 +35,6 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
 
     return () => clearTimeout(timeoutId);
   }, []);
-
-  const handleStartGiveaway = () => {
-    trackEvent('landing_cta_click', {
-      cta_type: 'start_giveaway',
-      cta_location: 'hero',
-    });
-    router.push('/app/instagram/posts');
-  };
 
   return (
     <Section className="pt-8 lg:pt-16" background="white">
@@ -84,7 +74,17 @@ export default function HeroClient({ initialVisitCount }: HeroClientProps) {
             className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8"
           >
             <div id="hero-cta" className="flex flex-col md:flex-row items-center gap-2">
-              <Button size="hero" variant="hero" onClick={handleStartGiveaway}>
+              <Button
+                href="/app/instagram/posts"
+                size="hero"
+                variant="hero"
+                onNavigate={() =>
+                  trackEvent('landing_cta_click', {
+                    cta_type: 'start_giveaway',
+                    cta_location: 'hero',
+                  })
+                }
+              >
                 Почати розіграш
               </Button>
               <span className="text-sm font-medium text-green-600">повністю безкоштовно</span>
