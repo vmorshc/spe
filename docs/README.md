@@ -54,8 +54,7 @@ Page-specific implementation details in `pages/`:
 - [auth-error.md](./pages/auth-error.md) - OAuth error handling
 - [instagram-posts.md](./pages/instagram-posts.md) - Posts grid with infinite scroll
 - [instagram-post-details.md](./pages/instagram-post-details.md) - Post details + comments
-- [instagram-post-export.md](./pages/instagram-post-export.md) - Export management page
-- [instagram-giveaway-wizard.md](./pages/instagram-giveaway-wizard.md) - Winner selection wizard
+- [instagram-giveaway-wizard.md](./pages/instagram-giveaway-wizard.md) - Giveaway wizard (export + winner selection)
 - [system-flags.md](./pages/system-flags.md) - Feature flags admin
 - [legal-terms.md](./pages/legal-terms.md) - Terms of service
 - [legal-privacy-policy.md](./pages/legal-privacy-policy.md) - Privacy policy

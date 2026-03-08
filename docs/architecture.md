@@ -98,7 +98,7 @@ src/
 3. `resumeExportAction()` runs in background, fetching comments in batches
 4. Progress updates are stored in Redis, UI polls via `getExportAction()`
 5. When complete, status changes to `done` and CSV becomes available
-6. User downloads via `/api/exports/[exportId]/csv`
+6. User downloads CSV from the giveaway wizard
 
 ### Giveaway Wizard Flow
 1. User initiates wizard from post details (`WizardProvider` receives `postDetails: InstagramMedia`)
