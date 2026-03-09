@@ -2,7 +2,6 @@ import { serverConfig } from '@/config/server';
 import {
   FACEBOOK_OAUTH_AUTH_TYPE,
   FACEBOOK_OAUTH_RESPONSE_TYPE,
-  FACEBOOK_OAUTH_SCOPE_STRING,
   FACEBOOK_OAUTH_URL,
 } from '@/lib/facebook/constants';
 
@@ -18,7 +17,10 @@ export function generateState(): string {
 }
 
 /**
- * Build Facebook OAuth URL with all required parameters
+ * Build Facebook OAuth URL with all required parameters.
+ * Uses config_id (Facebook Login Configuration) instead of scope.
+ * The config_id references a pre-configured set of permissions
+ * defined in the Facebook App Dashboard.
  */
 export function buildOAuthURL(state: string): string {
   const params = new URLSearchParams({
@@ -27,7 +29,7 @@ export function buildOAuthURL(state: string): string {
     state,
     response_type: FACEBOOK_OAUTH_RESPONSE_TYPE,
     auth_type: FACEBOOK_OAUTH_AUTH_TYPE,
-    scope: FACEBOOK_OAUTH_SCOPE_STRING,
+    config_id: serverConfig.FACEBOOK_CONFIG_ID,
   });
 
   return `${FACEBOOK_OAUTH_URL}?${params.toString()}`;

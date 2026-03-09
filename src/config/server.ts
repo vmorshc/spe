@@ -18,6 +18,7 @@ function createServerConfig() {
     // Facebook OAuth configuration
     FACEBOOK_APP_ID: env.FACEBOOK_APP_ID,
     FACEBOOK_APP_SECRET: env.FACEBOOK_APP_SECRET,
+    FACEBOOK_CONFIG_ID: env.FACEBOOK_CONFIG_ID,
     FACEBOOK_REDIRECT_URI: `${env.NEXT_PUBLIC_DOMAIN}${sharedConfig.FACEBOOK_REDIRECT_PATH}`,
     SESSION_SECRET: env.SESSION_SECRET,
     // MailerLite configuration

@@ -12,6 +12,7 @@ const serverEnvSchema = z.object({
   // Facebook OAuth configuration
   FACEBOOK_APP_ID: z.string().min(1, 'FACEBOOK_APP_ID is required'),
   FACEBOOK_APP_SECRET: z.string().min(1, 'FACEBOOK_APP_SECRET is required'),
+  FACEBOOK_CONFIG_ID: z.string().min(1, 'FACEBOOK_CONFIG_ID is required'),
   SESSION_SECRET: z.string().min(32, 'SESSION_SECRET must be at least 32 characters'),
   // MailerLite configuration
   MAILERLITE_API_KEY: z
